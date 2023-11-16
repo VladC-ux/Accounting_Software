@@ -1,0 +1,42 @@
+﻿@using Accounting_Software.ViewModel;
+@model AddEditViewModel;
+@{
+    ViewData["Title"] = "Add";
+
+
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+</head>
+<body>
+    <h1>Add new Seller</h1>
+    <form method="post">
+        <div>
+
+            <label>
+                Sellers Name
+                <input asp-for="Name" />
+            </label>
+        </div>
+
+        <div>
+            @foreach (UserViewModel item in ViewBag.Sellers)
+            {
+
+                <div>
+                    @item.Name
+                </div>
+
+            }
+            <input type="submit" value="Save" />
+        </div>
+
+    </form>
+</body>
+
+</html>
+

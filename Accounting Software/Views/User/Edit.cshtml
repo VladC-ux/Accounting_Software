@@ -1,0 +1,33 @@
+﻿@using Accounting_Software.ViewModel;
+@model UserViewModel
+@{
+    ViewData["Title"] = "Edit";
+
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+</head>
+<body>
+
+
+    <form method="post">
+        <input type="hidden" asp-for="Id" />
+        <div>
+            <label>
+                New Seller Name:
+                <input asp-for="Name"/>
+            </label>
+        </div>
+
+        <input type="submit" value="Save" />
+    </form>
+
+
+</body>
+</html>
