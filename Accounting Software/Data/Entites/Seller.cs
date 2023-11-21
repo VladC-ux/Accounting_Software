@@ -1,15 +1,15 @@
-﻿using Accounting_Software.Date.Entites;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+﻿using Accounting_Software.Data.Entites;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Accounting_Software.Data.Entites
+namespace Accounting_Software.Date.Entites
 {
     public class Seller
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ICollection<Product> Products { get; set; }
-    
+        public ICollection<Product> ProductsId { get; set; }
+
+
 
     }
 }

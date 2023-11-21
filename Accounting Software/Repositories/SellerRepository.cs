@@ -1,6 +1,7 @@
 ﻿using Accounting_Software.Data;
-using Accounting_Software.Data.Entites;
+using Accounting_Software.Date.Entites;
 using Accounting_Software.Repository_Interfaces;
+using Microsoft.Identity.Client;
 
 namespace Accounting_Software.Repositories
 {
@@ -13,47 +14,44 @@ namespace Accounting_Software.Repositories
             _context = context;
         }
 
-        public void Add(Seller Seller)
+        public void Add(Seller user)
         {
-            _context.Sellers.Add(Seller);
-            _context.SaveChanges();
+            _context.Sellers.Add(user);
         }
 
-        public void Delete(Seller Seller)
+        public void Delete(int id)
         {
-            _context.Sellers.Remove(Seller);
-            _context.SaveChanges();
-        }
+            var querry = _context.Sellers.Find(id);
 
+            if (querry != null)
+            {
+                _context.Sellers.Remove(querry);
+                
+            }
+        }
         public List<Seller> GetAll()
         {
-            return _context.Sellers.ToList();
+            var entity = _context.Sellers.ToList();
+            return entity;
         }
 
         public Seller GetById(int id)
         {
-            return _context.Sellers.FirstOrDefault(s => s.Id ==  id);
+            return _context.Sellers.FirstOrDefault(u => u.Id == id);
         }
 
-        public Seller Update(Seller Seller)
+        public Seller Update(Seller user)
         {
-            var entity = _context.Sellers.FirstOrDefault(s =>s.Id == Seller.Id);
-            if(entity!=null)
-            {
-                entity.Name = Seller.Name;
-
+            var entity = _context.Sellers.FirstOrDefault(u => u.Id == user.Id);
+           
+            
+                entity.Name = user.Name;
                 _context.Sellers.Update(entity);
-                _context.SaveChanges();
-
+             
 
                 return entity;
-
-            }
-            else
-            {
-                throw new NotImplementedException("The Seller is not found");
-            }
-          
+            
+         
         }
     }
 }

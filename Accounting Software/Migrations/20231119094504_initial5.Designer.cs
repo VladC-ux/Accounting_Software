@@ -4,6 +4,7 @@ using Accounting_Software.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounting_Software.Migrations
 {
     [DbContext(typeof(DBContextAccounting))]
-    partial class DBContextAccountingModelSnapshot : ModelSnapshot
+    [Migration("20231119094504_initial5")]
+    partial class initial5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,33 +57,6 @@ namespace Accounting_Software.Migrations
                     b.HasIndex("SellerId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Accounting_Software.Data.Entites.SoldList", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Unitofmass")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WareHouseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WareHouseId");
-
-                    b.ToTable("SoldLists");
                 });
 
             modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
@@ -142,17 +118,6 @@ namespace Accounting_Software.Migrations
                         .IsRequired();
 
                     b.Navigation("Seller");
-                });
-
-            modelBuilder.Entity("Accounting_Software.Data.Entites.SoldList", b =>
-                {
-                    b.HasOne("Accounting_Software.Date.Entites.WareHouse", "WareHouse")
-                        .WithMany()
-                        .HasForeignKey("WareHouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("Accounting_Software.Date.Entites.WareHouse", b =>

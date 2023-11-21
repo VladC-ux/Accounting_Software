@@ -1,16 +1,19 @@
-﻿using Accounting_Software.Data.Entites;
+﻿
+using Accounting_Software.Date.Entites;
+using Accounting_Software.ViewModel;
 
 namespace Accounting_Software.Repository_Interfaces
 {
     public interface ISellerRepositoryInterface
     {
-        void Add(Seller Seller);
-        Seller Update(Seller Seller);
-        void Delete(Seller Seller);
-
-        Seller GetById(int id);
+        void Add(Seller user);
+        Seller Update(Seller user); 
 
         List<Seller> GetAll();
 
+        Seller GetById(int id);
+
+        void Delete(int id);
+       
     }
 }

@@ -21,9 +21,10 @@ namespace Accounting_Software
             builder.Services.AddDbContext<DBContextAccounting>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AccountingDatabase")));
 
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<IUserServiceInterface, UserService>();
-            builder.Services.AddScoped<IUserRepositoryInterface, UserRepository>();
-
+            builder.Services.AddScoped<ISellerServiceInterface, SellerService>();
+            builder.Services.AddScoped<ISellerRepositoryInterface, SellerRepository>();
+            builder.Services.AddScoped<IProductServiceInterface, ProductService>();
+            builder.Services.AddScoped<IProductRepositoryInterface, ProductRepository>();
             builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
 
@@ -46,7 +47,7 @@ namespace Accounting_Software
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=User}/{action=Index}/{id?}");
+                pattern: "{controller=Seller}/{action=Index}/{id?}");
 
             app.Run();
         }
