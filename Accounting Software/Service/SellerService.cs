@@ -7,50 +7,50 @@ using Microsoft.EntityFrameworkCore;
 using Accounting_Software.UnitOfWorkk;
 using Accounting_Software.Date.Entites;
 using Accounting_Software.Data;
-using Accounting_Software.ViewModel;
 using Accounting_Software.Repositories;
 using Microsoft.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+
+
+
 
 namespace Accounting_Software.Service
 {
     public class SellerService : ISellerServiceInterface
     {
-        private readonly ISellerRepositoryInterface _userRepositoryInterface;
+        private readonly ISellerRepositoryInterface _sellerRepository;
         private readonly IUnitofWork _uow;
+        private readonly IProductRepositoryInterface _productRepository;
 
 
-        public SellerService(ISellerRepositoryInterface userRepositoryInterface, IUnitofWork unitofWork)
+        public SellerService(ISellerRepositoryInterface userRepositoryInterface, IUnitofWork unitofWork, IProductRepositoryInterface productRepository)
         {
-            _userRepositoryInterface = userRepositoryInterface;
+            _sellerRepository = userRepositoryInterface;
             _uow = unitofWork;
+            _productRepository = productRepository;
 
         }
 
-         public void Add(AddEditViewModel adduser)
+        public void Add(SellerViewModel adduser)
         {
             Seller seller = new Seller
             {
-              
                 Name = adduser.Name,
             };
-            _userRepositoryInterface.Add(seller);
+
+            _sellerRepository.Add(seller);
             _uow.SaveChanges();
+
         }
 
-        public void Delete(SellerViewModel model)
+        public void Delete(SellerViewModel id)
         {
-            Seller seller = new Seller
-            {
-                Name = model.Name,
-            };
-            _userRepositoryInterface.Delete(model.Id);
-            _uow.SaveChanges();
+            throw new NotImplementedException();
         }
 
         public List<SellerViewModel> GetAll()
         {
-            var data = _userRepositoryInterface.GetAll();
+            var data = _sellerRepository.GetAll();
 
             List<SellerViewModel> SellerViewModels = data.Select(seller => new SellerViewModel
             {
@@ -64,12 +64,12 @@ namespace Accounting_Software.Service
 
         public SellerViewModel GetById(int id)
         {
-            var data = _userRepositoryInterface.GetById(id);
+            var data = _sellerRepository.GetById(id);
 
             return new SellerViewModel
             {
                 Id = data.Id,
-                Name = data.Name,            
+                Name = data.Name,
 
             };
         }
@@ -83,7 +83,7 @@ namespace Accounting_Software.Service
 
             };
 
-            var updatedUser = _userRepositoryInterface.Update(userToUpdate);
+            var updatedUser = _sellerRepository.Update(userToUpdate);
             _uow.SaveChanges();
 
         }

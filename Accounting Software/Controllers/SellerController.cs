@@ -21,17 +21,19 @@ namespace Accounting_Software.Controllers
             
         }
 
-        public IActionResult Add(AddEditViewModel model)
+        public IActionResult Add(SellerViewModel model)
         {
             if (model.Name == null)
             {
-                ModelState.AddModelError(nameof(AddEditViewModel.Name), "Please select Sellers");
+                ModelState.AddModelError(nameof(SellerViewModel.Name), "Please select Sellers");
             }
             if (!ModelState.IsValid)
             {
                 GetProductDropdownData();
                 return View(model);
             }
+
+
             _sellerService.Add(model);
             return RedirectToAction("Index");
         }

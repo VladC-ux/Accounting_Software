@@ -5,7 +5,7 @@ namespace Accounting_Software.Service_Interfaces
 {
     public interface ISellerServiceInterface
     {
-        void Add(AddEditViewModel user);
+        void Add(SellerViewModel user);
         void Update(SellerViewModel model);
 
         List<SellerViewModel> GetAll();

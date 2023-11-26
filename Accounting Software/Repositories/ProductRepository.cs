@@ -1,5 +1,6 @@
 ﻿using Accounting_Software.Data;
 using Accounting_Software.Data.Entites;
+using Accounting_Software.Date.Entites;
 using Accounting_Software.Repository_Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.EntityFrameworkCore;
@@ -15,17 +16,21 @@ namespace Accounting_Software.Repositories
             _context = context;
         }
 
-        public void Add(Product Product)
+        public void Add(Product product)
         {
-            _context.Products.Add(Product);
+            _context.Products.Add(product);
+            
 
         }
-
-
-
-        public void Delete(int Product)
+        public void AttachRange(List<Product> products)
         {
-            var querry = _context.Products.Find(Product);
+            _context.Products.AttachRange(products);
+        }
+     
+
+        public void Delete(int product)
+        {
+            var querry = _context.Products.Find(product);
 
 
             if (querry != null)

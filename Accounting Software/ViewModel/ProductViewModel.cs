@@ -13,15 +13,13 @@ namespace Accounting_Software.ViewModel
 
         public double Price { get; set; }
 
-        public Unit_of_mass Unitofmass { get; set; }
 
         public string? Description { get; set; }
 
+        public Unit_of_mass unitOfmass { get; set; }
         public ushort Mass { get; set; }
 
         public int SellerId { get; set; }
-
-
 
 
 

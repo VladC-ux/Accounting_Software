@@ -16,29 +16,39 @@ namespace Accounting_Software.Service
         private readonly IProductRepositoryInterface _productRepository;
         private readonly IUnitofWork _uow;
 
+
         public ProductService(IProductRepositoryInterface poroductrepository, IUnitofWork uow)
         {
             _productRepository = poroductrepository;
             _uow = uow;
+
         }
 
-        public void Add(ProductViewModel Product)
+        public void Add(ProductViewModel model)
         {
+
             Product product = new Product
             {
-                Name = Product.Name,
-                Price = Product.Price,
-                Description = Product.Description,
-                Mass = Product.Mass,
-                Unitofmass = Product.Unitofmass,
-               
+
+                Name = model.Name,
+                Price = model.Price,
+                Description = model.Description,
+                Mass = model.Mass,
+                Unitofmass = model.unitOfmass,
+                SellerId = model.SellerId
+
             };
-           
+
+            _productRepository.Add(product);
+            _uow.SaveChanges();
+
         }
+
+
 
         public void Delete(ProductViewModel model)
         {
-         
+
             _productRepository.Delete(model.Id);
             _uow.SaveChanges();
         }
@@ -53,7 +63,7 @@ namespace Accounting_Software.Service
                 Name = product.Name,
                 Price = product.Price,
                 Description = product.Description,
-                Unitofmass = product.Unitofmass,
+                unitOfmass = product.Unitofmass,
 
 
             }).ToList();

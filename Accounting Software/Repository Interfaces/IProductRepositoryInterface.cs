@@ -1,10 +1,13 @@
 ﻿using Accounting_Software.Data.Entites;
+using Accounting_Software.Date.Entites;
+
 namespace Accounting_Software.Repository_Interfaces
 {
     public interface IProductRepositoryInterface
     {
-        void Add(Product Product);
-        Product Update(Product Product);
+        void Add(Product product);
+        Product Update(Product product);
+        void AttachRange(List<Product> products );
         void Delete(int id);   
         List<Product> GetAll();
         Product GetById(int id);

@@ -20,6 +20,8 @@ namespace Accounting_Software.Controllers
             return View(list);
         }
 
+
+        
         public IActionResult Add(ProductViewModel product)
         {
             try
