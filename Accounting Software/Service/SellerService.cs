@@ -36,10 +36,8 @@ namespace Accounting_Software.Service
             Seller seller = new Seller
             {
                 Name = adduser.Name,
+               
             };
-
-            _sellerRepository.Add(seller);
-            _uow.SaveChanges();
 
         }
 

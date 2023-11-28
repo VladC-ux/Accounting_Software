@@ -20,12 +20,15 @@ namespace Accounting_Software.Controllers
             return View(list);
         }
 
-
-        
+        [Route("Product/Add/{SellerId}")]
+        public IActionResult Add(int SellerId)
+        {
+            ViewBag.SellerId = SellerId;
+            return View();
+        }
         public IActionResult Add(ProductViewModel product)
         {
-            try
-            {
+            
                 if (!ModelState.IsValid)
                 {
                     GetDropDownData();
@@ -34,13 +37,8 @@ namespace Accounting_Software.Controllers
 
                 _productService.Add(product);
                 return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
+            
 
-                Console.WriteLine($"Error adding product: {ex.Message}");
-                throw;
-            }
         }
 
 
@@ -51,8 +49,8 @@ namespace Accounting_Software.Controllers
         }
         private void GetDropDownEnum()
         {
-           
-           
+
+
         }
     }
 }

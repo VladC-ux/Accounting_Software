@@ -35,7 +35,7 @@ namespace Accounting_Software.Service
                 Description = model.Description,
                 Mass = model.Mass,
                 Unitofmass = model.unitOfmass,
-                SellerId = model.SellerId
+               
 
             };
 
