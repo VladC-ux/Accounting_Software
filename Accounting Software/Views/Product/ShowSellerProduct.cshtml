@@ -1,0 +1,57 @@
+﻿@using Accounting_Software.ViewModel;
+@model List<ProductViewModel>;
+@{
+    ViewData["Title"] = "Add";
+
+
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Add</title>
+</head>
+<body>
+
+    <form method="post">
+
+        
+  
+        <div>
+            @if (ViewBag.Products != null)
+            {
+                @foreach (ProductViewModel item in ViewBag.Products)
+                {
+                    <div>
+
+                        @item.Name
+                        @item.Price
+                        @item.Description
+                        @item.Mass
+                        @item.unitOfmass
+                    </div>
+
+                }
+            }
+
+        </div>
+
+
+        <a asp-action="Index" asp-controller="Seller">Return to Seller Index</a>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td><a href="@Url.Action("ShowSellerProduct","Product", new  { SellerId = item.Id })">@item.Name</a></td>
+           
+            </tr>
+        }
+
+
+        <input type="submit" value="Save" />
+    </form>
+</body>
+
+</html>
+

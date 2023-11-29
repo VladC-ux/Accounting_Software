@@ -29,10 +29,11 @@
                 </tr>
             </thead>
             <tbody>
+               @if (ViewBag.Products != null)
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td><a href="@Url.Action("Add","Product", new  { id = item.Id })">@item.Name</a></td>
+                        <td><a href="@Url.Action("ShowSellerProduct","Product", new  { SellerId = item.Id })">@item.Name</a></td>
 
                         <td>
                             <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>

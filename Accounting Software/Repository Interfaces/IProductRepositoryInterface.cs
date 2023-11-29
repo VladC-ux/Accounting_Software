@@ -7,7 +7,7 @@ namespace Accounting_Software.Repository_Interfaces
     {
         void Add(Product product);
         Product Update(Product product);
-        void AttachRange(List<Product> products );
+        List<Product> GetByIdShowProduct();
         void Delete(int id);   
         List<Product> GetAll();
         Product GetById(int id);

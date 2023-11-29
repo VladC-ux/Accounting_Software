@@ -1,4 +1,5 @@
-﻿using Accounting_Software.Service_Interfaces;
+﻿using Accounting_Software.Date.Entites;
+using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -20,25 +21,33 @@ namespace Accounting_Software.Controllers
             return View(list);
         }
 
-        [Route("Product/Add/{SellerId}")]
+        [HttpGet]
         public IActionResult Add(int SellerId)
+        {
+
+            ViewBag.SellerId = SellerId;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult Add(ProductViewModel product)
+        {
+
+            GetDropDownData();
+            _productService.Add(product);
+            return View(product);
+
+        }
+        [HttpGet]
+        public IActionResult ShowSellerProduct(int SellerId)
         {
             ViewBag.SellerId = SellerId;
             return View();
         }
-        public IActionResult Add(ProductViewModel product)
+        [HttpPost]
+        public IActionResult ShowSellerProduct()
         {
-            
-                if (!ModelState.IsValid)
-                {
-                    GetDropDownData();
-                    return View(product);
-                }
-
-                _productService.Add(product);
-                return RedirectToAction("Index");
-            
-
+            var data =  _productService.GetByIdShowProduct();
+            return View(data);
         }
 
 

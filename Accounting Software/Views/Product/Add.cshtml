@@ -13,10 +13,13 @@
     <title>Add</title>
 </head>
 <body>
-    <h1>Add new Product</h1>
+    
     <form method="post">
 
-        <input type="hidden" id="SellerId" name="SellerId" value="@ViewBag.SellerId">
+        <input type="hidden" asp-for="SellerId" value="@ViewBag.SellerId">
+
+
+        <h1>Add new Product</h1>
         <div>
 
             <label asp-for="Name">Product Name:</label>
@@ -51,16 +54,21 @@
                 @foreach (ProductViewModel item in ViewBag.Products)
                 {
                     <div>
+
                         @item.Name
                         @item.Price
                         @item.Description
+                        @item.Mass
                         @item.unitOfmass
                     </div>
 
                 }
             }
-           
+
         </div>
+
+      
+        <a asp-action="Index" asp-controller="Seller">Return to Seller Index</a>
 
         <input type="submit" value="Save" />
     </form>

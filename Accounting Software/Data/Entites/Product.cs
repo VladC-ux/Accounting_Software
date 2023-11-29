@@ -9,8 +9,10 @@ namespace Accounting_Software.Data.Entites
         public int Id { get; set; } 
         public string Name { get; set; }
         public double Price { get; set; } 
-        public ushort Mass { get; set; }
+
         public string? Description { get; set; }
+
+        public ushort Mass { get; set; }
         public Unit_of_mass Unitofmass { get; set; }
 
         [ForeignKey("Seller")]

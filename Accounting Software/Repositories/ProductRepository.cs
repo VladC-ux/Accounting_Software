@@ -22,10 +22,7 @@ namespace Accounting_Software.Repositories
             
 
         }
-        public void AttachRange(List<Product> products)
-        {
-            _context.Products.AttachRange(products);
-        }
+     
      
 
         public void Delete(int product)
@@ -55,6 +52,10 @@ namespace Accounting_Software.Repositories
 
         }
 
+        public List<Product> GetByIdShowProduct()
+        {
+            return _context.Products.ToList();
+        }
 
         public Product Update(Product product)
         {

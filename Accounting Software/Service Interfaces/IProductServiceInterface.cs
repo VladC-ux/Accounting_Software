@@ -6,6 +6,8 @@ namespace Accounting_Software.Service_Interfaces
     public interface IProductServiceInterface
     {
         void Add(ProductViewModel Product);
+        List<ProductViewModel> GetByIdShowProduct();
+
         void Update(ProductViewModel Product);
         void Delete(ProductViewModel Product);
         List<ProductViewModel> GetAll();

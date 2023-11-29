@@ -2,11 +2,7 @@
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
-using Accounting_Software.Data;
 using Accounting_Software.UnitOfWorkk;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using Accounting_Software.Date.Entites;
-using System.Drawing.Printing;
 using Microsoft.CodeAnalysis;
 
 namespace Accounting_Software.Service
@@ -35,7 +31,7 @@ namespace Accounting_Software.Service
                 Description = model.Description,
                 Mass = model.Mass,
                 Unitofmass = model.unitOfmass,
-               
+                SellerId = model.SellerId
 
             };
 
@@ -64,7 +60,7 @@ namespace Accounting_Software.Service
                 Price = product.Price,
                 Description = product.Description,
                 unitOfmass = product.Unitofmass,
-
+                Mass = product.Mass
 
             }).ToList();
             return productViewModels;
@@ -80,8 +76,24 @@ namespace Accounting_Software.Service
                 Name = data.Name,
                 Price = data.Price,
                 Description = data.Description,
+                Mass = data.Mass
             };
 
+        }
+
+        public List<ProductViewModel> GetByIdShowProduct()
+        {
+            var data = _productRepository.GetAll();
+            List<ProductViewModel> productview = data.Select(product => new ProductViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Description = product.Description,
+                Mass = product.Mass
+            }).ToList();
+
+            return productview;
         }
 
         public void Update(ProductViewModel Product)
