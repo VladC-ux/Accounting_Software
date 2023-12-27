@@ -19,7 +19,7 @@ namespace Accounting_Software.Data
         public DbSet<SoldList> SoldLists { get; set; }
 
 
-
+     
 
 
 

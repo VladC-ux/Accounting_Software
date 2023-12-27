@@ -1,4 +1,4 @@
-﻿@using Accounting_Software.ViewModel;
+﻿@using Accounting_Software.ViewModel
 @model List<SellerViewModel>
 @{
     Layout = null;
@@ -9,17 +9,17 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+    <title>Seller List</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-        crossorigin="anonymous">
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
 </head>
 <body>
 
     <div class="container mt-4">
         <h2 class="mb-4">Seller List</h2>
 
-        <a class="btn btn-primary mb-3" asp-action="Add">Add new Seller</a>
+        <a class="btn btn-primary mb-3" asp-action="Add" asp-controller="Seller">Add new Seller</a>
 
         <table class="table">
             <thead>
@@ -29,17 +29,21 @@
                 </tr>
             </thead>
             <tbody>
-               @if (ViewBag.Products != null)
-                @foreach (var item in Model)
+                @if (ViewBag.Sellers != null)
                 {
-                    <tr>
-                        <td><a href="@Url.Action("ShowSellerProduct","Product", new  { SellerId = item.Id })">@item.Name</a></td>
-
-                        <td>
-                            <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                            <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
+                    foreach (var item in ViewBag.Sellers)
+                    {
+                        <tr>
+                            <td>
+                                <a href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">@item.Name</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-success btn-sm" asp-action="Add" asp-controller="Product" asp-route-SellerId="@item.Id">Add Product</a>
+                                <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id">Edit</a>
+                                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Seller" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
                 }
             </tbody>
         </table>

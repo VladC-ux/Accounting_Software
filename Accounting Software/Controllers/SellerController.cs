@@ -16,6 +16,8 @@ namespace Accounting_Software.Controllers
 
         public IActionResult Index()
         {
+
+            ViewBag.Sellers = _sellerService.GetAll();
             var list = _sellerService.GetAll();
             return View(list);
             
@@ -32,8 +34,6 @@ namespace Accounting_Software.Controllers
                 GetProductDropdownData();
                 return View(model);
             }
-
-
             _sellerService.Add(model);
             return RedirectToAction("Index");
         }
@@ -50,14 +50,15 @@ namespace Accounting_Software.Controllers
             _sellerService.Update(model);
             return RedirectToAction("Index");
         }
-      
 
-        public IActionResult Delete(SellerViewModel model)
+
+        
+        public IActionResult Delete(int id)
         {
-            _sellerService.Delete(model);
+            _sellerService.Delete(id);
             return RedirectToAction("Index");
         }
-
+        
         private void GetProductDropdownData()
         {
             ViewBag.Sellers = _sellerService.GetAll();

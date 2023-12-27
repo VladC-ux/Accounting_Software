@@ -1,6 +1,6 @@
 ﻿namespace Accounting_Software.Service
 {
-    public class TransactionService
+    public class SoldListService
     {
     }
 }

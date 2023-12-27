@@ -18,6 +18,11 @@ namespace Accounting_Software.Repositories
            _context.Add(Product);
         }
 
+        public void Delete(int id)
+        {
+            _context.Remove(id);
+        }
+
         public List<Product> GetAll()
         {
             return _context.Products.ToList();

@@ -76,25 +76,36 @@ namespace Accounting_Software.Service
                 Name = data.Name,
                 Price = data.Price,
                 Description = data.Description,
-                Mass = data.Mass
+                Mass = data.Mass,
+                SellerId = data.SellerId
+                
             };
 
         }
 
-        public List<ProductViewModel> GetByIdShowProduct()
-        {
-            var data = _productRepository.GetAll();
-            List<ProductViewModel> productview = data.Select(product => new ProductViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                Description = product.Description,
-                Mass = product.Mass
-            }).ToList();
 
-            return productview;
+        public List<ProductViewModel> GetProductsBySellerId(int? sellerId)
+        {
+            if (sellerId.HasValue)
+            {
+                var data = _productRepository.GetProductsBySellerId(sellerId.Value);
+                List<ProductViewModel> productViewModels = data.Select(product => new ProductViewModel
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    Price = product.Price,
+                    Description = product.Description,
+                    unitOfmass = product.Unitofmass,
+                    Mass = product.Mass,
+                    SellerId = product.SellerId
+                }).ToList();
+                return productViewModels;
+            }
+
+            return new List<ProductViewModel>(); 
         }
+
+      
 
         public void Update(ProductViewModel Product)
         {
@@ -103,7 +114,10 @@ namespace Accounting_Software.Service
                 Id = Product.Id,
                 Name = Product.Name,
                 Price = Product.Price,
+                Mass = Product.Mass,
+                Unitofmass = Product.unitOfmass,
                 Description = Product.Description,
+
 
             };
             var data = _productRepository.Update(product);

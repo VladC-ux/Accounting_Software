@@ -2,77 +2,92 @@
 @model ProductViewModel;
 @{
     ViewData["Title"] = "Add";
-
-
 }
-<!DOCTYPE html>
 
+<!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Add</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-    
-    <form method="post">
-
-        <input type="hidden" asp-for="SellerId" value="@ViewBag.SellerId">
-
-
-        <h1>Add new Product</h1>
-        <div>
-
-            <label asp-for="Name">Product Name:</label>
-            <input type="text" id="Name" name="Name" />
-
-            <br />
-
-            <label asp-for="Price">Price:</label>
-            <input type="number" id="Price" name="Price" />
-            <br />
-
-            <label asp-for="Description">Description:</label>
-            <input type="text" id="Description" name="Description" />
-            <br />
-
-            <label asp-for="Mass">Mass:</label>
-            <input type="number" id="Mass" name="Mass" />
-
-            <label asp-for="unitOfmass"></label>
-            <select id="Unitofmass" name="Unitofmass">
-                <option value="Kg">Kg</option>
-                <option value="Gram">Gram</option>
-                <option value="Ml">Ml</option>
-            </select>
-
-
-        </div>
-
-        <div>
-            @if (ViewBag.Products != null)
+    <div class="container">
+        <form method="post" action="/Product/Add">
+       
+            @if (TempData["ErrorMessage"] != null)
             {
-                @foreach (ProductViewModel item in ViewBag.Products)
-                {
-                    <div>
-
-                        @item.Name
-                        @item.Price
-                        @item.Description
-                        @item.Mass
-                        @item.unitOfmass
-                    </div>
-
-                }
+                <div class="alert alert-danger">
+                    @TempData["ErrorMessage"]
+                </div>
             }
 
-        </div>
+            <h1>Add new Product</h1>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Product Name:</label>
+                <input asp-for="Name" class="form-control" required />
+            </div>
 
-      
-        <a asp-action="Index" asp-controller="Seller">Return to Seller Index</a>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label">Price:</label>
+                <input asp-for="Price" class="form-control" required />
+            </div>
 
-        <input type="submit" value="Save" />
-    </form>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label">Description:</label>
+                <input asp-for="Description" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Mass" class="control-label">Mass:</label>
+                <input asp-for="Mass" class="form-control" required />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="unitOfmass" class="control-label">Unit of Mass:</label>
+                <select asp-for="unitOfmass" class="form-control" required>
+                    <option value="Kg">Kg</option>
+                    <option value="Gram">Gram</option>
+                    <option value="Ml">Ml</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+
+        @if (ViewBag.Products != null)
+        {
+            <h2>Added Products:</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Mass</th>
+                        <th>Unit of Mass</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ProductViewModel item in ViewBag.Products)
+                    {
+                        <tr>
+                            <td>@item.Name</td>
+                            <td>@item.Price</td>
+                            <td>@item.Description</td>
+                            <td>@item.Mass</td>
+                            <td>@item.unitOfmass</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <a asp-action="Index" asp-controller="Seller" class="btn btn-secondary">Return to Seller Index</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.min.js"></script>
 </body>
-
 </html>
-

@@ -6,9 +6,9 @@ namespace Accounting_Software.Data.Entites
 {
     public class Product
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
         public string Name { get; set; }
-        public double Price { get; set; } 
+        public double Price { get; set; }
 
         public string? Description { get; set; }
 
@@ -19,7 +19,9 @@ namespace Accounting_Software.Data.Entites
         public int SellerId { get; set; }
         public Seller Seller { get; set; }
 
+      
+    
 
-
-    }
+        
+     }
 }

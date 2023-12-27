@@ -1,0 +1,54 @@
+﻿@using Accounting_Software.ViewModel;
+@model ProductViewModel
+@{
+    ViewData["Title"] = "Edit";
+
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Edit</title>
+</head>
+<body>
+
+
+    <form method="post">
+        <input type="hidden" asp-for="SellerId" />
+        <div>
+            <label asp-for="Name"></label>
+            <input asp-for="Name" />
+        </div>
+
+        <div>
+            <label asp-for="Price"></label>
+            <input asp-for="Price" />
+        </div>
+
+        <div>
+            <label asp-for="Mass"></label>
+            <input asp-for="Mass" />
+        </div>
+
+        <div>
+            <label asp-for="unitOfmass"></label>
+            <input asp-for="unitOfmass" />
+        </div>
+
+        <div>
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description"></textarea>
+        </div>
+
+        <input type="submit" value="Update" />
+    </form>
+
+       
+    
+
+
+</body>
+</html>

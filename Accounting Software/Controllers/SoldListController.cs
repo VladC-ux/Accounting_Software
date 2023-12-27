@@ -2,7 +2,7 @@
 
 namespace Accounting_Software.Controllers
 {
-    public class TransactionController : Controller
+    public class SoldListController : Controller
     {
         public IActionResult Index()
         {

@@ -38,12 +38,14 @@ namespace Accounting_Software.Service
                 Name = adduser.Name,
                
             };
-
+            _sellerRepository.Add(seller);
+            _uow.SaveChanges();
         }
 
-        public void Delete(SellerViewModel id)
+        public void Delete(int id)
         {
-            throw new NotImplementedException();
+            _sellerRepository.Delete(id);
+            _uow.SaveChanges();
         }
 
         public List<SellerViewModel> GetAll()

@@ -4,6 +4,7 @@ using Accounting_Software.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounting_Software.Migrations
 {
     [DbContext(typeof(DBContextAccounting))]
-    partial class DBContextAccountingModelSnapshot : ModelSnapshot
+    [Migration("20231223134605_wareHouse")]
+    partial class wareHouse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,9 +52,14 @@ namespace Accounting_Software.Migrations
                     b.Property<int>("Unitofmass")
                         .HasColumnType("int");
 
+                    b.Property<int>("WareHouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SellerId");
+
+                    b.HasIndex("WareHouseId");
 
                     b.ToTable("Products");
                 });
@@ -120,10 +128,15 @@ namespace Accounting_Software.Migrations
                     b.Property<int>("Price")
                         .HasColumnType("int");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.Property<int>("Unitofmass")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("WareHouses");
                 });
@@ -136,7 +149,15 @@ namespace Accounting_Software.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Accounting_Software.Date.Entites.WareHouse", "WareHouse")
+                        .WithMany()
+                        .HasForeignKey("WareHouseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Seller");
+
+                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("Accounting_Software.Data.Entites.SoldList", b =>
@@ -148,6 +169,17 @@ namespace Accounting_Software.Migrations
                         .IsRequired();
 
                     b.Navigation("WareHouse");
+                });
+
+            modelBuilder.Entity("Accounting_Software.Date.Entites.WareHouse", b =>
+                {
+                    b.HasOne("Accounting_Software.Data.Entites.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
                 });
 
             modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>

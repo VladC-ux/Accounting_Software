@@ -22,18 +22,21 @@ namespace Accounting_Software.Repositories
             
 
         }
-     
-     
+        public void MoveToWarehouse(int productId, WareHouse warehouse)
+        {
+            var querry = _context.Products.Find(productId);
+            
+            
+        }
+
+
 
         public void Delete(int product)
         {
             var querry = _context.Products.Find(product);
-
-
             if (querry != null)
             {
                 _context.Products.Remove(querry);
-             
             }
 
 
@@ -42,8 +45,6 @@ namespace Accounting_Software.Repositories
         public List<Product> GetAll()
         {
             return _context.Products.ToList();
-
-
         }
 
         public Product GetById(int Id)
@@ -52,9 +53,9 @@ namespace Accounting_Software.Repositories
 
         }
 
-        public List<Product> GetByIdShowProduct()
+        public List<Product> GetProductsBySellerId(int sellerId)
         {
-            return _context.Products.ToList();
+            return _context.Products.Where(p => p.SellerId == sellerId).ToList();
         }
 
         public Product Update(Product product)
@@ -68,10 +69,14 @@ namespace Accounting_Software.Repositories
             entity.Unitofmass = product.Unitofmass;
             _context.Products.Update(entity);
             _context.SaveChanges();
-
             return entity;
 
 
+        }
+
+        public void MoveToWareHouse(int id, WareHouse wareHouse)
+        {
+            throw new NotImplementedException();
         }
     }
 }

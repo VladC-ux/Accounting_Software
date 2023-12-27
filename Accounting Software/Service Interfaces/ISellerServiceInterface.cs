@@ -12,6 +12,6 @@ namespace Accounting_Software.Service_Interfaces
 
         SellerViewModel GetById(int id);
 
-        void Delete(SellerViewModel id);
+        void Delete(int id);
     }
 }
