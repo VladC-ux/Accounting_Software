@@ -13,6 +13,8 @@ namespace Accounting_Software.Repository_Interfaces
         Product GetById(int id);
         void MoveToWareHouse(int id,WareHouse wareHouse);
 
+        void AddToWareHouse(WareHouse product);
+
 
 
 

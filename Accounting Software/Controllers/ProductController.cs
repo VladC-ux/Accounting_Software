@@ -31,20 +31,21 @@ namespace Accounting_Software.Controllers
             ViewBag.SellerId = SellerId;
             return View();
         }
+
         [HttpPost]
         public IActionResult Add(ProductViewModel product)
         {
             try
             {
-              
+
                 _productService.Add(product);
 
-                
+
                 TempData["SuccessMessage"] = "Your product is successfuly add!";
             }
             catch (Exception ex)
             {
-                
+
                 TempData["ErrorMessage"] = $"Error with add product : {ex.Message}";
             }
 
@@ -52,13 +53,29 @@ namespace Accounting_Software.Controllers
         }
 
 
+
+        [HttpGet]
+        public IActionResult AddToWareH(int SellerId)
+        {
+            ViewBag.SellerId = SellerId;
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddtoWareH(ProductViewModel product)
+        {
+            _productService.AddToWareHouse(product);
+            return View(product);
+        }
+
+
+
         [HttpGet]
         public IActionResult ShowSellerProduct(int? SellerId)
         {
-            
+
             var data = _productService.GetProductsBySellerId(SellerId);
             return View(data);
-            
+
         }
 
         [HttpPost]
@@ -67,6 +84,11 @@ namespace Accounting_Software.Controllers
             var data = _productService.GetAll();
             return View(data);
         }
+        //[HttpGet]
+        //public IActionResult MoveToWare(int id)
+        //{
+
+        //}
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -75,10 +97,10 @@ namespace Accounting_Software.Controllers
         }
         [HttpPost]
         public IActionResult Edit(ProductViewModel model)
-        { 
+        {
             _productService.Update(model);
-            return RedirectToAction("ShowSellerProduct", new {SellerId = model.SellerId});
-            
+            return RedirectToAction("ShowSellerProduct", new { SellerId = model.SellerId });
+
         }
         private void GetDropDownData()
         {
@@ -89,5 +111,7 @@ namespace Accounting_Software.Controllers
             ViewBag.Sellers = _sellerService.GetAll();
 
         }
+
+
     }
 }

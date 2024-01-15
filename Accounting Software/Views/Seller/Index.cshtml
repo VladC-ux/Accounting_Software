@@ -38,7 +38,7 @@
                                 <a href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">@item.Name</a>
                             </td>
                             <td>
-                                <a class="btn btn-success btn-sm" asp-action="Add" asp-controller="Product" asp-route-SellerId="@item.Id">Add Product</a>
+                                <a class="btn btn-success btn-sm" asp-action="Add" asp-controller="Product" asp-route-SellerId="@item.Id" asp-route-WareHouseId="@item.Id">Add Product</a>
                                 <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id">Edit</a>
                                 <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Seller" asp-route-id="@item.Id">Delete</a>
                             </td>
@@ -48,6 +48,13 @@
             </tbody>
         </table>
     </div>
+
+    <style>
+        .custom-plus {
+            background-color: #28a745; 
+            color: #fff; 
+        }
+    </style>
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

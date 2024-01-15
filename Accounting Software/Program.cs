@@ -25,6 +25,11 @@ namespace Accounting_Software
             builder.Services.AddScoped<ISellerRepositoryInterface, SellerRepository>();
             builder.Services.AddScoped<IProductServiceInterface, ProductService>();
             builder.Services.AddScoped<IProductRepositoryInterface, ProductRepository>();
+            builder.Services.AddScoped<IWareHouseServiceInterface, WareHouseService>();
+            builder.Services.AddScoped<IWareHouseRepositoryInterface, WareHouseRepository>();
+            
+            
+
             builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
 

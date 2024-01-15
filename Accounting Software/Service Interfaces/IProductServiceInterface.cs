@@ -1,4 +1,5 @@
 ﻿using Accounting_Software.Data.Entites;
+using Accounting_Software.Date.Entites;
 using Accounting_Software.ViewModel;
 
 namespace Accounting_Software.Service_Interfaces
@@ -13,7 +14,8 @@ namespace Accounting_Software.Service_Interfaces
         List<ProductViewModel> GetAll();
         ProductViewModel GetById(int id);
 
-    
+        void AddToWareHouse(ProductViewModel product);
+
 
     }        
 }

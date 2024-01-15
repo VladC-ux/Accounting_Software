@@ -1,55 +1,123 @@
 ﻿@using Accounting_Software.ViewModel;
 @model ProductViewModel;
-@{
-    ViewData["Title"] = "Add";
-}
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Add</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Add Product</title>
+  
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container">
-        <form method="post" action="/Product/Add">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            background-color: #ffffff;
+            margin-top: 50px;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+            border-color: #545b62;
+        }
+
+      
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
        
+        media (max-width: 767px) {
+            .form-group {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <form method="post">
+
             @if (TempData["ErrorMessage"] != null)
             {
-                <div class="alert alert-danger">
+                <div class="alert alert-danger mb-4">
                     @TempData["ErrorMessage"]
                 </div>
             }
 
-            <h1>Add new Product</h1>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label">Product Name:</label>
-                <input asp-for="Name" class="form-control" required />
+            <h1 class="mb-4">Add New Product</h1>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Name" class="font-weight-bold">Product Name:</label>
+                    <input asp-for="Name" class="form-control" required />
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label asp-for="Price" class="font-weight-bold">Price:</label>
+                    <input asp-for="Price" class="form-control" required />
+                </div>
             </div>
 
             <div class="form-group">
-                <label asp-for="Price" class="control-label">Price:</label>
-                <input asp-for="Price" class="form-control" required />
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Description" class="control-label">Description:</label>
+                <label asp-for="Description" class="font-weight-bold">Description:</label>
                 <input asp-for="Description" class="form-control" required />
             </div>
 
-            <div class="form-group">
-                <label asp-for="Mass" class="control-label">Mass:</label>
-                <input asp-for="Mass" class="form-control" required />
-            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label asp-for="Mass" class="font-weight-bold">Mass:</label>
+                    <input asp-for="Mass" class="form-control" required />
+                </div>
 
-            <div class="form-group">
-                <label asp-for="unitOfmass" class="control-label">Unit of Mass:</label>
-                <select asp-for="unitOfmass" class="form-control" required>
-                    <option value="Kg">Kg</option>
-                    <option value="Gram">Gram</option>
-                    <option value="Ml">Ml</option>
-                </select>
+                <div class="form-group col-md-6">
+                    <label asp-for="unitOfmass" class="font-weight-bold">Unit of Mass:</label>
+                    <select asp-for="unitOfmass" class="form-control" required>
+                        <option value="Kg">Kg</option>
+                        <option value="Gram">Gram</option>
+                        <option value="Ml">Ml</option>
+                    </select>
+                </div>
             </div>
 
             <button type="submit" class="btn btn-primary">Save</button>
@@ -57,37 +125,41 @@
 
         @if (ViewBag.Products != null)
         {
-            <h2>Added Products:</h2>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th>Mass</th>
-                        <th>Unit of Mass</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (ProductViewModel item in ViewBag.Products)
-                    {
+            <div class="mt-4">
+                <h2 class="mb-3">Added Products:</h2>
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>@item.Name</td>
-                            <td>@item.Price</td>
-                            <td>@item.Description</td>
-                            <td>@item.Mass</td>
-                            <td>@item.unitOfmass</td>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Mass</th>
+                            <th>Unit of Mass</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (ProductViewModel item in ViewBag.Products)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@item.Price</td>
+                                <td>@item.Description</td>
+                                <td>@item.Mass</td>
+                                <td>@item.unitOfmass</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
 
-        <a asp-action="Index" asp-controller="Seller" class="btn btn-secondary">Return to Seller Index</a>
+        <a asp-action="Index" asp-controller="Seller" class="btn btn-secondary mt-3">Return to Seller Index</a>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
 </body>
-</html>
+
+</html> 

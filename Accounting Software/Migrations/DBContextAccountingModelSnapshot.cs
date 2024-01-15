@@ -49,9 +49,14 @@ namespace Accounting_Software.Migrations
                     b.Property<int>("Unitofmass")
                         .HasColumnType("int");
 
+                    b.Property<int?>("WareHouseId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("SellerId");
+
+                    b.HasIndex("WareHouseId");
 
                     b.ToTable("Products");
                 });
@@ -136,7 +141,13 @@ namespace Accounting_Software.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Accounting_Software.Date.Entites.WareHouse", "WareHouse")
+                        .WithMany()
+                        .HasForeignKey("WareHouseId");
+
                     b.Navigation("Seller");
+
+                    b.Navigation("WareHouse");
                 });
 
             modelBuilder.Entity("Accounting_Software.Data.Entites.SoldList", b =>

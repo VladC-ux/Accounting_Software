@@ -19,15 +19,22 @@
     <div class="container mt-4">
         <h2 class="mb-4">Products List</h2>
 
-        
-        <a class="btn btn-primary mb-3" asp-action="Add" asp-controller="Product">Add new Product</a>
+
+
+        @if (Model.Any()) 
+        {
+            var firstProduct = Model.First(); 
+
+            <a class="btn btn-success btn-sm" asp-action="Add" asp-controller="Product" asp-route-SellerId="@firstProduct.SellerId">Add Product</a>
+        }
+
 
         <table class="table">
             <thead>
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Price</th>
-                    <th scope="col">Description</th>       
+                    <th scope="col">Description</th>
                     <th scope="col">Mass</th>
                     <th scope="col">UnitOfMass</th>
                     <th scope="col">Actions</th>
@@ -41,12 +48,14 @@
                         <tr>
                             <td>@item.Name</td>
                             <td>@item.Price</td>
-                            <td>@item.Description</td>                          
+                            <td>@item.Description</td>
                             <td>@item.Mass</td>
                             <td>@item.unitOfmass</td>
                             <td>
                                 <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id">Edit</a>
                                 <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Product" asp-route-id="@item.Id">Delete</a>
+                                <a class="btn btn-danger btn-sm custom-plus" asp-action="ToWareHouse" asp-controller="WareHouse" asp-route-id="@item.Id">+</a>
+
                             </td>
                         </tr>
                     }

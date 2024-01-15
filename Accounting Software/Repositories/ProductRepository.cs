@@ -25,8 +25,7 @@ namespace Accounting_Software.Repositories
         public void MoveToWarehouse(int productId, WareHouse warehouse)
         {
             var querry = _context.Products.Find(productId);
-            
-            
+                     
         }
 
 
@@ -77,6 +76,11 @@ namespace Accounting_Software.Repositories
         public void MoveToWareHouse(int id, WareHouse wareHouse)
         {
             throw new NotImplementedException();
+        }
+
+        public void AddToWareHouse(WareHouse product)
+        {
+            _context.Add(product);
         }
     }
 }

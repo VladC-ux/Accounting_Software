@@ -4,6 +4,7 @@ using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
 using Accounting_Software.UnitOfWorkk;
 using Microsoft.CodeAnalysis;
+using Accounting_Software.Date.Entites;
 
 namespace Accounting_Software.Service
 {
@@ -31,7 +32,8 @@ namespace Accounting_Software.Service
                 Description = model.Description,
                 Mass = model.Mass,
                 Unitofmass = model.unitOfmass,
-                SellerId = model.SellerId
+                SellerId = model.SellerId,
+                WareHouseId = model.WareHosueId
 
             };
 
@@ -78,7 +80,7 @@ namespace Accounting_Software.Service
                 Description = data.Description,
                 Mass = data.Mass,
                 SellerId = data.SellerId
-                
+
             };
 
         }
@@ -102,10 +104,10 @@ namespace Accounting_Software.Service
                 return productViewModels;
             }
 
-            return new List<ProductViewModel>(); 
+            return new List<ProductViewModel>();
         }
 
-      
+
 
         public void Update(ProductViewModel Product)
         {
@@ -122,6 +124,47 @@ namespace Accounting_Software.Service
             };
             var data = _productRepository.Update(product);
             _uow.SaveChanges();
+        }
+
+        public void MoveToWareHouse(int productId, ProductViewModel product, int warehouse)
+        {
+            var data = _productRepository.GetById(productId);
+            Product products = new Product
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Mass = product.Mass,
+                Unitofmass = product.unitOfmass,
+                Description = product.Description
+            };
+
+            product.WareHosueId = warehouse;
+
+
+
+
+        }
+
+        public void AddToWareHouse(ProductViewModel model)
+        {
+
+            Product product = new Product
+            {
+
+                Name = model.Name,
+                Price = model.Price,
+                Description = model.Description,
+                Mass = model.Mass,
+                Unitofmass = model.unitOfmass,
+                SellerId = model.SellerId,
+                WareHouseId = model.WareHosueId
+
+            };
+
+            _productRepository.Add(product);
+            _uow.SaveChanges();
+
         }
     }
 }

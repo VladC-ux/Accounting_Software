@@ -25,16 +25,20 @@ namespace Accounting_Software.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
+                name: "WareHouses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    DateBuy = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    Balance = table.Column<double>(type: "float", nullable: false),
+                    Unitofmass = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Users", x => x.Id);
+                    table.PrimaryKey("PK_WareHouses", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,8 +49,11 @@ namespace Accounting_Software.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Mass = table.Column<int>(type: "int", nullable: false),
                     Unitofmass = table.Column<int>(type: "int", nullable: false),
-                    SellerId = table.Column<int>(type: "int", nullable: false)
+                    SellerId = table.Column<int>(type: "int", nullable: false),
+                    WareHouseId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,28 +64,31 @@ namespace Accounting_Software.Migrations
                         principalTable: "Sellers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Products_WareHouses_WareHouseId",
+                        column: x => x.WareHouseId,
+                        principalTable: "WareHouses",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "WareHouses",
+                name: "SoldLists",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DateBuy = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
                     Count = table.Column<int>(type: "int", nullable: false),
-                    Balance = table.Column<double>(type: "float", nullable: false),
                     Unitofmass = table.Column<int>(type: "int", nullable: false),
-                    ProductId = table.Column<int>(type: "int", nullable: false)
+                    WareHouseId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WareHouses", x => x.Id);
+                    table.PrimaryKey("PK_SoldLists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_WareHouses_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
+                        name: "FK_SoldLists_WareHouses_WareHouseId",
+                        column: x => x.WareHouseId,
+                        principalTable: "WareHouses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -89,25 +99,30 @@ namespace Accounting_Software.Migrations
                 column: "SellerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WareHouses_ProductId",
-                table: "WareHouses",
-                column: "ProductId");
+                name: "IX_Products_WareHouseId",
+                table: "Products",
+                column: "WareHouseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SoldLists_WareHouseId",
+                table: "SoldLists",
+                column: "WareHouseId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Users");
-
-            migrationBuilder.DropTable(
-                name: "WareHouses");
-
-            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
+                name: "SoldLists");
+
+            migrationBuilder.DropTable(
                 name: "Sellers");
+
+            migrationBuilder.DropTable(
+                name: "WareHouses");
         }
     }
 }

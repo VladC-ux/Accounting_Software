@@ -2,53 +2,111 @@
 @model ProductViewModel
 @{
     ViewData["Title"] = "Edit";
-
-
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Edit</title>
+    <!-- Include Bootstrap CSS link here -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8NySez9QK2n9xXrdCrXbXqFny73D6J3"
+          crossorigin="anonymous">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        label {
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        input,
+        select,
+        textarea {
+            margin-bottom: 1rem;
+            width: 100%;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            border: 1px solid #ced4da;
+            border-radius: 0.25rem;
+            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        input[type="submit"] {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+            input[type="submit"]:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+            }
+    </style>
 </head>
 <body>
 
-
     <form method="post">
         <input type="hidden" asp-for="SellerId" />
-        <div>
-            <label asp-for="Name"></label>
-            <input asp-for="Name" />
+
+        <div class="form-group">
+            <label asp-for="Name">Product Name</label>
+            <input asp-for="Name" class="form-control" />
         </div>
 
-        <div>
-            <label asp-for="Price"></label>
-            <input asp-for="Price" />
+        <div class="form-group">
+            <label asp-for="Price">Price</label>
+            <input asp-for="Price" class="form-control" />
         </div>
 
-        <div>
-            <label asp-for="Mass"></label>
-            <input asp-for="Mass" />
+        <div class="form-group">
+            <label asp-for="Mass">Mass</label>
+            <input asp-for="Mass" class="form-control" />
         </div>
 
-        <div>
-            <label asp-for="unitOfmass"></label>
-            <input asp-for="unitOfmass" />
+        <div class="form-group">
+            <label asp-for="unitOfmass">Unit of Mass</label>
+            <select asp-for="unitOfmass" class="form-control" required>
+                <option value="Kg">Kg</option>
+                <option value="Gram">Gram</option>
+                <option value="Ml">Ml</option>
+            </select>
         </div>
 
-        <div>
-            <label asp-for="Description"></label>
-            <textarea asp-for="Description"></textarea>
+        <div class="form-group">
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
         </div>
 
-        <input type="submit" value="Update" />
+        <input type="submit" value="Update" class="btn btn-primary" />
     </form>
 
-       
-    
-
-
+    <!-- Include Bootstrap JS and Popper.js scripts here -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.0.7/dist/umd/popper.min.js"
+            integrity="sha384-nvEsg+6PWUJ9/H3kYqCZNm+U2Q4d7QShQI5z2b70F/nv70T+G5L4ez4+DEeVx6iX"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8NySez9QK2n9xXrdCrXbXqFny73D6J3"
+            crossorigin="anonymous"></script>
 </body>
 </html>
