@@ -1,6 +1,5 @@
 using Accounting_Software.Repositories;
 using Accounting_Software.Service;
-using Microsoft.AspNetCore.Authentication;
 using Accounting_Software.Data;
 using Microsoft.EntityFrameworkCore;
 using Accounting_Software.Service_Interfaces;
@@ -27,8 +26,8 @@ namespace Accounting_Software
             builder.Services.AddScoped<IProductRepositoryInterface, ProductRepository>();
             builder.Services.AddScoped<IWareHouseServiceInterface, WareHouseService>();
             builder.Services.AddScoped<IWareHouseRepositoryInterface, WareHouseRepository>();
-            
-            
+
+
 
             builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 

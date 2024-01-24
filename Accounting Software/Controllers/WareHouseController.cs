@@ -17,14 +17,23 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult ToWareHouse(int id)
         {
-            _productService.GetById(id);
+            var product = _warehouse.GetById(id);
+
+            if (product == null)
+            {          
+                return NotFound();
+            }
+
+           
             return View();
         }
         [HttpPost]
-        public IActionResult ToWareHouse(ProductViewModel model)
+        public IActionResult ToWareHouse(WareHouseViewModel model)
         {
-            _productService.AddToWareHouse(model);
-            return View();
+            _warehouse.AddToWareHouse(model);
+
+            return RedirectToAction("Index", "Seller");
         }
+
     }
 }

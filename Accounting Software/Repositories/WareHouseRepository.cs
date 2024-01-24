@@ -1,5 +1,6 @@
 ﻿using Accounting_Software.Data;
 using Accounting_Software.Data.Entites;
+using Accounting_Software.Date.Entites;
 using Accounting_Software.Repository_Interfaces;
 using Microsoft.AspNetCore.Authentication;
 
@@ -16,6 +17,12 @@ namespace Accounting_Software.Repositories
         public void Add(Product Product)
         {
            _context.Add(Product);
+        }
+
+        public void AddToWareHouse(WareHouse wareHouse)
+        {
+            _context.Add(wareHouse);
+                     
         }
 
         public void Delete(int id)
