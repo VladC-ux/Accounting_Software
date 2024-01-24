@@ -113,27 +113,17 @@ namespace Accounting_Software.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<double?>("Balance")
+                    b.Property<double>("Balance")
                         .HasColumnType("float");
 
-                    b.Property<int?>("Count")
+                    b.Property<int>("Count")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DateBuy")
+                    b.Property<DateTime>("DateBuy")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Mass")
+                    b.Property<int>("Price")
                         .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
 
                     b.Property<int>("Unitofmass")
                         .HasColumnType("int");

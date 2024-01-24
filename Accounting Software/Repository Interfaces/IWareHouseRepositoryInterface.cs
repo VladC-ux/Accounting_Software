@@ -11,7 +11,5 @@ namespace Accounting_Software.Repository_Interfaces
         Product GetById(int id);
         Product GetByName(string name);
         double GetAveragePrice();
-        void AddToWareHouse(WareHouse wareHouse);
-
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Accounting_Software.Data.Entites;
-using Accounting_Software.Date.Entites;
 using Accounting_Software.ViewModel;
 
 namespace Accounting_Software.Service_Interfaces
@@ -12,8 +11,6 @@ namespace Accounting_Software.Service_Interfaces
         ProductViewModel GetById(int id);
         ProductViewModel GetByName(string name);
         double GetAveragePrice();
-
-        void AddToWareHouse(WareHouseViewModel wareHouse);
     }
 
 
