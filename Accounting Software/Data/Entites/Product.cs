@@ -25,9 +25,5 @@ namespace Accounting_Software.Data.Entites
 
         public WareHouse? WareHouse { get; set; }
 
-
-
-
-
     }
 }
