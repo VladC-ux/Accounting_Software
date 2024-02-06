@@ -86,11 +86,7 @@ namespace Accounting_Software.Controllers
             var data = _productService.GetAll();
             return View(data);
         }
-        //[HttpGet]
-        //public IActionResult MoveToWare(int id)
-        //{
-
-        //}
+      
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -103,6 +99,12 @@ namespace Accounting_Software.Controllers
             _productService.Update(model);
             return RedirectToAction("ShowSellerProduct", new { SellerId = model.SellerId });
 
+        }
+
+        public IActionResult Delete(ProductViewModel model)
+        {
+            _productService.Delete(model);
+            return RedirectToAction("Index","Seller");
         }
         private void GetDropDownData()
         {
