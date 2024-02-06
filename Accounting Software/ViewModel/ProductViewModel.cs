@@ -22,5 +22,7 @@ namespace Accounting_Software.ViewModel
 
        public int? WareHosueId { get; set;}
        
+       public int ProductId { get; set; }
+
     }
 }

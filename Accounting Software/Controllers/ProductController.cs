@@ -11,11 +11,13 @@ namespace Accounting_Software.Controllers
     {
         private readonly IProductServiceInterface _productService;
         private readonly ISellerServiceInterface _sellerService;
+        private readonly IWareHouseServiceInterface _warehouse;
 
-        public ProductController(IProductServiceInterface productService, ISellerServiceInterface sellerService)
+        public ProductController(IProductServiceInterface productService, ISellerServiceInterface sellerService, IWareHouseServiceInterface warehouse)
         {
             _productService = productService;
             _sellerService = sellerService;
+            _warehouse = warehouse;
         }
 
         public IActionResult Index()
@@ -55,15 +57,15 @@ namespace Accounting_Software.Controllers
 
 
         [HttpGet]
-        public IActionResult AddToWareH(int SellerId)
+        public IActionResult AddToWareH(int ProductId)
         {
-            ViewBag.SellerId = SellerId;
+            ViewBag.ProductId = ProductId;
             return View();
         }
         [HttpPost]
-        public IActionResult AddtoWareH(ProductViewModel product)
+        public IActionResult AddtoWareH(WareHouseViewModel product)
         {
-            _productService.AddToWareHouse(product);
+            _warehouse.AddToWareHouse(product);
             return View(product);
         }
 
@@ -104,7 +106,7 @@ namespace Accounting_Software.Controllers
         }
         private void GetDropDownData()
         {
-            ViewBag.Products = _productService.GetAll();
+            ViewBag.ProductId = _productService.GetAll();
         }
         private void GetDropDownSeller()
         {

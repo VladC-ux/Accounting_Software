@@ -10,7 +10,7 @@ namespace Accounting_Software.Date.Entites
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int Price { get; set; }
+        public int? Price { get; set; }
         public string? Description { get; set; }
         public ushort Mass { get; set; }
         public Unit_of_mass Unitofmass { get; set; }
@@ -19,11 +19,12 @@ namespace Accounting_Software.Date.Entites
         public int? Count { get; set; }
         public double? Balance { get; set; }
 
+
         [ForeignKey("Product")]
 
-        public int? Productid;
+        public int? Productid { get; set; }
 
-        public Product? Product;
+        public Product? Product { get; set; }
 
 
         

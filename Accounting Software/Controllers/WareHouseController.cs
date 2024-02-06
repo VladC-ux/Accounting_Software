@@ -14,17 +14,17 @@ namespace Accounting_Software.Controllers
             _productService = productService;
         }
 
-        [HttpGet]
-        public IActionResult ToWareHouse(int id)
-        {
-            _productService.GetById(id);
-            return View();
-        }
-        [HttpPost]
-        public IActionResult ToWareHouse(ProductViewModel model)
-        {
-            _productService.AddToWareHouse(model);
-            return View();
-        }
+        //[HttpGet]
+        //public IActionResult ToWareHouse(int id)
+        //{
+        //    _productService.GetById(id);
+        //    return View();
+        //}
+        //[HttpPost]
+        //public IActionResult ToWareHouse(ProductViewModel model)
+        //{
+        //    _productService.AddToWareHouse(model);
+        //    return RedirectToAction("Seller","Index");
+        //}
     }
 }

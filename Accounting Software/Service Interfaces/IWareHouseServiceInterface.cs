@@ -5,7 +5,7 @@ namespace Accounting_Software.Service_Interfaces
 {
     public interface IWareHouseServiceInterface
     {
-        void Add(ProductViewModel product);
+        void AddToWareHouse(WareHouseViewModel product);
         void Delete(int id);
         List<ProductViewModel> GetAll();
         ProductViewModel GetById(int id);

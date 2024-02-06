@@ -5,7 +5,7 @@ namespace Accounting_Software.Repository_Interfaces
 {
     public interface IWareHouseRepositoryInterface
     {
-        void Add(Product product);
+        void Add(WareHouse WareHouse);
         void Delete(int id);   
         List<Product> GetAll();
         Product GetById(int id);

@@ -10,15 +10,16 @@ namespace Accounting_Software.Service
 {
     public class ProductService : IProductServiceInterface
     {
+        private readonly IWareHouseRepositoryInterface _Wrepo;
         private readonly IProductRepositoryInterface _productRepository;
         private readonly IUnitofWork _uow;
 
 
-        public ProductService(IProductRepositoryInterface poroductrepository, IUnitofWork uow)
+        public ProductService(IProductRepositoryInterface poroductrepository, IUnitofWork uow, IWareHouseRepositoryInterface wrepo)
         {
             _productRepository = poroductrepository;
             _uow = uow;
-
+            _Wrepo = wrepo;
         }
 
         public void Add(ProductViewModel model)
@@ -41,6 +42,27 @@ namespace Accounting_Software.Service
             _uow.SaveChanges();
 
         }
+        public void AddToWareHouse(WareHouseViewModel model)
+        {
+            WareHouse product = new WareHouse
+            {
+                Name = model.Name,
+                Price = model.Price,
+                Description = model.Description,
+                Mass = model.Mass,
+                Unitofmass = model.Unitofmass,
+                Balance = model.Balance,
+                Count = model.Count,
+                DateBuy = model.DateBuy,
+                Productid = model.ProductId
+
+            };
+
+            _Wrepo.Add(product);
+            _uow.SaveChanges();
+
+        }
+
 
 
 
@@ -126,45 +148,7 @@ namespace Accounting_Software.Service
             _uow.SaveChanges();
         }
 
-        public void MoveToWareHouse(int productId, ProductViewModel product, int warehouse)
-        {
-            var data = _productRepository.GetById(productId);
-            Product products = new Product
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                Mass = product.Mass,
-                Unitofmass = product.unitOfmass,
-                Description = product.Description
-            };
-
-            product.WareHosueId = warehouse;
-
-
-
-
-        }
-
-        public void AddToWareHouse(ProductViewModel model)
-        {
-
-            Product product = new Product
-            {
-
-                Name = model.Name,
-                Price = model.Price,
-                Description = model.Description,
-                Mass = model.Mass,
-                Unitofmass = model.unitOfmass,
-                SellerId = model.SellerId,
-                WareHouseId = model.WareHosueId
-
-            };
-
-            _productRepository.Add(product);
-            _uow.SaveChanges();
-
-        }
+       
+       
     }
 }

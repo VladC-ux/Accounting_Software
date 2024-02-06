@@ -1,5 +1,6 @@
 ﻿using Accounting_Software.Data;
 using Accounting_Software.Data.Entites;
+using Accounting_Software.Date.Entites;
 using Accounting_Software.Repository_Interfaces;
 using Microsoft.AspNetCore.Authentication;
 
@@ -13,9 +14,9 @@ namespace Accounting_Software.Repositories
         {
             _context = context;
         }
-        public void Add(Product Product)
+        public void Add(WareHouse Warehouse)
         {
-           _context.Add(Product);
+           _context.Add(Warehouse);
         }
 
         public void Delete(int id)
@@ -30,9 +31,14 @@ namespace Accounting_Software.Repositories
 
         public double GetAveragePrice()
         {
-            var averagePrice = _context.WareHouses.Average(wh => wh.Price);
-            return averagePrice;
+            throw new NotImplementedException();
         }
+
+        //public double GetAveragePrice()
+        //{
+        //    var averagePrice = _context.WareHouses.Average(wh => wh.Price);
+        //    return averagePrice;
+        //}
 
         public Product GetById(int id)
         {
