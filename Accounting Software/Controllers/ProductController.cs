@@ -65,10 +65,17 @@ namespace Accounting_Software.Controllers
         [HttpPost]
         public IActionResult AddtoWareH(WareHouseViewModel product)
         {
-            _warehouse.AddToWareHouse(product);
-            return View(product);
+            if (ModelState.IsValid)
+            {
+                _warehouse.AddToWareHouse(product);
+                return RedirectToAction("ShowSellerProcut");
+            }
+            else
+            {
+                
+                return View(product);
+            }
         }
-
 
 
         [HttpGet]
