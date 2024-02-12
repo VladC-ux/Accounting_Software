@@ -1,7 +1,9 @@
-﻿
+﻿    
 @{
     ViewData["Title"] = "AddtoWareH";
 }
 
-<h1>AddtoWareH</h1>
+<form asp-controller="Product" asp-action="AddtoWareH" method="post">
+    <input type="hidden" name="ProductId" value="@ViewBag.ProductId" />
 
+</form>

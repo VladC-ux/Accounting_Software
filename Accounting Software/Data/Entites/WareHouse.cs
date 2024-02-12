@@ -15,7 +15,7 @@ namespace Accounting_Software.Date.Entites
         public ushort Mass { get; set; }
         public Unit_of_mass Unitofmass { get; set; }
         public DateTime? DateBuy { get; set; }
-        
+
         public int? Count { get; set; }
         public double? Balance { get; set; }
 

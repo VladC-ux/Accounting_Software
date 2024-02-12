@@ -91,18 +91,20 @@ namespace Accounting_Software.Service
         }
 
 
-        public ProductViewModel GetById(int model)
+        public ProductViewModel GetById(int? model)
         {
-            var data = _productRepository.GetById(model);
+            var product = _productRepository.GetById(model);
             return new ProductViewModel
             {
-                Id = data.Id,
-                Name = data.Name,
-                Price = data.Price,
-                Description = data.Description,
-                Mass = data.Mass,
-                SellerId = data.SellerId
 
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Description = product.Description,
+                unitOfmass = product.Unitofmass,
+                Mass = product.Mass,
+                SellerId = product.SellerId,
+                WareHosueId = product.WareHouseId
             };
 
         }

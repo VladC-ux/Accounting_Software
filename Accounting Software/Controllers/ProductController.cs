@@ -57,11 +57,12 @@ namespace Accounting_Software.Controllers
 
 
         [HttpGet]
-        public IActionResult AddToWareH(int ProductId)
+        public IActionResult AddToWareH(int? ProductId)
         {
-            ViewBag.ProductId = ProductId;
-            return View();
+            var data = _productService.GetById(ProductId);
+            return View(data);
         }
+
         [HttpPost]
         public IActionResult AddtoWareH(WareHouseViewModel product)
         {

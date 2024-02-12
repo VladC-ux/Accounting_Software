@@ -8,10 +8,12 @@ namespace Accounting_Software.Repository_Interfaces
         void Add(Product product);
         Product Update(Product product);
         List<Product> GetProductsBySellerId(int sellerId);
+
+       
         void Delete(int id);   
         List<Product> GetAll();
-        Product GetById(int id);
-        void MoveToWareHouse(int id,WareHouse wareHouse);
+        Product GetById(int? id);
+         
 
         void AddToWareHouse(WareHouse product);
 

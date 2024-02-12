@@ -12,7 +12,7 @@ namespace Accounting_Software.Service_Interfaces
         void Update(ProductViewModel Product);
         void Delete(ProductViewModel Product);
         List<ProductViewModel> GetAll();
-        ProductViewModel GetById(int id);
+        ProductViewModel GetById(int? id);
 
        
 

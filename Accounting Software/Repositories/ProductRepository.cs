@@ -46,7 +46,7 @@ namespace Accounting_Software.Repositories
             return _context.Products.ToList();
         }
 
-        public Product GetById(int Id)
+        public Product GetById(int? Id)
         {
             return _context.Products.FirstOrDefault(p => p.Id == Id);
 
@@ -73,14 +73,12 @@ namespace Accounting_Software.Repositories
 
         }
 
-        public void MoveToWareHouse(int id, WareHouse wareHouse)
-        {
-            throw new NotImplementedException();
-        }
-
+      
         public void AddToWareHouse(WareHouse product)
         {
             _context.Add(product);
         }
+
+       
     }
 }
