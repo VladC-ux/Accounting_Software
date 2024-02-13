@@ -57,7 +57,7 @@ namespace Accounting_Software.Controllers
 
 
         [HttpGet]
-        public IActionResult AddToWareH(int? ProductId)
+        public IActionResult AddToWareH(int ProductId)
         {
             var data = _productService.GetById(ProductId);
             return View(data);

@@ -1,6 +1,5 @@
 ﻿@using Accounting_Software.ViewModel;
 @model List<ProductViewModel>
-
 @{
     Layout = null;
 }
@@ -52,10 +51,12 @@
                             <td>@item.Description</td>
                             <td>@item.Mass</td>
                             <td>@item.unitOfmass</td>
+                            <td>@item.SellerId</td>
+                            <td>@item.WareHouseId</td>
                             <td>
                                 <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id">Edit</a>
                                 <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Product" asp-route-id="@item.Id">Delete</a>
-                                <a class="btn btn-danger btn-sm custom-plus" asp-action="AddtoWareH" asp-controller="Product" asp-route-id="@item.Id">+</a>
+                                <a class="btn btn-danger btn-sm " asp-action="AddtoWareH" asp-controller="Product" asp-route-id="@item.Id">+</a>
 
                             </td>
                         </tr>

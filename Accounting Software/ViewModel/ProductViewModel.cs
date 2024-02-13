@@ -20,7 +20,7 @@ namespace Accounting_Software.ViewModel
 
         public int SellerId { get; set; }
 
-       public int? WareHosueId { get; set;}
+       public int? WareHouseId { get; set;}
        
        public int ProductId { get; set; }
 

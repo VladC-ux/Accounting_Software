@@ -34,7 +34,7 @@ namespace Accounting_Software.Service
                 Mass = model.Mass,
                 Unitofmass = model.unitOfmass,
                 SellerId = model.SellerId,
-                WareHouseId = model.WareHosueId
+                WareHouseId = model.WareHouseId
 
             };
 
@@ -91,9 +91,9 @@ namespace Accounting_Software.Service
         }
 
 
-        public ProductViewModel GetById(int? model)
+        public ProductViewModel GetById(int ProductId)
         {
-            var product = _productRepository.GetById(model);
+            var product = _productRepository.GetById(ProductId);
             return new ProductViewModel
             {
 
@@ -104,7 +104,7 @@ namespace Accounting_Software.Service
                 unitOfmass = product.Unitofmass,
                 Mass = product.Mass,
                 SellerId = product.SellerId,
-                WareHosueId = product.WareHouseId
+                WareHouseId = product.WareHouseId
             };
 
         }

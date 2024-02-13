@@ -1,9 +1,10 @@
-﻿    
+﻿@using Accounting_Software.ViewModel;
+@model ProductViewModel
 @{
     ViewData["Title"] = "AddtoWareH";
 }
 
-<form asp-controller="Product" asp-action="AddtoWareH" method="post">
-    <input type="hidden" name="ProductId" value="@ViewBag.ProductId" />
+<form method="post">
+    <input type="hidden" asp-for="Id" />
 
 </form>

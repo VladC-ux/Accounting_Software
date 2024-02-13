@@ -12,7 +12,7 @@ namespace Accounting_Software.Repository_Interfaces
        
         void Delete(int id);   
         List<Product> GetAll();
-        Product GetById(int? id);
+        Product GetById(int id);
          
 
         void AddToWareHouse(WareHouse product);

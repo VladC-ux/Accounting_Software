@@ -46,9 +46,10 @@ namespace Accounting_Software.Repositories
             return _context.Products.ToList();
         }
 
-        public Product GetById(int? Id)
+        public Product GetById(int ProductId)
         {
-            return _context.Products.FirstOrDefault(p => p.Id == Id);
+           
+            return _context.Products.FirstOrDefault(p => p.Id == ProductId);
 
         }
 
