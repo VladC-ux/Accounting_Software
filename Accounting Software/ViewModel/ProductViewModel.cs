@@ -18,6 +18,13 @@ namespace Accounting_Software.ViewModel
         public Unit_of_mass unitOfmass { get; set; }
         public ushort Mass { get; set; }
 
+        public int Count { get; set; }
+
+        public double Total
+        {
+            get { return Price * Count; }
+        }
+        public double TotalPrice { get; set; }
         public int SellerId { get; set; }
 
        public int? WareHouseId { get; set;}

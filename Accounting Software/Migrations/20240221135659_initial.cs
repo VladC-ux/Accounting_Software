@@ -35,6 +35,7 @@ namespace Accounting_Software.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Mass = table.Column<int>(type: "int", nullable: false),
                     Unitofmass = table.Column<int>(type: "int", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
                     SellerId = table.Column<int>(type: "int", nullable: false),
                     WareHouseId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -56,7 +57,7 @@ namespace Accounting_Software.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Price = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<int>(type: "int", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Mass = table.Column<int>(type: "int", nullable: false),
                     Unitofmass = table.Column<int>(type: "int", nullable: false),

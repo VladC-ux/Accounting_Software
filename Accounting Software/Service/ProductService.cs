@@ -34,7 +34,11 @@ namespace Accounting_Software.Service
                 Mass = model.Mass,
                 Unitofmass = model.unitOfmass,
                 SellerId = model.SellerId,
-                WareHouseId = model.WareHouseId
+                Count = model.Count,
+                TotalPrice = model.TotalPrice,
+               
+                
+            
 
             };
 
@@ -123,6 +127,7 @@ namespace Accounting_Software.Service
                     Description = product.Description,
                     unitOfmass = product.Unitofmass,
                     Mass = product.Mass,
+                    Count= product.Count,
                     SellerId = product.SellerId
                 }).ToList();
                 return productViewModels;

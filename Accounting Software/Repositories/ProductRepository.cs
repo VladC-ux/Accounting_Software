@@ -80,6 +80,9 @@ namespace Accounting_Software.Repositories
             _context.Add(product);
         }
 
-       
+        public Product GetWareHouseViewModelById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -4,6 +4,7 @@ using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace Accounting_Software.Controllers
 {
@@ -39,15 +40,12 @@ namespace Accounting_Software.Controllers
         {
             try
             {
-
                 _productService.Add(product);
-
 
                 TempData["SuccessMessage"] = "Your product is successfuly add!";
             }
             catch (Exception ex)
             {
-
                 TempData["ErrorMessage"] = $"Error with add product : {ex.Message}";
             }
 
@@ -57,28 +55,19 @@ namespace Accounting_Software.Controllers
 
 
         [HttpGet]
-        public IActionResult AddToWareH(int ProductId)
+        public void AddToWareH(int Id)
         {
-            var data = _productService.GetById(ProductId);
-            return View(data);
+             _productService.GetById(Id);          
+            
+           
         }
-
         [HttpPost]
-        public IActionResult AddtoWareH(WareHouseViewModel product)
+        public IActionResult AddToWareH(WareHouseViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                _warehouse.AddToWareHouse(product);
-                return RedirectToAction("ShowSellerProcut");
-            }
-            else
-            {
-                
-                return View(product);
-            }
+            _productService.AddToWareHouse(model);
+            return RedirectToAction("ShowSellerProduct");
         }
-
-
+  
         [HttpGet]
         public IActionResult ShowSellerProduct(int? SellerId)
         {
@@ -98,7 +87,7 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var data = _productService.GetById(id);
+            var data = _productService.GetById(id); 
             return View(data);
         }
         [HttpPost]

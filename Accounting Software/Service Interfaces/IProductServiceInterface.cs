@@ -14,7 +14,10 @@ namespace Accounting_Software.Service_Interfaces
         List<ProductViewModel> GetAll();
         ProductViewModel GetById(int id);
 
-       
+        void AddToWareHouse(WareHouseViewModel model);                
+
+
+
 
 
     }        
