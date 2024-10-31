@@ -6,9 +6,9 @@ namespace Accounting_Software.Controllers
 {
     public class WareHouseController : Controller
     {
-        private readonly IWareHouseServiceInterface _warehouse;
-        private readonly IProductServiceInterface _productService;
-        public WareHouseController(IWareHouseServiceInterface warehouse, IProductServiceInterface productService)
+        private readonly IWareHouseService _warehouse;
+        private readonly IProductService _productService;
+        public WareHouseController(IWareHouseService warehouse, IProductService productService)
         {
             _warehouse = warehouse;
             _productService = productService;

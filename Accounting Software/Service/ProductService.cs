@@ -8,18 +8,20 @@ using Accounting_Software.Date.Entites;
 
 namespace Accounting_Software.Service
 {
-    public class ProductService : IProductServiceInterface
+    public class ProductService : IProductService
     {
-        private readonly IWareHouseRepositoryInterface _Wrepo;
-        private readonly IProductRepositoryInterface _productRepository;
+        private readonly IWareHouseRepository _Wrepo;
+        private readonly IProductRepository _productRepository;
+        private readonly IStoreRepository _store;
         private readonly IUnitofWork _uow;
 
 
-        public ProductService(IProductRepositoryInterface poroductrepository, IUnitofWork uow, IWareHouseRepositoryInterface wrepo)
+        public ProductService(IProductRepository poroductrepository, IUnitofWork uow, IWareHouseRepository wrepo , IStoreRepository store)
         {
             _productRepository = poroductrepository;
             _uow = uow;
             _Wrepo = wrepo;
+            _store = store;
         }
 
         public void Add(ProductViewModel model)
@@ -27,7 +29,6 @@ namespace Accounting_Software.Service
 
             Product product = new Product
             {
-
                 Name = model.Name,
                 Price = model.Price,
                 Description = model.Description,
@@ -36,10 +37,6 @@ namespace Accounting_Software.Service
                 SellerId = model.SellerId,
                 Count = model.Count,
                 TotalPrice = model.TotalPrice,
-               
-                
-            
-
             };
 
             _productRepository.Add(product);
@@ -66,18 +63,11 @@ namespace Accounting_Software.Service
             _uow.SaveChanges();
 
         }
-
-
-
-
         public void Delete(ProductViewModel model)
         {
-
             _productRepository.Delete(model.Id);
             _uow.SaveChanges();
         }
-
-
         public List<ProductViewModel> GetAll()
         {
             var data = _productRepository.GetAll();
@@ -136,8 +126,6 @@ namespace Accounting_Software.Service
             return new List<ProductViewModel>();
         }
 
-
-
         public void Update(ProductViewModel Product)
         {
             Product product = new Product
@@ -155,7 +143,15 @@ namespace Accounting_Software.Service
             _uow.SaveChanges();
         }
 
-       
-       
+        public List<Store> GetStores()
+        {
+            var data = _store.GetAll();
+            List<Store> store = data.Select(product => new Store
+            {
+                Id = product.Id,
+                Name = product.Name          
+            }).ToList();
+            return store;
+        }     
     }
 }

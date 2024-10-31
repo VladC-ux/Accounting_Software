@@ -29,14 +29,14 @@ namespace Accounting_Software.Data.Entites
         public int SellerId { get; set; }
         public Seller Seller { get; set; }
 
-       
-
 
         [ForeignKey("WareHouse")]
 
         public int? WareHouseId { get; set; }
 
         public WareHouse? WareHouse { get; set; }
+
+        public ICollection<StoreProduct> StoreProducts { get; set; } = new List<StoreProduct>();
 
     }
 }

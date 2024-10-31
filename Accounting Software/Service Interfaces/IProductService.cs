@@ -4,19 +4,16 @@ using Accounting_Software.ViewModel;
 
 namespace Accounting_Software.Service_Interfaces
 {
-    public interface IProductServiceInterface
+    public interface IProductService
     {
         void Add(ProductViewModel Product);
         List<ProductViewModel> GetProductsBySellerId(int? sellerId);
-
         void Update(ProductViewModel Product);
         void Delete(ProductViewModel Product);
         List<ProductViewModel> GetAll();
         ProductViewModel GetById(int id);
-
         void AddToWareHouse(WareHouseViewModel model);                
-
-
+        List<Store> GetStores();
 
 
 

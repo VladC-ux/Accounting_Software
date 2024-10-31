@@ -8,8 +8,6 @@ using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.UnitOfWorkk;
 
 
-
-
 namespace Accounting_Software
 {
     public class Program
@@ -21,14 +19,16 @@ namespace Accounting_Software
             builder.Services.AddDbContext<DBContextAccounting>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AccountingDatabase")));
 
             builder.Services.AddControllersWithViews();
-            builder.Services.AddScoped<ISellerServiceInterface, SellerService>();
-            builder.Services.AddScoped<ISellerRepositoryInterface, SellerRepository>();
-            builder.Services.AddScoped<IProductServiceInterface, ProductService>();
-            builder.Services.AddScoped<IProductRepositoryInterface, ProductRepository>();
-            builder.Services.AddScoped<IWareHouseServiceInterface, WareHouseService>();
-            builder.Services.AddScoped<IWareHouseRepositoryInterface, WareHouseRepository>();
-            
-            
+            builder.Services.AddScoped<ISellerService, SellerService>();
+            builder.Services.AddScoped<ISellerRepository, SellerRepository>();
+            builder.Services.AddScoped<IProductService, ProductService>();
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IWareHouseService, WareHouseService>();
+            builder.Services.AddScoped<IWareHouseRepository, WareHouseRepository>();
+            builder.Services.AddScoped<IStoreService, StoreService>();
+            builder.Services.AddScoped<IStoreRepository, StoreRepository>();
+            builder.Services.AddScoped<IStoreProductService, StoreProductService>();
+            builder.Services.AddScoped<IStoreProductRepository, StoreProductRepository>();
 
             builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 

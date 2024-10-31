@@ -3,7 +3,7 @@ using Accounting_Software.ViewModel;
 
 namespace Accounting_Software.Service_Interfaces
 {
-    public interface IWareHouseServiceInterface
+    public interface IWareHouseService
     {
         void AddToWareHouse(WareHouseViewModel product);
         void Delete(int id);

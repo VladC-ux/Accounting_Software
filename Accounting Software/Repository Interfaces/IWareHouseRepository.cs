@@ -3,7 +3,7 @@ using Accounting_Software.Date.Entites;
 
 namespace Accounting_Software.Repository_Interfaces
 {
-    public interface IWareHouseRepositoryInterface
+    public interface IWareHouseRepository
     {
         void Add(WareHouse WareHouse);
         void Delete(int id);   

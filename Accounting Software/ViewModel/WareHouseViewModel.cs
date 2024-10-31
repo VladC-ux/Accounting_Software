@@ -14,12 +14,5 @@ namespace Accounting_Software.ViewModel
         public int? Count { get; set; }
         public double? Balance { get; set; }
         public int? ProductId { get; set; }
-
-
-
-
-
-
-
     }
 }

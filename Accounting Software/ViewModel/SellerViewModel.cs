@@ -6,10 +6,6 @@ namespace Accounting_Software.ViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-         
-        
-        
-     
-       
+           
     }
 }

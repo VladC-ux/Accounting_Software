@@ -3,7 +3,7 @@ using Accounting_Software.Date.Entites;
 
 namespace Accounting_Software.Repository_Interfaces
 {
-    public interface IProductRepositoryInterface
+    public interface IProductRepository
     {
         void Add(Product product);
         Product Update(Product product);
@@ -12,16 +12,8 @@ namespace Accounting_Software.Repository_Interfaces
         List<Product> GetAll();
         Product GetById(int id);
         Product GetWareHouseViewModelById(int id);
-
         void AddToWareHouse(WareHouse product);
-
-
-
-
-
-
-
-
+        List<Store> GetStores();
 
     }
 }

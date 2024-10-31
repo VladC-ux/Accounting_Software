@@ -6,9 +6,9 @@ namespace Accounting_Software.Controllers
 {
     public class SellerController : Controller
     {
-        private readonly ISellerServiceInterface _sellerService;
+        private readonly ISellerService _sellerService;
 
-        public SellerController(ISellerServiceInterface userinterface)
+        public SellerController(ISellerService userinterface)
         {
             _sellerService = userinterface;
         }

@@ -3,15 +3,12 @@ using Accounting_Software.ViewModel;
 
 namespace Accounting_Software.Service_Interfaces
 {
-    public interface ISellerServiceInterface
+    public interface ISellerService
     {
         void Add(SellerViewModel user);
         void Update(SellerViewModel model);
-
         List<SellerViewModel> GetAll();
-
         SellerViewModel GetById(int id);
-
         void Delete(int id);
     }
 }

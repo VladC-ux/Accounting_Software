@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Accounting_Software.Repositories
 {
-    public class WareHouseRepository : IWareHouseRepositoryInterface
+    public class WareHouseRepository : IWareHouseRepository
     {
         private readonly DBContextAccounting _context;
 

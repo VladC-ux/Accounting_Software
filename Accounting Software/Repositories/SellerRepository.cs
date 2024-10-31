@@ -5,7 +5,7 @@ using Microsoft.Identity.Client;
 
 namespace Accounting_Software.Repositories
 {
-    public class SellerRepository : ISellerRepositoryInterface
+    public class SellerRepository : ISellerRepository
     {
         private readonly DBContextAccounting _context;
 

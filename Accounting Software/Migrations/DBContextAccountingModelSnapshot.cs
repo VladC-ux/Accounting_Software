@@ -91,6 +91,28 @@ namespace Accounting_Software.Migrations
                     b.ToTable("SoldLists");
                 });
 
+            modelBuilder.Entity("Accounting_Software.Data.Entites.Store", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("WareHouseId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WareHouseId");
+
+                    b.ToTable("Stores");
+                });
+
             modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
                 {
                     b.Property<int>("Id")
@@ -151,6 +173,38 @@ namespace Accounting_Software.Migrations
                     b.ToTable("WareHouses");
                 });
 
+            modelBuilder.Entity("StoreProduct", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("AddDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("StoreId");
+
+                    b.ToTable("StoreProducts");
+                });
+
             modelBuilder.Entity("Accounting_Software.Data.Entites.Product", b =>
                 {
                     b.HasOne("Accounting_Software.Date.Entites.Seller", "Seller")
@@ -179,6 +233,13 @@ namespace Accounting_Software.Migrations
                     b.Navigation("WareHouse");
                 });
 
+            modelBuilder.Entity("Accounting_Software.Data.Entites.Store", b =>
+                {
+                    b.HasOne("Accounting_Software.Date.Entites.WareHouse", null)
+                        .WithMany("Stores")
+                        .HasForeignKey("WareHouseId");
+                });
+
             modelBuilder.Entity("Accounting_Software.Date.Entites.WareHouse", b =>
                 {
                     b.HasOne("Accounting_Software.Data.Entites.Product", "Product")
@@ -188,9 +249,43 @@ namespace Accounting_Software.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("StoreProduct", b =>
+                {
+                    b.HasOne("Accounting_Software.Data.Entites.Product", "ProductName")
+                        .WithMany("StoreProducts")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Accounting_Software.Data.Entites.Store", "Store")
+                        .WithMany("StoreProducts")
+                        .HasForeignKey("StoreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductName");
+
+                    b.Navigation("Store");
+                });
+
+            modelBuilder.Entity("Accounting_Software.Data.Entites.Product", b =>
+                {
+                    b.Navigation("StoreProducts");
+                });
+
+            modelBuilder.Entity("Accounting_Software.Data.Entites.Store", b =>
+                {
+                    b.Navigation("StoreProducts");
+                });
+
             modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("Accounting_Software.Date.Entites.WareHouse", b =>
+                {
+                    b.Navigation("Stores");
                 });
 #pragma warning restore 612, 618
         }

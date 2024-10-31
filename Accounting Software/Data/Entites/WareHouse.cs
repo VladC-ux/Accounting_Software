@@ -26,9 +26,7 @@ namespace Accounting_Software.Date.Entites
 
         public Product? Product { get; set; }
 
-
-        
-
+        public ICollection<Store> Stores { get; set; }
     }
 
 }

@@ -2,7 +2,7 @@
 
 namespace Accounting_Software.Repository_Interfaces
 {
-    public interface ISoldListRepositoryInterface
+    public interface ISoldListRepository
     {
 
         List<SoldList> GetAllSoldItems();

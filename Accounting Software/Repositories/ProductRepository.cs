@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Accounting_Software.Repositories
 {
-    public class ProductRepository : IProductRepositoryInterface
+    public class ProductRepository : IProductRepository
     {
         private readonly DBContextAccounting _context;
 
@@ -27,9 +27,6 @@ namespace Accounting_Software.Repositories
             var querry = _context.Products.Find(productId);
                      
         }
-
-
-
         public void Delete(int product)
         {
             var querry = _context.Products.Find(product);
@@ -37,10 +34,7 @@ namespace Accounting_Software.Repositories
             {
                 _context.Products.Remove(querry);
             }
-
-
         }
-
         public List<Product> GetAll()
         {
             return _context.Products.ToList();
@@ -70,19 +64,20 @@ namespace Accounting_Software.Repositories
             _context.Products.Update(entity);
             _context.SaveChanges();
             return entity;
-
-
-        }
-
-      
+        }    
         public void AddToWareHouse(WareHouse product)
         {
             _context.Add(product);
         }
-
+        public List<Store> GetStores()
+        {
+            return _context.Stores.ToList();
+        }
         public Product GetWareHouseViewModelById(int id)
         {
             throw new NotImplementedException();
         }
+
+       
     }
 }

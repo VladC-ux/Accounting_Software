@@ -11,26 +11,19 @@ using Accounting_Software.Repositories;
 using Microsoft.CodeAnalysis;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-
-
-
 namespace Accounting_Software.Service
 {
-    public class SellerService : ISellerServiceInterface
+    public class SellerService : ISellerService
     {
-        private readonly ISellerRepositoryInterface _sellerRepository;
+        private readonly ISellerRepository _sellerRepository;
         private readonly IUnitofWork _uow;
-        private readonly IProductRepositoryInterface _productRepository;
-
-
-        public SellerService(ISellerRepositoryInterface userRepositoryInterface, IUnitofWork unitofWork, IProductRepositoryInterface productRepository)
+        private readonly IProductRepository _productRepository;
+        public SellerService(ISellerRepository userRepositoryInterface, IUnitofWork unitofWork, IProductRepository productRepository)
         {
             _sellerRepository = userRepositoryInterface;
             _uow = unitofWork;
             _productRepository = productRepository;
-
         }
-
         public void Add(SellerViewModel adduser)
         {
             Seller seller = new Seller
@@ -47,7 +40,6 @@ namespace Accounting_Software.Service
             _sellerRepository.Delete(id);
             _uow.SaveChanges();
         }
-
         public List<SellerViewModel> GetAll()
         {
             var data = _sellerRepository.GetAll();
@@ -65,7 +57,6 @@ namespace Accounting_Software.Service
         public SellerViewModel GetById(int id)
         {
             var data = _sellerRepository.GetById(id);
-
             return new SellerViewModel
             {
                 Id = data.Id,
@@ -73,24 +64,16 @@ namespace Accounting_Software.Service
 
             };
         }
-
         public void Update(SellerViewModel model)
         {
             Seller userToUpdate = new Seller
             {
                 Id = model.Id,
                 Name = model.Name,
-
             };
-
             var updatedUser = _sellerRepository.Update(userToUpdate);
             _uow.SaveChanges();
 
         }
     }
-
-
-
-
-
 }

@@ -9,12 +9,12 @@ using Microsoft.CodeAnalysis;
 
 namespace Accounting_Software.Service
 {
-    public class WareHouseService : IWareHouseServiceInterface
+    public class WareHouseService : IWareHouseService
     {
-        private readonly IWareHouseRepositoryInterface _whrepo;
+        private readonly IWareHouseRepository _whrepo;
         private readonly IUnitofWork _uow;
 
-        public WareHouseService(IWareHouseRepositoryInterface repository, IUnitofWork uow)
+        public WareHouseService(IWareHouseRepository repository, IUnitofWork uow)
         {
             _whrepo = repository;
             _uow = uow;
