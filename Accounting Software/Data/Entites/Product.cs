@@ -8,16 +8,12 @@ namespace Accounting_Software.Data.Entites
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public double Price { get; set; }
-
+        public decimal Price { get; set; }
         public string? Description { get; set; }
-
-
         public ushort Mass { get; set; }
         public Unit_of_mass Unitofmass { get; set; }
-
         public int Count { get; set; }
-        public double Total
+        public decimal Total
         {
             get { return Price * Count; }
         }

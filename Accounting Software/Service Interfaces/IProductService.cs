@@ -14,8 +14,7 @@ namespace Accounting_Software.Service_Interfaces
         ProductViewModel GetById(int id);
         void AddToWareHouse(WareHouseViewModel model);                
         List<Store> GetStores();
-
-
+        Task<ProductViewModel> GetProductByIdAsync(int productId);
 
     }        
 }

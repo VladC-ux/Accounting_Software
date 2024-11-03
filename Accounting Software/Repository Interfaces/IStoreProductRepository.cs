@@ -9,6 +9,7 @@ namespace Accounting_Software.Repository_Interfaces
         void Add(StoreProduct storeProduct);
         void Update(StoreProduct storeProduct);
         void Delete(int storeId, int productId);
+        Task AddAsync(StoreProduct storeProduct);
 
     }
 }

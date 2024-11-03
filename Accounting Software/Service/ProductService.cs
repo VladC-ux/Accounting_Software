@@ -36,7 +36,7 @@ namespace Accounting_Software.Service
                 Unitofmass = model.unitOfmass,
                 SellerId = model.SellerId,
                 Count = model.Count,
-                TotalPrice = model.TotalPrice,
+                
             };
 
             _productRepository.Add(product);
@@ -83,8 +83,6 @@ namespace Accounting_Software.Service
             }).ToList();
             return productViewModels;
         }
-
-
         public ProductViewModel GetById(int ProductId)
         {
             var product = _productRepository.GetById(ProductId);
@@ -100,10 +98,7 @@ namespace Accounting_Software.Service
                 SellerId = product.SellerId,
                 WareHouseId = product.WareHouseId
             };
-
         }
-
-
         public List<ProductViewModel> GetProductsBySellerId(int? sellerId)
         {
             if (sellerId.HasValue)
@@ -119,11 +114,26 @@ namespace Accounting_Software.Service
                     Mass = product.Mass,
                     Count= product.Count,
                     SellerId = product.SellerId
+
                 }).ToList();
                 return productViewModels;
             }
-
             return new List<ProductViewModel>();
+        }
+        public async Task<ProductViewModel> GetProductByIdAsync(int productId)
+        {
+            var product =  await _productRepository.GetProductByIdAsync(productId);
+            return new ProductViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Description = product.Description,
+                unitOfmass = product.Unitofmass,
+                Mass = product.Mass,
+                Count = product.Count,
+                SellerId = product.SellerId        
+            };
         }
 
         public void Update(ProductViewModel Product)
@@ -136,8 +146,6 @@ namespace Accounting_Software.Service
                 Mass = Product.Mass,
                 Unitofmass = Product.unitOfmass,
                 Description = Product.Description,
-
-
             };
             var data = _productRepository.Update(product);
             _uow.SaveChanges();
@@ -152,6 +160,6 @@ namespace Accounting_Software.Service
                 Name = product.Name          
             }).ToList();
             return store;
-        }     
+        }
     }
 }

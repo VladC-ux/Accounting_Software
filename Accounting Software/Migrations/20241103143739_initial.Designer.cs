@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounting_Software.Migrations
 {
     [DbContext(typeof(DBContextAccounting))]
-    [Migration("20241031080117_initial")]
+    [Migration("20241103143739_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -46,8 +46,8 @@ namespace Accounting_Software.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("SellerId")
                         .HasColumnType("int");
@@ -187,16 +187,32 @@ namespace Accounting_Software.Migrations
                     b.Property<DateTime>("AddDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Mass")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Quantity")
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SellerId")
                         .HasColumnType("int");
 
                     b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Unitofmass")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -254,7 +270,7 @@ namespace Accounting_Software.Migrations
 
             modelBuilder.Entity("StoreProduct", b =>
                 {
-                    b.HasOne("Accounting_Software.Data.Entites.Product", "ProductName")
+                    b.HasOne("Accounting_Software.Data.Entites.Product", null)
                         .WithMany("StoreProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -265,8 +281,6 @@ namespace Accounting_Software.Migrations
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ProductName");
 
                     b.Navigation("Store");
                 });

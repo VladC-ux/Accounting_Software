@@ -25,7 +25,9 @@
                     @foreach (var store in Model)
                     {
                         <tr>
-                            <td>@store.Name</td>
+                            <td>
+                                <a href="@Url.Action("AddProductsToStore", "Product", new { storeId = store.Id })">@store.Name</a>
+                            </td>
                             <td>
                                 <a href="@Url.Action("Edit", "Store", new { id = store.Id })" class="btn btn-sm btn-primary">Edit</a>
                                 <a href="@Url.Action("Delete", "Store", new { id = store.Id })" class="btn btn-sm btn-danger">Delete</a>

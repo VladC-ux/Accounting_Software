@@ -73,11 +73,9 @@ namespace Accounting_Software.Repositories
         {
             return _context.Stores.ToList();
         }
-        public Product GetWareHouseViewModelById(int id)
+        public async Task<Product> GetProductByIdAsync(int productId)
         {
-            throw new NotImplementedException();
+            return await _context.Products.FindAsync(productId);
         }
-
-       
     }
 }

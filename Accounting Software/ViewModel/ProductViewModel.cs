@@ -9,16 +9,16 @@ namespace Accounting_Software.ViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public double Price { get; set; }
+        public decimal Price { get; set; }
         public string? Description { get; set; }
         public Unit_of_mass unitOfmass { get; set; }
         public ushort Mass { get; set; }
         public int Count { get; set; }
-        public double Total
+        public decimal Total
         {
             get { return Price * Count; }
         }
-        public double TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
         public int SellerId { get; set; }
        public int? WareHouseId { get; set;}
        public int ProductId { get; set; }

@@ -14,7 +14,6 @@ namespace Accounting_Software.Controllers
         private readonly IProductService _productService;
         private readonly ISellerService _sellerService;
         private readonly IWareHouseService _warehouse;
-        private readonly IStoreService _store;
 
         public ProductController(IProductService productService, ISellerService sellerService, IWareHouseService warehouse)
         {
@@ -58,8 +57,6 @@ namespace Accounting_Software.Controllers
         public void AddToWareH(int Id)
         {
             _productService.GetById(Id);
-
-
         }
         [HttpPost]
         public IActionResult AddToWareH(WareHouseViewModel model)
@@ -98,9 +95,7 @@ namespace Accounting_Software.Controllers
         {
             _productService.Delete(model);
             return RedirectToAction("Index", "Seller");
-        }
-
-       
+        }     
         public IActionResult ShowShops()
         {
             var data = _productService.GetStores();

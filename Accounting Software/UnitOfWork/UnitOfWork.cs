@@ -16,5 +16,11 @@ namespace Accounting_Software.UnitOfWorkk
             _context.SaveChanges();
         }
 
+        public async Task SaveChangesAsnyc()
+        {
+            await _context.SaveChangesAsync();
+        }
+
+       
     }
 }
