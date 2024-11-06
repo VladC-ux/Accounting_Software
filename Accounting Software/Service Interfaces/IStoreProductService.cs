@@ -1,4 +1,5 @@
 ﻿
+using Accounting_Software.Data.Entites;
 using Accounting_Software.ViewModel;
 
 namespace Accounting_Software.Service_Interfaces
@@ -10,7 +11,9 @@ namespace Accounting_Software.Service_Interfaces
         void Add(StoreProductViewModel storeProduct);
         void Update(StoreProductViewModel storeProduct);
         void Delete(int storeId, int productId);
-        Task AddProductToStoreAsync(int productId);
-        Task AddAsync(StoreProduct storeProduct);
+        void AddProductToStore(int productId, int storeId);
+        List<StoreProductViewModel> GetStores();
+
+        StoreProduct GetStoreProduct(int storeId, int productId);
     }
 }

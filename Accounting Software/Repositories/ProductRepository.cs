@@ -3,6 +3,7 @@ using Accounting_Software.Data.Entites;
 using Accounting_Software.Date.Entites;
 using Accounting_Software.Repository_Interfaces;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace Accounting_Software.Repositories
@@ -10,22 +11,14 @@ namespace Accounting_Software.Repositories
     public class ProductRepository : IProductRepository
     {
         private readonly DBContextAccounting _context;
-
         public ProductRepository(DBContextAccounting context)
         {
             _context = context;
         }
-
         public void Add(Product product)
         {
             _context.Products.Add(product);
             
-
-        }
-        public void MoveToWarehouse(int productId, WareHouse warehouse)
-        {
-            var querry = _context.Products.Find(productId);
-                     
         }
         public void Delete(int product)
         {
@@ -39,14 +32,10 @@ namespace Accounting_Software.Repositories
         {
             return _context.Products.ToList();
         }
-
-        public Product GetById(int ProductId)
-        {
-           
-            return _context.Products.FirstOrDefault(p => p.Id == ProductId);
-
+        public Product GetById(int productId)
+        {         
+            return _context.Products.FirstOrDefault(p => p.Id == productId);           
         }
-
         public List<Product> GetProductsBySellerId(int sellerId)
         {
             return _context.Products.Where(p => p.SellerId == sellerId).ToList();
@@ -64,18 +53,7 @@ namespace Accounting_Software.Repositories
             _context.Products.Update(entity);
             _context.SaveChanges();
             return entity;
-        }    
-        public void AddToWareHouse(WareHouse product)
-        {
-            _context.Add(product);
-        }
-        public List<Store> GetStores()
-        {
-            return _context.Stores.ToList();
-        }
-        public async Task<Product> GetProductByIdAsync(int productId)
-        {
-            return await _context.Products.FindAsync(productId);
-        }
+        }         
+       
     }
 }

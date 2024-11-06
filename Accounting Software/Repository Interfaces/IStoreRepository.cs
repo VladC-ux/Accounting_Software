@@ -9,6 +9,8 @@ namespace Accounting_Software.Repository_Interfaces
         void Add(Store store);
         void Update(Store store);
         void Delete(int id);
+       
+
     }
 
 }

@@ -13,13 +13,12 @@ namespace Accounting_Software.Controllers
     {
         private readonly IProductService _productService;
         private readonly ISellerService _sellerService;
-        private readonly IWareHouseService _warehouse;
-
-        public ProductController(IProductService productService, ISellerService sellerService, IWareHouseService warehouse)
+      
+        public ProductController(IProductService productService, ISellerService sellerService)
         {
             _productService = productService;
             _sellerService = sellerService;
-            _warehouse = warehouse;
+          
         }
 
         public IActionResult Index()
@@ -53,17 +52,6 @@ namespace Accounting_Software.Controllers
             return View(product);
         }
 
-        [HttpGet]
-        public void AddToWareH(int Id)
-        {
-            _productService.GetById(Id);
-        }
-        [HttpPost]
-        public IActionResult AddToWareH(WareHouseViewModel model)
-        {
-            _productService.AddToWareHouse(model);
-            return RedirectToAction("ShowSellerProduct");
-        }
 
         [HttpGet]
         public IActionResult ShowSellerProduct(int? SellerId)
@@ -96,11 +84,7 @@ namespace Accounting_Software.Controllers
             _productService.Delete(model);
             return RedirectToAction("Index", "Seller");
         }     
-        public IActionResult ShowShops()
-        {
-            var data = _productService.GetStores();
-            return View(data);
-        }
+       
 
         private void GetDropDownData()
         {

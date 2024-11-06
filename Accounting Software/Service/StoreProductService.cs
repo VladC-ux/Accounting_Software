@@ -11,13 +11,13 @@ namespace Accounting_Software.Service
 {
     public class StoreProductService : IStoreProductService
     {
-        private readonly IStoreProductRepository _sp;
+        private readonly IStoreProductRepository _storeProductRepository;
         private readonly IUnitofWork _uow;
         private readonly IProductRepository _productRepository;
 
         public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository)
         {
-            _sp = storeproduct;
+            _storeProductRepository = storeproduct;
             _uow = uow;
             _productRepository = productrepository;
         }
@@ -32,7 +32,7 @@ namespace Accounting_Software.Service
                 ProductName = storeProduct.ProductName,
             };
 
-            _sp.Add(st);
+            _storeProductRepository.Add(st);
             _uow.SaveChanges();
         }
 
@@ -41,9 +41,9 @@ namespace Accounting_Software.Service
             throw new NotImplementedException();
         }
 
-        public async Task AddProductToStoreAsync(int productId)
+        public void AddProductToStore(int productId,int storeId)
         {         
-            var product = await _productRepository.GetProductByIdAsync(productId);
+            var product = _productRepository.GetById(productId);
 
             if (product == null)
             {
@@ -52,35 +52,35 @@ namespace Accounting_Software.Service
 
             StoreProduct storeProduct = new StoreProduct
             {
-                Id = product.Id,
+               
                 ProductName = product.Name,
                 Price = product.Price,
                 Mass = product.Mass,
                 Unitofmass = product.Unitofmass,
                 Description = product.Description,
-                SellerId = product.SellerId    
-                
+                SellerId = product.SellerId,  
+                StoreId = storeId
             }; 
             
-            await _sp.AddAsync(storeProduct);
-            await _uow.SaveChangesAsnyc();
+             _storeProductRepository.Add(storeProduct);
+             _uow.SaveChanges();
         }
 
         public void Delete(int storeId, int productId)
         {
            
-            var storeProduct = _sp.GetById(storeId, productId);
+            var storeProduct = _storeProductRepository.GetById(storeId, productId);
             if (storeProduct == null)
             {
                 throw new KeyNotFoundException("StoreProduct not found.");
             }
 
-            _sp.Delete(storeId, productId);            
+            _storeProductRepository.Delete(storeId, productId);            
             _uow.SaveChanges();
         }      
         public StoreProductViewModel GetById(int storeId, int productId)
         {       
-            var storeProduct = _sp.GetById(storeId, productId);
+            var storeProduct = _storeProductRepository.GetById(storeId, productId);
 
             if (storeProduct == null)
             {
@@ -98,7 +98,7 @@ namespace Accounting_Software.Service
 
         public IEnumerable<StoreProductViewModel> GetByStoreId(int storeId)
         {
-            var storeProducts = _sp.GetByStoreId(storeId);
+            var storeProducts = _storeProductRepository.GetByStoreId(storeId);
             if (storeProducts == null)
             {
                 throw new KeyNotFoundException("Store not found.");
@@ -118,7 +118,7 @@ namespace Accounting_Software.Service
         {
             StoreProduct sp = new StoreProduct
             {
-                Id = storeProduct.Id,
+                
                 ProductId = storeProduct.ProductId,
                 StoreId = storeProduct.StoreId,
                 Price = storeProduct.Price,
@@ -126,9 +126,28 @@ namespace Accounting_Software.Service
                 ProductName = storeProduct.ProductName
             };
 
-            _sp.Update(sp);
+            _storeProductRepository.Update(sp);
             _uow.SaveChanges();
         }
+        public List<StoreProductViewModel> GetStores()
+        {
+            var data = _storeProductRepository.GetAll();
+            List<StoreProductViewModel> storeProducts = data.Select(storeproduct => new StoreProductViewModel
+            {
+              StoreId = storeproduct.Id,
+              ProductId = storeproduct.Id,
+              StoreName = storeproduct.StoreName,
 
+              
+
+            }).ToList();
+
+            return storeProducts;
+        }
+
+        public StoreProduct GetStoreProduct(int storeId, int productId)
+        {
+            return _storeProductRepository.GetStoreProduct(storeId, productId);
+        }
     }
 }

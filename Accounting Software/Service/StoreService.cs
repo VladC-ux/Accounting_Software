@@ -21,7 +21,7 @@ namespace Accounting_Software.Service
             Store st = new Store
             {
                 Id = store.Id,
-                Name = store.Name,
+                StoreName = store.StoreName,
             };
             _sp.Add(st);
             _uow.SaveChanges();
@@ -41,16 +41,14 @@ namespace Accounting_Software.Service
         public List<Store> GetAll()
         {
             var data = _sp.GetAll();
-
             if (data == null)
             {
                 data = new List<Store>();
             }
-
             return data.Select(store => new Store
             {
                 Id = store.Id,
-                Name = store.Name,
+                StoreName = store.StoreName,
             }).ToList();
         }
 
@@ -69,7 +67,7 @@ namespace Accounting_Software.Service
             Store st = new Store
             {
                 Id = store.Id,
-                Name = store.Name,
+                StoreName = store.StoreName,
             };
             _sp.Update(st);
             _uow.SaveChanges();

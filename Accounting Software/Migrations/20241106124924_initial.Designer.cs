@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounting_Software.Migrations
 {
     [DbContext(typeof(DBContextAccounting))]
-    [Migration("20241103143739_initial")]
+    [Migration("20241106124924_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -55,43 +55,11 @@ namespace Accounting_Software.Migrations
                     b.Property<int>("Unitofmass")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WareHouseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SellerId");
 
-                    b.HasIndex("WareHouseId");
-
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("Accounting_Software.Data.Entites.SoldList", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Price")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Unitofmass")
-                        .HasColumnType("int");
-
-                    b.Property<int>("WareHouseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("WareHouseId");
-
-                    b.ToTable("SoldLists");
                 });
 
             modelBuilder.Entity("Accounting_Software.Data.Entites.Store", b =>
@@ -102,87 +70,22 @@ namespace Accounting_Software.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("StoreName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("WareHouseId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("WareHouseId");
 
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entites.StoreProduct", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Sellers");
-                });
-
-            modelBuilder.Entity("Accounting_Software.Date.Entites.WareHouse", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<double?>("Balance")
-                        .HasColumnType("float");
-
-                    b.Property<int?>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DateBuy")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Mass")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("Price")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Productid")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Unitofmass")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Productid");
-
-                    b.ToTable("WareHouses");
-                });
-
-            modelBuilder.Entity("StoreProduct", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
 
                     b.Property<DateTime>("AddDate")
                         .HasColumnType("datetime2");
@@ -212,16 +115,37 @@ namespace Accounting_Software.Migrations
                     b.Property<int>("StoreId")
                         .HasColumnType("int");
 
+                    b.Property<string>("StoreName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("Unitofmass")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.HasKey("id");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("StoreId");
 
                     b.ToTable("StoreProducts");
+                });
+
+            modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sellers");
                 });
 
             modelBuilder.Entity("Accounting_Software.Data.Entites.Product", b =>
@@ -232,45 +156,12 @@ namespace Accounting_Software.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Accounting_Software.Date.Entites.WareHouse", "WareHouse")
-                        .WithMany()
-                        .HasForeignKey("WareHouseId");
-
                     b.Navigation("Seller");
-
-                    b.Navigation("WareHouse");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.SoldList", b =>
-                {
-                    b.HasOne("Accounting_Software.Date.Entites.WareHouse", "WareHouse")
-                        .WithMany()
-                        .HasForeignKey("WareHouseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("WareHouse");
-                });
-
-            modelBuilder.Entity("Accounting_Software.Data.Entites.Store", b =>
-                {
-                    b.HasOne("Accounting_Software.Date.Entites.WareHouse", null)
-                        .WithMany("Stores")
-                        .HasForeignKey("WareHouseId");
-                });
-
-            modelBuilder.Entity("Accounting_Software.Date.Entites.WareHouse", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entites.StoreProduct", b =>
                 {
                     b.HasOne("Accounting_Software.Data.Entites.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("Productid");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("StoreProduct", b =>
-                {
-                    b.HasOne("Accounting_Software.Data.Entites.Product", null)
                         .WithMany("StoreProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -281,6 +172,8 @@ namespace Accounting_Software.Migrations
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
 
                     b.Navigation("Store");
                 });
@@ -298,11 +191,6 @@ namespace Accounting_Software.Migrations
             modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("Accounting_Software.Date.Entites.WareHouse", b =>
-                {
-                    b.Navigation("Stores");
                 });
 #pragma warning restore 612, 618
         }

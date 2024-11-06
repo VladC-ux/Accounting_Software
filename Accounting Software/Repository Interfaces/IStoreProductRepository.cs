@@ -8,8 +8,12 @@ namespace Accounting_Software.Repository_Interfaces
         IEnumerable<StoreProduct> GetByStoreId(int storeId);
         void Add(StoreProduct storeProduct);
         void Update(StoreProduct storeProduct);
-        void Delete(int storeId, int productId);
+        void Delete(int storeId, int productId);       
         Task AddAsync(StoreProduct storeProduct);
+        List<StoreProduct> GetStores();
+        List<Store> GetAll();
+
+        StoreProduct GetStoreProduct(int storeId, int productId);
 
     }
 }

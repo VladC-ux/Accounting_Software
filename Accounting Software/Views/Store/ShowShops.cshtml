@@ -1,31 +1,35 @@
-﻿@model List<Accounting_Software.Data.Entites.Store>
+﻿@model List<Accounting_Software.ViewModel.StoreProductViewModel>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shops List</title>
+    <title>Store Products List</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
 
     <div class="container mt-4">
-        <h2 class="mb-4">Shops List</h2>
+        <h2 class="mb-4">Store Products List</h2>
 
         @if (Model != null && Model.Any())
         {
             <table class="table table-bordered">
                 <thead>
                     <tr>
-                        <th scope="col">Name</th>
+                        <th scope="col">Store Name</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var shop in Model)
+                    @foreach (var storeProduct in Model)
                     {
                         <tr>
-                            <td>@shop.Name</td>
+                            <td>
+                                <a href="@Url.Action("ProductToStore", "Store", new { storeId = storeProduct.StoreId, productId = storeProduct.ProductId })">
+                                    @storeProduct.StoreName
+                                </a>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -34,10 +38,10 @@
         else
         {
             <div class="alert alert-warning" role="alert">
-                No shops found.
+                No products found.
             </div>
         }
-      
+
         <a class="btn btn-secondary mt-2" asp-action="Index" asp-controller="Seller">Back to Product List</a>
     </div>
 

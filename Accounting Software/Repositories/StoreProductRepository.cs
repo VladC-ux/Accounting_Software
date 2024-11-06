@@ -39,7 +39,7 @@ namespace Accounting_Software.Repositories
             .FirstOrDefault(sp => sp.StoreId == storeId && sp.ProductId == productId);
         }
 
-       
+
         public IEnumerable<StoreProduct> GetByStoreId(int storeId)
         {
             return _context.StoreProducts
@@ -56,5 +56,29 @@ namespace Accounting_Software.Repositories
             _context.StoreProducts.Update(storeProduct);
         }
 
+        public List<StoreProduct> GetStores()
+        {
+            return _context.StoreProducts.ToList();
+        }
+        public List<Store> GetAll()
+        {
+            return _context.Stores.ToList();
+        }
+
+        public StoreProduct GetStoreProduct(int storeId, int productId)
+        {
+            var result = from store in _context.Stores
+                         join product in _context.Products
+                         on store.Id equals product.Id
+                         where store.Id == storeId && product.Id == productId
+                         select new StoreProduct
+                         {
+                             StoreId = store.Id,
+                             ProductId = product.Id,
+                             StoreName = store.StoreName,                                                   
+                         };
+
+            return result.FirstOrDefault();
+        }
     }
 }

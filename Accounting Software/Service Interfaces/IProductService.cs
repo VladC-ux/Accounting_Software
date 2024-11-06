@@ -11,10 +11,7 @@ namespace Accounting_Software.Service_Interfaces
         void Update(ProductViewModel Product);
         void Delete(ProductViewModel Product);
         List<ProductViewModel> GetAll();
-        ProductViewModel GetById(int id);
-        void AddToWareHouse(WareHouseViewModel model);                
-        List<Store> GetStores();
-        Task<ProductViewModel> GetProductByIdAsync(int productId);
-
+        ProductViewModel GetById(int id);       
+   
     }        
 }

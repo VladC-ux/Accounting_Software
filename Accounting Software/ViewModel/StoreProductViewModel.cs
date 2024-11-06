@@ -7,8 +7,9 @@ namespace Accounting_Software.ViewModel
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
-        public string ProductName { get; set; }
         public int StoreId { get; set; }
+        public string StoreName { get; set; } 
+        public string ProductName { get; set; }
         public DateTime AddDate { get; set; }
         public decimal Price { get; set; }
         public ushort Mass { get; set; }
@@ -21,6 +22,6 @@ namespace Accounting_Software.ViewModel
             get { return Price * Count; }
         }
 
-        public int storeId { get; set; }
+      
     }
 }

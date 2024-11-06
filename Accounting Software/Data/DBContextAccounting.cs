@@ -12,8 +12,6 @@ namespace Accounting_Software.Data
         }
         public DbSet<Seller> Sellers { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<WareHouse> WareHouses { get; set; }
-        public DbSet<SoldList> SoldLists { get; set; }
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreProduct> StoreProducts { get; set; }
 

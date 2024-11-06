@@ -1,4 +1,5 @@
 ﻿using Accounting_Software.Data.Entites;
+using Accounting_Software.Service;
 using Accounting_Software.Service_Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -7,12 +8,13 @@ namespace Accounting_Software.Controllers
     public class StoreController : Controller
     {
         private readonly IStoreService _storeService;
-        private readonly IStoreProductService _storeProduct;
-      
+        private readonly IStoreProductService _storeProductService;
+     
+
         public StoreController(IStoreService storeService, IStoreProductService storeproduct)
         {
             _storeService = storeService;
-            _storeProduct = storeproduct;
+            _storeProductService = storeproduct;
         }
 
         public IActionResult Index()
@@ -20,7 +22,7 @@ namespace Accounting_Software.Controllers
             var stores = _storeService.GetAll();
             return View(stores);
         }
-       
+
         public IActionResult Add(Store store)
         {
             if (ModelState.IsValid)
@@ -48,10 +50,16 @@ namespace Accounting_Software.Controllers
             }
             return View(store);
         }
-        public async Task<IActionResult> ProductToStore(int productId)
+        public IActionResult ProductToStore(int productId, int storeId)
         {
-            await _storeProduct.AddProductToStoreAsync(productId);
+            _storeProductService.AddProductToStore(productId, storeId);
             return View();
+        }
+
+        public IActionResult ShowShops(int productId,int storeId)
+        {
+            var data = _storeProductService.GetStoreProduct(productId, storeId);
+            return View(data);
         }
     }
 }

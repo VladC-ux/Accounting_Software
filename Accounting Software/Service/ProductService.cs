@@ -10,17 +10,15 @@ namespace Accounting_Software.Service
 {
     public class ProductService : IProductService
     {
-        private readonly IWareHouseRepository _Wrepo;
         private readonly IProductRepository _productRepository;
         private readonly IStoreRepository _store;
         private readonly IUnitofWork _uow;
 
 
-        public ProductService(IProductRepository poroductrepository, IUnitofWork uow, IWareHouseRepository wrepo , IStoreRepository store)
+        public ProductService(IProductRepository poroductrepository, IUnitofWork uow, IStoreRepository store)
         {
             _productRepository = poroductrepository;
-            _uow = uow;
-            _Wrepo = wrepo;
+            _uow = uow;        
             _store = store;
         }
 
@@ -42,27 +40,7 @@ namespace Accounting_Software.Service
             _productRepository.Add(product);
             _uow.SaveChanges();
 
-        }
-        public void AddToWareHouse(WareHouseViewModel model)
-        {
-            WareHouse product = new WareHouse
-            {
-                Name = model.Name,
-                Price = model.Price,
-                Description = model.Description,
-                Mass = model.Mass,
-                Unitofmass = model.Unitofmass,
-                Balance = model.Balance,
-                Count = model.Count,
-                DateBuy = model.DateBuy,
-                Productid = model.ProductId
-
-            };
-
-            _Wrepo.Add(product);
-            _uow.SaveChanges();
-
-        }
+        }      
         public void Delete(ProductViewModel model)
         {
             _productRepository.Delete(model.Id);
@@ -96,7 +74,7 @@ namespace Accounting_Software.Service
                 unitOfmass = product.Unitofmass,
                 Mass = product.Mass,
                 SellerId = product.SellerId,
-                WareHouseId = product.WareHouseId
+                
             };
         }
         public List<ProductViewModel> GetProductsBySellerId(int? sellerId)
@@ -120,21 +98,7 @@ namespace Accounting_Software.Service
             }
             return new List<ProductViewModel>();
         }
-        public async Task<ProductViewModel> GetProductByIdAsync(int productId)
-        {
-            var product =  await _productRepository.GetProductByIdAsync(productId);
-            return new ProductViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                Description = product.Description,
-                unitOfmass = product.Unitofmass,
-                Mass = product.Mass,
-                Count = product.Count,
-                SellerId = product.SellerId        
-            };
-        }
+       
 
         public void Update(ProductViewModel Product)
         {
@@ -151,15 +115,6 @@ namespace Accounting_Software.Service
             _uow.SaveChanges();
         }
 
-        public List<Store> GetStores()
-        {
-            var data = _store.GetAll();
-            List<Store> store = data.Select(product => new Store
-            {
-                Id = product.Id,
-                Name = product.Name          
-            }).ToList();
-            return store;
-        }
+      
     }
 }
