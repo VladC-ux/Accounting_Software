@@ -1,0 +1,48 @@
+﻿@model Accounting_Software.ViewModel.StoreProductViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product to Store</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-4">
+        <h2>Add Product to Store</h2>
+
+        <form method="post" action="@Url.Action("AddProductToStore", "Store")">
+            @Html.HiddenFor(model => model.StoreId)
+            @Html.HiddenFor(model => model.ProductId)
+
+            <div class="form-group">
+                <label for="StoreName">Store Name</label>
+                <input type="text" class="form-control" id="StoreName" value="@Model.StoreName" readonly />
+            </div>
+
+            <div class="form-group">
+                <label for="ProductName">Product Name</label>
+                <input type="text" class="form-control" id="ProductName" value="@Model.ProductName" readonly />
+            </div>
+
+            <div class="form-group">
+                <label for="Price">Price</label>
+                <input type="number" class="form-control" id="Price" value="@Model.Price"/>
+            </div>
+
+            <div class="form-group">
+                <label for="Count">Quantity</label>
+                @Html.TextBoxFor(model => model.Count, new { @class = "form-control", type = "number", id = "Count", min = 1 })
+            </div>
+
+            <button type="submit" class="btn btn-primary">Add Product</button>
+            <a class="btn btn-secondary" asp-action="ShowSellerProduct" asp-controller="Product">Back</a>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

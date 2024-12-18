@@ -6,10 +6,8 @@ namespace Accounting_Software.Data.Entites
 {
     public class StoreProduct
     {
-        public int id { get; set; }
-
+        public int Id { get; set; }
         public string StoreName { get; set; }
-
         public int StoreId { get; set; }
         public Store Store { get; set; }
         public int ProductId { get; set; }

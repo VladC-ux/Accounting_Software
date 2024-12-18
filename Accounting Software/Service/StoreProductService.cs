@@ -5,6 +5,7 @@ using Accounting_Software.Service_Interfaces;
 using Accounting_Software.UnitOfWorkk;
 using Accounting_Software.ViewModel;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace Accounting_Software.Service
@@ -14,12 +15,14 @@ namespace Accounting_Software.Service
         private readonly IStoreProductRepository _storeProductRepository;
         private readonly IUnitofWork _uow;
         private readonly IProductRepository _productRepository;
+        private readonly IStoreRepository _storeRepository;
 
-        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository)
+        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepositoryl)
         {
             _storeProductRepository = storeproduct;
             _uow = uow;
             _productRepository = productrepository;
+            _storeRepository = storeRepositoryl;
         }
         public void Add(StoreProductViewModel storeProduct)
         {
@@ -41,29 +44,37 @@ namespace Accounting_Software.Service
             throw new NotImplementedException();
         }
 
-        public void AddProductToStore(int productId,int storeId)
-        {         
+        public void AddProductToStore(int productId, int storeId)
+        {
+           
             var product = _productRepository.GetById(productId);
-
             if (product == null)
             {
-                throw new Exception("Product not found");
+                throw new Exception("Product not found.");
             }
 
-            StoreProduct storeProduct = new StoreProduct
+
+            var store = _storeRepository.GetById(storeId);
+            if (store == null)
             {
-               
-                ProductName = product.Name,
-                Price = product.Price,
-                Mass = product.Mass,
-                Unitofmass = product.Unitofmass,
-                Description = product.Description,
-                SellerId = product.SellerId,  
+                throw new Exception("Store not found.");
+            }
+
+
+            var storeProductExists = _storeProductRepository.Exists(storeId, productId);
+            if (storeProductExists)
+            {
+                throw new Exception("Product is already added to this store.");
+            }
+
+            var storeProduct = new StoreProduct
+            {
+                ProductId = productId,
                 StoreId = storeId
-            }; 
+            };
+
             
-             _storeProductRepository.Add(storeProduct);
-             _uow.SaveChanges();
+            _storeProductRepository.Add(storeProduct);
         }
 
         public void Delete(int storeId, int productId)
@@ -134,11 +145,10 @@ namespace Accounting_Software.Service
             var data = _storeProductRepository.GetAll();
             List<StoreProductViewModel> storeProducts = data.Select(storeproduct => new StoreProductViewModel
             {
-              StoreId = storeproduct.Id,
-              ProductId = storeproduct.Id,
-              StoreName = storeproduct.StoreName,
 
-              
+              StoreId = storeproduct.StoreId,
+              ProductId = storeproduct.ProductId,
+              StoreName = storeproduct.StoreName,
 
             }).ToList();
 
@@ -149,5 +159,8 @@ namespace Accounting_Software.Service
         {
             return _storeProductRepository.GetStoreProduct(storeId, productId);
         }
+
+       
+
     }
 }

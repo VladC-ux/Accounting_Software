@@ -5,6 +5,7 @@ using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace Accounting_Software.Controllers
@@ -56,6 +57,7 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult ShowSellerProduct(int? SellerId)
         {
+
             var data = _productService.GetProductsBySellerId(SellerId);
             return View(data);
         }
@@ -63,6 +65,7 @@ namespace Accounting_Software.Controllers
         [HttpPost]
         public IActionResult ShowSellerProduct()
         {
+            
             var data = _productService.GetAll();
             return View(data);
         }

@@ -1,4 +1,4 @@
-﻿@model List<Accounting_Software.ViewModel.StoreProductViewModel>
+﻿@model List<Accounting_Software.ViewModel.StoreProductViewModel>;
 
 <!DOCTYPE html>
 <html lang="en">
@@ -22,13 +22,15 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var storeProduct in Model)
+                    @foreach (var store in Model)
                     {
-                        <tr>
+                        <tr>                                                                 
                             <td>
-                                <a href="@Url.Action("ProductToStore", "Store", new { storeId = storeProduct.StoreId, productId = storeProduct.ProductId })">
-                                    @storeProduct.StoreName
+                                <a href="@Url.Action("AddProductToStore", "Store", new { storeId = store.StoreId, productId = ViewBag.ProductId })">
+                                    @store.StoreName
                                 </a>
+
+                              
                             </td>
                         </tr>
                     }
@@ -38,7 +40,7 @@
         else
         {
             <div class="alert alert-warning" role="alert">
-                No products found.
+                No shops found.
             </div>
         }
 

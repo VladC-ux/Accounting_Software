@@ -49,6 +49,7 @@ namespace Accounting_Software.Service
             {
                 Id = store.Id,
                 StoreName = store.StoreName,
+
             }).ToList();
         }
 

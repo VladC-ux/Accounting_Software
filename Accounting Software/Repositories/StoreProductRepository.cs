@@ -14,11 +14,6 @@ namespace Accounting_Software.Repositories
             _context = context;
         }
 
-        public void Add(StoreProduct storeProduct)
-        {
-            _context.StoreProducts.Add(storeProduct);
-        }
-
         public async Task AddAsync(StoreProduct storeProduct)
         {
             await _context.StoreProducts.AddAsync(storeProduct);
@@ -60,25 +55,54 @@ namespace Accounting_Software.Repositories
         {
             return _context.StoreProducts.ToList();
         }
-        public List<Store> GetAll()
-        {
-            return _context.Stores.ToList();
-        }
+        //public List<Store> GetAll()
+        //{
+        //    return _context.Stores.ToList();
+        //}
 
         public StoreProduct GetStoreProduct(int storeId, int productId)
         {
-            var result = from store in _context.Stores
-                         join product in _context.Products
-                         on store.Id equals product.Id
-                         where store.Id == storeId && product.Id == productId
-                         select new StoreProduct
-                         {
-                             StoreId = store.Id,
-                             ProductId = product.Id,
-                             StoreName = store.StoreName,                                                   
-                         };
+            var storeProduct = _context.Stores
+                .Include(store => store.StoreProducts) 
+                .ThenInclude(sp => sp.Product) 
+                .Where(store => store.Id == storeId) 
+                .SelectMany(store => store.StoreProducts, (store, storeProduct) => new StoreProduct
+                {
+                    StoreId = store.Id,
+                    ProductId = storeProduct.Product.Id,
+                    StoreName = store.StoreName
+                })
+                .FirstOrDefault(sp => sp.ProductId == productId); 
 
-            return result.FirstOrDefault();
+            return storeProduct;
         }
+
+        //test
+        public bool Exists(int storeId, int productId)
+        {
+            return _context.StoreProducts
+                           .Any(sp => sp.StoreId == storeId && sp.ProductId == productId);
+        }
+
+        
+        public void Add(StoreProduct storeProduct)
+        {
+            _context.StoreProducts.Add(storeProduct);
+            _context.SaveChanges();
+        }
+
+        public IEnumerable<StoreProduct> GetStoreProducts()
+        {
+            return _context.StoreProducts.Include(sp => sp.Store).Include(sp => sp.Product).ToList();
+        }
+
+        public IEnumerable<StoreProduct> GetAll()
+        {
+            return _context.StoreProducts
+                .Include(sp => sp.Store) 
+                .Include(sp => sp.Product)
+                .ToList();
+        }
+
     }
 }
