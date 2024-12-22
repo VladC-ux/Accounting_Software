@@ -66,12 +66,11 @@ namespace Accounting_Software.Migrations
                 name: "StoreProducts",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     StoreName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     StoreId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
-                    SellerId = table.Column<int>(type: "int", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     AddDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -82,7 +81,7 @@ namespace Accounting_Software.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StoreProducts", x => x.id);
+                    table.PrimaryKey("PK_StoreProducts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_StoreProducts_Products_ProductId",
                         column: x => x.ProductId,

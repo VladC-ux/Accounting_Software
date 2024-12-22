@@ -78,11 +78,11 @@ namespace Accounting_Software.Migrations
 
             modelBuilder.Entity("Accounting_Software.Data.Entites.StoreProduct", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("AddDate")
                         .HasColumnType("datetime2");
@@ -106,9 +106,6 @@ namespace Accounting_Software.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("SellerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("StoreId")
                         .HasColumnType("int");
 
@@ -119,7 +116,7 @@ namespace Accounting_Software.Migrations
                     b.Property<int>("Unitofmass")
                         .HasColumnType("int");
 
-                    b.HasKey("id");
+                    b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 

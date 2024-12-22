@@ -1,48 +1,68 @@
 ﻿@model Accounting_Software.ViewModel.StoreProductViewModel
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product to Store</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-</head>
-<body>
-    <div class="container mt-4">
-        <h2>Add Product to Store</h2>
+@{
+    ViewBag.Title = "Add Product to Store";
+}
 
-        <form method="post" action="@Url.Action("AddProductToStore", "Store")">
-            @Html.HiddenFor(model => model.StoreId)
-            @Html.HiddenFor(model => model.ProductId)
+<h2>Add Product to Store</h2>
 
-            <div class="form-group">
-                <label for="StoreName">Store Name</label>
-                <input type="text" class="form-control" id="StoreName" value="@Model.StoreName" readonly />
-            </div>
-
-            <div class="form-group">
-                <label for="ProductName">Product Name</label>
-                <input type="text" class="form-control" id="ProductName" value="@Model.ProductName" readonly />
-            </div>
-
-            <div class="form-group">
-                <label for="Price">Price</label>
-                <input type="number" class="form-control" id="Price" value="@Model.Price"/>
-            </div>
-
-            <div class="form-group">
-                <label for="Count">Quantity</label>
-                @Html.TextBoxFor(model => model.Count, new { @class = "form-control", type = "number", id = "Count", min = 1 })
-            </div>
-
-            <button type="submit" class="btn btn-primary">Add Product</button>
-            <a class="btn btn-secondary" asp-action="ShowSellerProduct" asp-controller="Product">Back</a>
-        </form>
+<form asp-action="AddProductToStore" method="post">
+    <div class="form-group">
+        <label asp-for="StoreName" class="control-label"></label>
+        <input asp-for="StoreName" class="form-control" readonly />
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
-</html>
+    <div class="form-group">
+        <label asp-for="ProductName" class="control-label"></label>
+        <input asp-for="ProductName" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Price" class="control-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Count" class="control-label"></label>
+        <input asp-for="Count" class="form-control" />
+        <span asp-validation-for="Count" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Mass" class="control-label"></label>
+        <input asp-for="Mass" class="form-control" />
+        <span asp-validation-for="Mass" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="unitOfmass" class="control-label"></label>
+        <select asp-for="unitOfmass" class="form-control">
+            <option value="0">Select Unit</option>
+            @foreach (var unit in Enum.GetValues(typeof(Accounting_Software.Enums.Unit_of_mass)))
+            {
+                <option value="@unit">@unit</option>
+            }
+        </select>
+        <span asp-validation-for="unitOfmass" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div>
+        <input type="hidden" asp-for="StoreId" />
+        <input type="hidden" asp-for="ProductId" />
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

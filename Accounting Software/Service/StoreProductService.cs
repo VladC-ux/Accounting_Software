@@ -28,13 +28,17 @@ namespace Accounting_Software.Service
         {
             StoreProduct st = new StoreProduct
             {
+                Id = storeProduct.Id,
                 ProductId = storeProduct.ProductId,
                 StoreId = storeProduct.StoreId,             
                 Price = storeProduct.Price,
                 AddDate = DateTime.Now,
                 ProductName = storeProduct.ProductName,
+                Mass = storeProduct.Mass,
+                Count = storeProduct.Count,
+                StoreName = storeProduct.StoreName,
+                Unitofmass = storeProduct.unitOfmass,
             };
-
             _storeProductRepository.Add(st);
             _uow.SaveChanges();
         }

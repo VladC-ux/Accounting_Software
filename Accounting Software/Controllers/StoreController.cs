@@ -58,7 +58,7 @@ namespace Accounting_Software.Controllers
             return View(store);
         }
         //public IActionResult ProductToStore(int productId, int storeId)
-        //{
+        //{a
         //    _storeProductService.AddProductToStore(productId, storeId);
         //    return View();
         //}
@@ -85,24 +85,27 @@ namespace Accounting_Software.Controllers
             var store = _storeService.GetById(storeId);
             if (store == null)
             {
-                return NotFound("Магазин не найден.");
+                return NotFound("Shop not found.");
             }
             
             var product = _productService.GetById(productId);
             if (product == null)
             {
-                return NotFound("Продукт не найден.");
+                return NotFound("Product not found");
             }
             
             var viewModel = new StoreProductViewModel
             {
-                
-                StoreId = storeId,
-                ProductId = productId,
+                Id = product.Id,
+                StoreId = store.Id,
+                ProductId = product.Id,
                 StoreName = store.StoreName,
                 ProductName = product.Name,
                 Price = product.Price, 
-                
+                Count = product.Count,
+                unitOfmass = product.unitOfmass,
+                Description = product.Description,
+                Mass = product.Mass, 
             };
 
             return View(viewModel);
@@ -112,18 +115,23 @@ namespace Accounting_Software.Controllers
         public IActionResult AddProductToStore(StoreProductViewModel model)
         {
             if (ModelState.IsValid)
-            {
-               
+            {     
                 var storeProduct = new StoreProductViewModel
                 {
+                    Id = model.Id,
                     StoreId = model.StoreId,
                     ProductId = model.ProductId,
+                    StoreName = model.StoreName,
+                    ProductName = model.ProductName,
                     Price = model.Price,
-                    Count = model.Count
+                    Count = model.Count,      
+                    unitOfmass = model.unitOfmass,
+                    Description = model.Description,
+                    Mass = model.Mass,
+                    AddDate = model.AddDate
                 };
 
                 _storeProductService.Add(storeProduct); 
-
                 return RedirectToAction("ShowSellerProduct","Product");
             }
 

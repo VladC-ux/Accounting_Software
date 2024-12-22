@@ -12,7 +12,6 @@ namespace Accounting_Software.Data.Entites
         public Store Store { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
-        public int SellerId { get; set; }
         public string ProductName { get; set; }
 
         [Required(ErrorMessage = "Quantity is required")]
