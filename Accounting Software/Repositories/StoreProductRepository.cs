@@ -1,5 +1,6 @@
 ﻿using Accounting_Software.Data;
 using Accounting_Software.Data.Entites;
+using Accounting_Software.Date.Entites;
 using Accounting_Software.Repository_Interfaces;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,7 +32,7 @@ namespace Accounting_Software.Repositories
         public StoreProduct GetById(int storeId, int productId)
         {
             return _context.StoreProducts
-            .FirstOrDefault(sp => sp.StoreId == storeId && sp.ProductId == productId);
+            .FirstOrDefault(sp => sp.StoreId == storeId && sp.ProductId == productId); 
         }
 
 
@@ -55,36 +56,22 @@ namespace Accounting_Software.Repositories
         {
             return _context.StoreProducts.ToList();
         }
-        //public List<Store> GetAll()
-        //{
-        //    return _context.Stores.ToList();
-        //}
-
         public StoreProduct GetStoreProduct(int storeId, int productId)
         {
             var storeProduct = _context.Stores
-                .Include(store => store.StoreProducts) 
-                .ThenInclude(sp => sp.Product) 
-                .Where(store => store.Id == storeId) 
+                .Include(store => store.StoreProducts)
+                .ThenInclude(sp => sp.Product)
+                .Where(store => store.Id == storeId)
                 .SelectMany(store => store.StoreProducts, (store, storeProduct) => new StoreProduct
                 {
                     StoreId = store.Id,
                     ProductId = storeProduct.Product.Id,
                     StoreName = store.StoreName
                 })
-                .FirstOrDefault(sp => sp.ProductId == productId); 
+                .FirstOrDefault(sp => sp.ProductId == productId);
 
             return storeProduct;
         }
-
-        //test
-        public bool Exists(int storeId, int productId)
-        {
-            return _context.StoreProducts
-                           .Any(sp => sp.StoreId == storeId && sp.ProductId == productId);
-        }
-
-        
         public void Add(StoreProduct storeProduct)
         {
             _context.StoreProducts.Add(storeProduct);
@@ -96,13 +83,27 @@ namespace Accounting_Software.Repositories
             return _context.StoreProducts.Include(sp => sp.Store).Include(sp => sp.Product).ToList();
         }
 
-        public IEnumerable<StoreProduct> GetAll()
+        public List<StoreProduct> GetAll()
+        {
+            return _context.StoreProducts.ToList();
+        }
+
+        public List<StoreProduct> GetProductByStoreId(int storeId)
         {
             return _context.StoreProducts
-                .Include(sp => sp.Store) 
-                .Include(sp => sp.Product)
+                .Where(p => p.StoreId == storeId)
+                .Include(p => p.Product) 
+                .ThenInclude(p => p.Seller) 
                 .ToList();
         }
+
+        public List<string> GetSellerName()
+        {
+            return _context.Products
+                .Select(p => p.Seller.Name)  
+                .ToList();
+        }
+
 
     }
 }

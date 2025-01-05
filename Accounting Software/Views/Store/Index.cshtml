@@ -26,7 +26,7 @@
                     {
                         <tr>
                             <td>
-                                <a href="@Url.Action("AddProductsToStore", "Product", new { storeId = store.Id })">@store.StoreName</a>
+                                <a href="@Url.Action("ShowStoreProduct", "Store", new { storeId = store.Id })">@store.StoreName</a>
                             </td>
                             <td>
                                 <a href="@Url.Action("Edit", "Store", new { id = store.Id })" class="btn btn-sm btn-primary">Edit</a>

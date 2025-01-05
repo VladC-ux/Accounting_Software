@@ -22,6 +22,7 @@ namespace Accounting_Software.ViewModel
             get { return Price * Count; }
         }
 
+        public string SellerName { get; set; }
       
     }
 }

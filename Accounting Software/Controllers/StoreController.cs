@@ -14,14 +14,16 @@ namespace Accounting_Software.Controllers
         private readonly IStoreProductService _storeProductService;
         private readonly IProductService _productService;
         private readonly IStoreProductRepository _storeProductRepository;
-     
+        private readonly ISellerService _sellerService;
 
-        public StoreController(IStoreService storeService, IStoreProductService storeproduct, IStoreProductRepository storeProductRepository,IProductService productService)
+
+        public StoreController(IStoreService storeService, IStoreProductService storeproduct, IStoreProductRepository storeProductRepository, IProductService productService, ISellerService sellerService)
         {
             _storeService = storeService;
             _storeProductService = storeproduct;
             _storeProductRepository = storeProductRepository;
             _productService = productService;
+            _sellerService = sellerService;
         }
 
         public IActionResult Index()
@@ -68,12 +70,12 @@ namespace Accounting_Software.Controllers
         {
             ViewBag.ProductId = id;
             var stores = _storeService.GetAll();
-            var storeProducts = _storeProductRepository.GetAll(); 
-            
+            var storeProducts = _storeProductRepository.GetAll();
+
             var storeProductViewModels = stores.Select(sp => new StoreProductViewModel
-            {            
+            {
                 StoreId = sp.Id,
-                StoreName = sp.StoreName, 
+                StoreName = sp.StoreName,
             }).ToList();
 
             return View(storeProductViewModels);
@@ -81,19 +83,20 @@ namespace Accounting_Software.Controllers
 
         [HttpGet]
         public IActionResult AddProductToStore(int storeId, int productId)
-        {          
+        {
             var store = _storeService.GetById(storeId);
             if (store == null)
             {
                 return NotFound("Shop not found.");
             }
-            
+
             var product = _productService.GetById(productId);
             if (product == null)
             {
                 return NotFound("Product not found");
             }
-            
+
+
             var viewModel = new StoreProductViewModel
             {
                 Id = product.Id,
@@ -101,11 +104,13 @@ namespace Accounting_Software.Controllers
                 ProductId = product.Id,
                 StoreName = store.StoreName,
                 ProductName = product.Name,
-                Price = product.Price, 
+                Price = product.Price,
                 Count = product.Count,
                 unitOfmass = product.unitOfmass,
                 Description = product.Description,
-                Mass = product.Mass, 
+                Mass = product.Mass,
+               
+
             };
 
             return View(viewModel);
@@ -114,8 +119,7 @@ namespace Accounting_Software.Controllers
         [HttpPost]
         public IActionResult AddProductToStore(StoreProductViewModel model)
         {
-            if (ModelState.IsValid)
-            {     
+           
                 var storeProduct = new StoreProductViewModel
                 {
                     Id = model.Id,
@@ -124,37 +128,32 @@ namespace Accounting_Software.Controllers
                     StoreName = model.StoreName,
                     ProductName = model.ProductName,
                     Price = model.Price,
-                    Count = model.Count,      
+                    Count = model.Count,
                     unitOfmass = model.unitOfmass,
                     Description = model.Description,
                     Mass = model.Mass,
                     AddDate = model.AddDate
                 };
 
-                _storeProductService.Add(storeProduct); 
-                return RedirectToAction("ShowSellerProduct","Product");
-            }
-
-            return View(model); 
+                _storeProductService.Add(storeProduct);
+               return RedirectToAction("Index", "Seller");
+                   
         }
 
+        [HttpGet]
+        public IActionResult ShowStoreProduct(int? storeId)
+        {
+            var data = _storeProductService.GetProductByStoreId(storeId);
+            return View(data);
 
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        [HttpPost]
+        public IActionResult ShowStoreProduct()
+        {
+            var data = _storeProductService.GetAll();
+            return View(data);
+        }
     }
+
 }

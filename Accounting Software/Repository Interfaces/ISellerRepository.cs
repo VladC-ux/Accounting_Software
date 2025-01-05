@@ -11,6 +11,6 @@ namespace Accounting_Software.Repository_Interfaces
         List<Seller> GetAll(); 
         Seller GetById(int id);
         void Delete(int id);
-       
+        Seller GetSellerName(string name);
     }
 }

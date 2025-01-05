@@ -13,8 +13,8 @@ namespace Accounting_Software.Service_Interfaces
         void Delete(int storeId, int productId);
         List<StoreProductViewModel> GetStores();
         StoreProduct GetStoreProduct(int storeId, int productId);
-
-        //test
         void AddProductToStore(int productId, int storeId);
+        List<StoreProductViewModel> GetAll();
+        List<StoreProductViewModel> GetProductByStoreId(int? sellerId);
     }
 }

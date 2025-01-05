@@ -32,10 +32,12 @@ namespace Accounting_Software.Repositories
         {
             return _context.Products.ToList();
         }
+
         public Product GetById(int productId)
         {         
             return _context.Products.FirstOrDefault(p => p.Id == productId);           
         }
+
         public List<Product> GetProductsBySellerId(int sellerId)
         {
             return _context.Products.Where(p => p.SellerId == sellerId).ToList();

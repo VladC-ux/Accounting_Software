@@ -29,8 +29,6 @@
                                 <a href="@Url.Action("AddProductToStore", "Store", new { storeId = store.StoreId, productId = ViewBag.ProductId })">
                                     @store.StoreName
                                 </a>
-
-                              
                             </td>
                         </tr>
                     }
@@ -43,7 +41,6 @@
                 No shops found.
             </div>
         }
-
         <a class="btn btn-secondary mt-2" asp-action="Index" asp-controller="Seller">Back to Product List</a>
     </div>
 

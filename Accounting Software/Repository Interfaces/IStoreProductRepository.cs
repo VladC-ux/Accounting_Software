@@ -11,13 +11,12 @@ namespace Accounting_Software.Repository_Interfaces
         void Delete(int storeId, int productId);       
         Task AddAsync(StoreProduct storeProduct);
         List<StoreProduct> GetStores();
-      //  List<Store> GetAll();
         StoreProduct GetStoreProduct(int storeId, int productId);
-
-        //test
-        bool Exists(int storeId, int productId);
         IEnumerable<StoreProduct> GetStoreProducts();
-        IEnumerable<StoreProduct> GetAll();
+        List<StoreProduct> GetAll();
+        List<StoreProduct> GetProductByStoreId(int storeId);
+        List<string> GetSellerName();
+
 
     }
 }

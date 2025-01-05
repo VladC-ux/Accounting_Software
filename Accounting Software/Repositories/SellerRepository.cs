@@ -40,6 +40,11 @@ namespace Accounting_Software.Repositories
             return _context.Sellers.FirstOrDefault(u => u.Id == id);
         }
 
+        public Seller GetSellerName(string name)
+        {
+            return _context.Sellers.FirstOrDefault(u => u.Name == name);
+        }
+
         public Seller Update(Seller user)
         {
             var entity = _context.Sellers.FirstOrDefault(u => u.Id == user.Id);
