@@ -78,6 +78,27 @@
             color: #6c757d;
         }
 
+        .actions {
+            text-align: center;
+        }
+
+            .actions a {
+                text-decoration: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                margin: 0 4px;
+                font-size: 0.9rem;
+            }
+
+            .actions .edit {
+                background-color: #ffc107;
+                color: #fff;
+            }
+
+            .actions .delete {
+                background-color: #dc3545;
+                color: #fff;
+            }
     </style>
 </head>
 <body>
@@ -99,6 +120,7 @@
                     <th>Unit of Mass</th>
                     <th>Count</th>
                     <th>Add Date</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -110,20 +132,24 @@
                             <td>@product.Id</td>
                             <td>@product.ProductName</td>
                             <td>@product.StoreName</td>
-                            <td>@product.SellerName</td> 
-                            <td class="price">@product.Price.ToString("C")</td> 
+                            <td>@product.SellerName</td>
+                            <td class="price">@product.Price.ToString("C")</td>
                             <td>@product.Description</td>
                             <td>@product.Mass</td>
                             <td>@product.unitOfmass</td>
                             <td>@product.Count</td>
-                            <td class="date">@product.AddDate.ToString("yyyy-MM-dd")</td> 
+                            <td class="date">@product.AddDate.ToString("yyyy-MM-dd")</td>
+                            <td class="actions">
+                                <a href="/Store/EditAllStore/@product.Id" class="Update">Edit</a>
+                                <a href="/Store/DeleteStoreProduct/@product.Id" class="delete" onclick="return confirm('Are you sure you want to delete this product?');">Delete</a>
+                            </td>
                         </tr>
                     }
                 }
                 else
                 {
                     <tr>
-                        <td colspan="10" class="no-products">No products available</td>
+                        <td colspan="11" class="no-products">No products available</td>
                     </tr>
                 }
             </tbody>

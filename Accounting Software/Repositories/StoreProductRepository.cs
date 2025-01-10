@@ -20,21 +20,24 @@ namespace Accounting_Software.Repositories
             await _context.StoreProducts.AddAsync(storeProduct);
         }
 
-        public void Delete(int storeId, int productId)
+        public void Delete(StoreProduct product)
         {
-            var storeProduct = GetById(storeId, productId);
-            if (storeProduct != null)
+            if (product != null)
             {
-                _context.StoreProducts.Remove(storeProduct);
+                _context.StoreProducts.Remove(product);
+                _context.SaveChanges();
+            }
+            else
+            {
+                throw new ArgumentNullException(nameof(product), "Product cannot be null.");
             }
         }
 
-        public StoreProduct GetById(int storeId, int productId)
+        public StoreProduct GetIdByStoreAndProduct(int storeId, int productId)
         {
             return _context.StoreProducts
             .FirstOrDefault(sp => sp.StoreId == storeId && sp.ProductId == productId); 
         }
-
 
         public IEnumerable<StoreProduct> GetByStoreId(int storeId)
         {
@@ -47,9 +50,11 @@ namespace Accounting_Software.Repositories
             return await _context.Products.FindAsync(productId);
         }
 
-        public void Update(StoreProduct storeProduct)
-        {
+        public StoreProduct Update(StoreProduct storeProduct)
+        { 
             _context.StoreProducts.Update(storeProduct);
+            _context.SaveChanges();
+            return storeProduct;
         }
 
         public List<StoreProduct> GetStores()
@@ -104,6 +109,15 @@ namespace Accounting_Software.Repositories
                 .ToList();
         }
 
+        public StoreProduct GetById(int id)
+        {
+            return _context.StoreProducts
+                        .FirstOrDefault(sp => sp.Id == id);
+        }
 
+        public StoreProduct GetBy(int storeId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

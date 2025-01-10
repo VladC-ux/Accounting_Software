@@ -4,11 +4,11 @@ namespace Accounting_Software.Repository_Interfaces
 {
     public interface IStoreProductRepository
     {
-        StoreProduct GetById(int storeId, int productId);
-        IEnumerable<StoreProduct> GetByStoreId(int storeId);
+        StoreProduct GetIdByStoreAndProduct(int storeId, int productId);
+        StoreProduct GetById(int storeId);
         void Add(StoreProduct storeProduct);
-        void Update(StoreProduct storeProduct);
-        void Delete(int storeId, int productId);       
+        StoreProduct Update(StoreProduct storeProduct);
+        void Delete(StoreProduct Id);       
         Task AddAsync(StoreProduct storeProduct);
         List<StoreProduct> GetStores();
         StoreProduct GetStoreProduct(int storeId, int productId);
@@ -16,7 +16,7 @@ namespace Accounting_Software.Repository_Interfaces
         List<StoreProduct> GetAll();
         List<StoreProduct> GetProductByStoreId(int storeId);
         List<string> GetSellerName();
-
+       
 
     }
 }

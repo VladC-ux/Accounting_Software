@@ -1,11 +1,14 @@
 ﻿using Accounting_Software.Data.Entites;
 using Accounting_Software.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Accounting_Software.ViewModel
 {
     public class StoreProductViewModel
     {
         public int Id { get; set; }
+
+        [ForeignKey("Product")]
         public int ProductId { get; set; }
         public int StoreId { get; set; }
         public string StoreName { get; set; } 

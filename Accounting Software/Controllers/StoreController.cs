@@ -5,6 +5,7 @@ using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Accounting_Software.Controllers
 {
@@ -109,7 +110,7 @@ namespace Accounting_Software.Controllers
                 unitOfmass = product.unitOfmass,
                 Description = product.Description,
                 Mass = product.Mass,
-               
+
 
             };
 
@@ -119,25 +120,22 @@ namespace Accounting_Software.Controllers
         [HttpPost]
         public IActionResult AddProductToStore(StoreProductViewModel model)
         {
-           
-                var storeProduct = new StoreProductViewModel
-                {
-                    Id = model.Id,
-                    StoreId = model.StoreId,
-                    ProductId = model.ProductId,
-                    StoreName = model.StoreName,
-                    ProductName = model.ProductName,
-                    Price = model.Price,
-                    Count = model.Count,
-                    unitOfmass = model.unitOfmass,
-                    Description = model.Description,
-                    Mass = model.Mass,
-                    AddDate = model.AddDate
-                };
-
-                _storeProductService.Add(storeProduct);
-               return RedirectToAction("Index", "Seller");
-                   
+            var storeProduct = new StoreProductViewModel
+            {
+                Id = model.Id,
+                StoreId = model.StoreId,
+                ProductId = model.ProductId,
+                StoreName = model.StoreName,
+                ProductName = model.ProductName,
+                Price = model.Price,
+                Count = model.Count,
+                unitOfmass = model.unitOfmass,
+                Description = model.Description,
+                Mass = model.Mass,
+                AddDate = model.AddDate
+            };
+            _storeProductService.Add(storeProduct);
+            return RedirectToAction("Index", "Seller");
         }
 
         [HttpGet]
@@ -154,6 +152,31 @@ namespace Accounting_Software.Controllers
             var data = _storeProductService.GetAll();
             return View(data);
         }
+
+        [HttpGet]
+        public IActionResult EditAllStore(int id)
+        {
+            var data = _storeProductService.GetById(id);
+            return View(data);  
+        }
+
+        [HttpPost]
+        public IActionResult EditAllStore(StoreProductViewModel model)
+        {
+            _storeProductService.Update(model);
+            return RedirectToAction("ShowStoreProduct", new { StoreId = model.StoreId });
+        }
+
+      
+        public IActionResult DeleteStoreProduct(StoreProductViewModel model)
+        {   
+            var data = _storeProductService.GetById(model.Id);
+            _storeProductService.Delete(data);
+            return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId });
+        }
+
     }
 
 }
+
+

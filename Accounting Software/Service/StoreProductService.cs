@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Security.Cryptography.X509Certificates;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Accounting_Software.Service
 {
@@ -20,7 +21,7 @@ namespace Accounting_Software.Service
         private readonly IStoreRepository _storeRepository;
         private readonly ISellerRepository _sellerRepository;
 
-        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepositoryl , ISellerRepository sellerRepository)
+        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepositoryl, ISellerRepository sellerRepository)
         {
             _storeProductRepository = storeproduct;
             _uow = uow;
@@ -34,7 +35,7 @@ namespace Accounting_Software.Service
             {
                 Id = storeProduct.Id,
                 ProductId = storeProduct.ProductId,
-                StoreId = storeProduct.StoreId,             
+                StoreId = storeProduct.StoreId,
                 Price = storeProduct.Price,
                 AddDate = DateTime.Now,
                 ProductName = storeProduct.ProductName,
@@ -55,7 +56,7 @@ namespace Accounting_Software.Service
 
         public void AddProductToStore(int productId, int storeId)
         {
-           
+
             var product = _productRepository.GetById(productId);
             if (product == null)
             {
@@ -72,82 +73,66 @@ namespace Accounting_Software.Service
             {
                 ProductId = productId,
                 StoreId = storeId
-            };    
+            };
             _storeProductRepository.Add(storeProduct);
         }
-        public void Delete(int storeId, int productId)
+
+        public void Delete(StoreProductViewModel storeProduct)
+        {
+            var st = _storeProductRepository.GetById(storeProduct.Id);
+
+            if (st == null)
+            {
+                return;
+            }
+            _storeProductRepository.Delete(st);
+        }
+
+        public StoreProductViewModel Update(StoreProductViewModel storeProduct)
         {
            
-            var storeProduct = _storeProductRepository.GetById(storeId, productId);
-            if (storeProduct == null)
+            StoreProduct st = new StoreProduct
             {
-                throw new KeyNotFoundException("StoreProduct not found.");
-            }
-
-            _storeProductRepository.Delete(storeId, productId);            
+                Id = storeProduct.Id,
+                StoreId = storeProduct.StoreId,
+                ProductId = storeProduct.ProductId,        
+                ProductName = storeProduct.ProductName,
+                StoreName = storeProduct.StoreName,
+                Price = storeProduct.Price,
+                Description = storeProduct.Description,
+                Unitofmass = storeProduct.unitOfmass,
+                Mass = storeProduct.Mass,
+                AddDate = storeProduct.AddDate,
+                Count = storeProduct.Count,
+            };
+    
+            _storeProductRepository.Update(st);
             _uow.SaveChanges();
-        }      
-        public StoreProductViewModel GetById(int storeId, int productId)
-        {       
-            var storeProduct = _storeProductRepository.GetById(storeId, productId);
 
-            if (storeProduct == null)
-            {
-                throw new KeyNotFoundException("StoreProduct not found.");
-            }          
             return new StoreProductViewModel
             {
-                ProductId = storeProduct.ProductId,
-                StoreId = storeProduct.StoreId,              
-                Price = storeProduct.Price,
-                AddDate = storeProduct.AddDate,
-                ProductName = storeProduct.ProductName 
-            };
-        }
-
-        public IEnumerable<StoreProductViewModel> GetByStoreId(int storeId)
-        {
-            var storeProducts = _storeProductRepository.GetByStoreId(storeId);
-            if (storeProducts == null)
-            {
-                throw new KeyNotFoundException("Store not found.");
-            }
-            return storeProducts.Select(sp => new StoreProductViewModel
-            {
-                ProductId = sp.ProductId,
-                StoreId = sp.StoreId,              
-                Price = sp.Price,
-                AddDate = sp.AddDate,
-                ProductName = sp.ProductName
-
-            }).ToList();
-        }
-
-        public void Update(StoreProductViewModel storeProduct)
-        {
-            StoreProduct sp = new StoreProduct
-            {
-                
-                ProductId = storeProduct.ProductId,
+                Id = st.Id,
                 StoreId = storeProduct.StoreId,
-                Price = storeProduct.Price,
-                AddDate = storeProduct.AddDate,
-                ProductName = storeProduct.ProductName
+                ProductId = storeProduct.ProductId,
+                ProductName = st.ProductName,
+                StoreName = st.StoreName,
+                Price = st.Price,
+                Description = st.Description,
+                unitOfmass = st.Unitofmass,
+                Mass = st.Mass,
+                AddDate = st.AddDate,
+                Count = st.Count,
             };
-
-            _storeProductRepository.Update(sp);
-            _uow.SaveChanges();
         }
+
         public List<StoreProductViewModel> GetStores()
         {
             var data = _storeProductRepository.GetAll();
             List<StoreProductViewModel> storeProducts = data.Select(storeproduct => new StoreProductViewModel
             {
-
-              StoreId = storeproduct.StoreId,
-              ProductId = storeproduct.ProductId,
-              StoreName = storeproduct.StoreName,
-
+                StoreId = storeproduct.StoreId,
+                ProductId = storeproduct.ProductId,
+                StoreName = storeproduct.StoreName,
             }).ToList();
 
             return storeProducts;
@@ -162,7 +147,7 @@ namespace Accounting_Software.Service
         {
             var data = _storeProductRepository.GetAll();
             List<StoreProductViewModel> storeproduct = data.Select(stProduct => new StoreProductViewModel
-            { 
+            {
                 Id = stProduct.Id,
                 StoreId = stProduct.StoreId,
                 ProductId = stProduct.ProductId,
@@ -175,6 +160,7 @@ namespace Accounting_Software.Service
                 AddDate = stProduct.AddDate,
                 Count = stProduct.Count
             }).ToList();
+
             return storeproduct;
         }
 
@@ -184,7 +170,6 @@ namespace Accounting_Software.Service
             {
                 var data = _storeProductRepository.GetProductByStoreId(storeid.Value);
 
-               
                 List<StoreProductViewModel> storeproduct = data.Select(st =>
                 {
                     return new StoreProductViewModel
@@ -200,7 +185,7 @@ namespace Accounting_Software.Service
                         Mass = st.Mass,
                         AddDate = st.AddDate,
                         Count = st.Count,
-                        SellerName = st.Product.Seller.Name 
+                        SellerName = st.Product.Seller.Name
                     };
                 }).ToList();
 
@@ -211,6 +196,24 @@ namespace Accounting_Software.Service
         }
 
 
-
+        public StoreProductViewModel GetById(int storeId)
+        {
+            var st = _storeProductRepository.GetById(storeId);
+            
+            return new StoreProductViewModel
+            {
+                Id = st.Id,
+                StoreId = st.StoreId,
+                ProductId = st.ProductId,
+                ProductName = st.ProductName,
+                StoreName = st.StoreName,
+                Price = st.Price,
+                Description = st.Description,
+                unitOfmass = st.Unitofmass,
+                Mass = st.Mass,
+                AddDate = st.AddDate,
+                Count = st.Count,
+            };
+        }
     }
 }
