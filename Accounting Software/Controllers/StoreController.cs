@@ -110,8 +110,6 @@ namespace Accounting_Software.Controllers
                 unitOfmass = product.unitOfmass,
                 Description = product.Description,
                 Mass = product.Mass,
-
-
             };
 
             return View(viewModel);
@@ -167,7 +165,7 @@ namespace Accounting_Software.Controllers
             return RedirectToAction("ShowStoreProduct", new { StoreId = model.StoreId });
         }
 
-      
+        [HttpPost]
         public IActionResult DeleteStoreProduct(StoreProductViewModel model)
         {   
             var data = _storeProductService.GetById(model.Id);
