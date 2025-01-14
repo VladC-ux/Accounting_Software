@@ -1,11 +1,12 @@
 using Accounting_Software.Repositories;
 using Accounting_Software.Service;
-using Microsoft.AspNetCore.Authentication;
 using Accounting_Software.Data;
 using Microsoft.EntityFrameworkCore;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.UnitOfWorkk;
+
+
 
 
 namespace Accounting_Software
@@ -27,6 +28,8 @@ namespace Accounting_Software
             builder.Services.AddScoped<IStoreRepository, StoreRepository>();
             builder.Services.AddScoped<IStoreProductService, StoreProductService>();
             builder.Services.AddScoped<IStoreProductRepository, StoreProductRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 

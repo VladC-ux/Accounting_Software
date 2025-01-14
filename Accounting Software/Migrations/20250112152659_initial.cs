@@ -38,6 +38,19 @@ namespace Accounting_Software.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -58,6 +71,29 @@ namespace Accounting_Software.Migrations
                         name: "FK_Products_Sellers_SellerId",
                         column: x => x.SellerId,
                         principalTable: "Sellers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransactionHistory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SoldDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransactionHistory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TransactionHistory_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -110,6 +146,11 @@ namespace Accounting_Software.Migrations
                 name: "IX_StoreProducts_StoreId",
                 table: "StoreProducts",
                 column: "StoreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TransactionHistory_UserId",
+                table: "TransactionHistory",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -119,10 +160,16 @@ namespace Accounting_Software.Migrations
                 name: "StoreProducts");
 
             migrationBuilder.DropTable(
+                name: "TransactionHistory");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
                 name: "Stores");
+
+            migrationBuilder.DropTable(
+                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Sellers");

@@ -17,7 +17,6 @@ namespace Accounting_Software.Data.Entites
         public Product Product { get; set; }
         public string ProductName { get; set; }
 
-
         [Range(0.01, double.MaxValue, ErrorMessage = "Price must be greater than zero")]
         public decimal Price { get; set; }
         public DateTime AddDate { get; set; }
@@ -30,6 +29,4 @@ namespace Accounting_Software.Data.Entites
         public Unit_of_mass Unitofmass { get; set; }
         public int Count { get; set; }
     }
-
-
 }

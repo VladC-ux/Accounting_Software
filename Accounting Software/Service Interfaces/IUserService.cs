@@ -1,9 +1,10 @@
-﻿using Humanizer.Localisation.TimeToClockNotation;
+﻿using Accounting_Software.ViewModel;
+using Humanizer.Localisation.TimeToClockNotation;
 
 namespace Accounting_Software.Service_Interfaces
 {
     public interface IUserService
     {
-        decimal GetBalance(int Id);
+        UserViewModel GetBalance(int Id);
     }
 }

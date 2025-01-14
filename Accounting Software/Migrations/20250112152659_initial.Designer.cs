@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounting_Software.Migrations
 {
     [DbContext(typeof(DBContextAccounting))]
-    [Migration("20250110095416_initial")]
+    [Migration("20250112152659_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -128,6 +128,53 @@ namespace Accounting_Software.Migrations
                     b.ToTable("StoreProducts");
                 });
 
+            modelBuilder.Entity("Accounting_Software.Data.Entites.TransactionHistory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SoldDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("TransactionHistory");
+                });
+
+            modelBuilder.Entity("Accounting_Software.Data.Entites.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Balance")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Users");
+                });
+
             modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
                 {
                     b.Property<int>("Id")
@@ -175,6 +222,17 @@ namespace Accounting_Software.Migrations
                     b.Navigation("Store");
                 });
 
+            modelBuilder.Entity("Accounting_Software.Data.Entites.TransactionHistory", b =>
+                {
+                    b.HasOne("Accounting_Software.Data.Entites.User", "User")
+                        .WithMany("TransactionHistories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Accounting_Software.Data.Entites.Product", b =>
                 {
                     b.Navigation("StoreProducts");
@@ -183,6 +241,11 @@ namespace Accounting_Software.Migrations
             modelBuilder.Entity("Accounting_Software.Data.Entites.Store", b =>
                 {
                     b.Navigation("StoreProducts");
+                });
+
+            modelBuilder.Entity("Accounting_Software.Data.Entites.User", b =>
+                {
+                    b.Navigation("TransactionHistories");
                 });
 
             modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>

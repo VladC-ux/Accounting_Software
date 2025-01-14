@@ -25,5 +25,10 @@ namespace Accounting_Software.Repositories
             return balance;
         }
 
+        public User GetUserById(int id)
+        {
+            return _context.Users.FirstOrDefault(u => u.Id == id);
+
+        }
     }
 }
