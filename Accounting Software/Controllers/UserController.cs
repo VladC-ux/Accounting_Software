@@ -1,4 +1,6 @@
-﻿using Accounting_Software.Service_Interfaces;
+﻿
+using Accounting_Software.Service_Interfaces;
+using Accounting_Software.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Accounting_Software.Controllers
@@ -14,8 +16,15 @@ namespace Accounting_Software.Controllers
 
         public IActionResult Index(int Id)
         {
+           
             var data = _userService.GetBalance(Id);
             return View(data);
+        }
+
+        public IActionResult AddUser(UserViewModel user)
+        {             
+            _userService.Add(user);
+            return View();
         }
     }
 }

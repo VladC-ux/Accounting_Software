@@ -13,13 +13,14 @@ namespace Accounting_Software.Service
         private readonly IProductRepository _productRepository;
         private readonly IStoreRepository _store;
         private readonly IUnitofWork _uow;
+        private readonly IUserRepository _userRepository;
 
-
-        public ProductService(IProductRepository poroductrepository, IUnitofWork uow, IStoreRepository store)
+        public ProductService(IProductRepository poroductrepository, IUnitofWork uow, IStoreRepository store,IUserRepository userRepository)
         {
             _productRepository = poroductrepository;
             _uow = uow;        
             _store = store;
+            _userRepository = userRepository;
         }
 
         public void Add(ProductViewModel model)
@@ -34,9 +35,11 @@ namespace Accounting_Software.Service
                 Unitofmass = model.unitOfmass,
                 SellerId = model.SellerId,
                 Count = model.Count,
-                
+               
             };
 
+            var data = _userRepository.GetUserById(4);
+            data.Balance -= model.Total;
             _productRepository.Add(product);
             _uow.SaveChanges();
 

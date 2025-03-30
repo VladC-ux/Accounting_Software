@@ -100,6 +100,11 @@
                 color: #fff;
             }
 
+            .actions .sale {
+                background-color: #28a745;
+                color: #fff;
+            }
+
             .actions form {
                 display: inline;
             }
@@ -158,11 +163,12 @@
                             <td class="date">@product.AddDate.ToString("yyyy-MM-dd")</td>
                             <td class="actions">
                                 <a href="/Store/EditAllStore/@product.Id" class="edit">Edit</a>
+                               <a href="/Store/Sale/@product.Id?storeId=@product.StoreId" class="sale">Sale</a>
                                 <form asp-action="DeleteStoreProduct" method="post" onsubmit="return confirm('Are you sure you want to delete this product?');">
                                     <input type="hidden" name="Id" value="@product.Id" />
                                     <input type="hidden" name="ProductId" value="@product.ProductId" />
                                     <input type="hidden" name="StoreId" value="@product.StoreId" />
-                                    <button type="submit">Delete</button>
+                                    <button type="submit" class="delete">Delete</button>
                                 </form>
                             </td>
                         </tr>

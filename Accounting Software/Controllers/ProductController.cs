@@ -1,12 +1,7 @@
-﻿using Accounting_Software.Data.Entites;
-using Accounting_Software.Date.Entites;
-using Accounting_Software.Service;
+﻿
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis;
-using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 
 namespace Accounting_Software.Controllers
 {
@@ -18,8 +13,7 @@ namespace Accounting_Software.Controllers
         public ProductController(IProductService productService, ISellerService sellerService)
         {
             _productService = productService;
-            _sellerService = sellerService;
-          
+            _sellerService = sellerService;         
         }
 
         public IActionResult Index()
@@ -52,6 +46,8 @@ namespace Accounting_Software.Controllers
 
             return View(product);
         }
+
+   
 
 
         [HttpGet]

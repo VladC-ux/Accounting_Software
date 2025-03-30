@@ -33,6 +33,19 @@ namespace Accounting_Software.Controllers
             return View(stores);
         }
 
+        public IActionResult Sale(StoreProductViewModel model)
+        {
+            _storeProductService.GetBalanceSale(model.Id);
+            return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId });     
+        }
+
+        [HttpPost]
+        public IActionResult DeleteStoreProduct(StoreProductViewModel model)
+        {
+            var data = _storeProductService.GetById(model.Id);
+            _storeProductService.Delete(data);
+            return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId});
+        }
         public IActionResult Add(Store store)
         {
             if (ModelState.IsValid)
@@ -165,13 +178,7 @@ namespace Accounting_Software.Controllers
             return RedirectToAction("ShowStoreProduct", new { StoreId = model.StoreId });
         }
 
-        [HttpPost]
-        public IActionResult DeleteStoreProduct(StoreProductViewModel model)
-        {   
-            var data = _storeProductService.GetById(model.Id);
-            _storeProductService.Delete(data);
-            return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId });
-        }
+     
 
     }
 

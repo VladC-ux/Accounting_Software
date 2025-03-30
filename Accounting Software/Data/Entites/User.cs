@@ -2,8 +2,9 @@
 {
     public class User
     {
-        public int Id { get; set; } 
+        public int Id { get; set; }
+        public string Name { get; set; } = string.Empty;
         public decimal Balance { get; set; } = 0m;
-        public ICollection<TransactionHistory> TransactionHistories { get; set; }
+        public List<TransactionHistory> TransactionHistories { get; set; } = new List<TransactionHistory>();
     }
 }

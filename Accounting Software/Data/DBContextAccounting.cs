@@ -15,11 +15,7 @@ namespace Accounting_Software.Data
         public DbSet<Store> Stores { get; set; }
         public DbSet<StoreProduct> StoreProducts { get; set; }
         public DbSet<User> Users { get; set; }
-
-
-
-
-
+        public DbSet<TransactionHistory> TransactionHistories { get; set; }
 
     }
 }

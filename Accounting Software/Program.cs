@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.UnitOfWorkk;
+using Accounting_Software.Data.Entites;
 
 
 
@@ -30,13 +31,12 @@ namespace Accounting_Software
             builder.Services.AddScoped<IStoreProductRepository, StoreProductRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-
+            //builder.Services.AddScoped<ITransactionHistoryService, TransactionHistoryService>();
+            //builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
             builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
-
             var app = builder.Build();
-
-           
+            
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");

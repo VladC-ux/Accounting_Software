@@ -19,7 +19,7 @@ namespace Accounting_Software.Repositories
         {
             return _context.Stores.FirstOrDefault(p => p.Id == id);
         }
-
+        
         public List<Store> GetAll()
         {
             return _context.Stores.ToList();
@@ -45,5 +45,7 @@ namespace Accounting_Software.Repositories
               
             }
         }
+
+           
     }
 }

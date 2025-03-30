@@ -16,7 +16,7 @@ namespace Accounting_Software.Service_Interfaces
         void AddProductToStore(int productId, int storeId);
         List<StoreProductViewModel> GetAll();
         List<StoreProductViewModel> GetProductByStoreId(int? sellerId);
-
+        void GetBalanceSale(int id);
         StoreProductViewModel GetById (int storeId);
     }
 }

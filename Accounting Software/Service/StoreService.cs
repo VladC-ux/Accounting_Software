@@ -73,5 +73,7 @@ namespace Accounting_Software.Service
             _sp.Update(st);
             _uow.SaveChanges();
         }
+
+       
     }
 }

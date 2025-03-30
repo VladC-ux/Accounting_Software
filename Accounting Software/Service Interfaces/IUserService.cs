@@ -6,5 +6,7 @@ namespace Accounting_Software.Service_Interfaces
     public interface IUserService
     {
         UserViewModel GetBalance(int Id);
+
+        void Add(UserViewModel user);
     }
 }

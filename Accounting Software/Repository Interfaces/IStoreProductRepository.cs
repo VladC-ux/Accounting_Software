@@ -1,4 +1,5 @@
 ﻿using Accounting_Software.Data.Entites;
+using Microsoft.EntityFrameworkCore;
 
 namespace Accounting_Software.Repository_Interfaces
 {
@@ -16,7 +17,7 @@ namespace Accounting_Software.Repository_Interfaces
         List<StoreProduct> GetAll();
         List<StoreProduct> GetProductByStoreId(int storeId);
         List<string> GetSellerName();
-       
 
+       
     }
 }

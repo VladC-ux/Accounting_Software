@@ -8,6 +8,7 @@ using Accounting_Software.ViewModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -20,14 +21,15 @@ namespace Accounting_Software.Service
         private readonly IProductRepository _productRepository;
         private readonly IStoreRepository _storeRepository;
         private readonly ISellerRepository _sellerRepository;
-
-        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepositoryl, ISellerRepository sellerRepository)
+        private readonly IUserRepository _userRepository;
+        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepositoryl, ISellerRepository sellerRepository, IUserRepository userRepository)
         {
             _storeProductRepository = storeproduct;
             _uow = uow;
             _productRepository = productrepository;
             _storeRepository = storeRepositoryl;
             _sellerRepository = sellerRepository;
+            _userRepository = userRepository;
         }
         public void Add(StoreProductViewModel storeProduct)
         {
@@ -214,6 +216,16 @@ namespace Accounting_Software.Service
                 AddDate = st.AddDate,
                 Count = st.Count,
             };
+        }
+
+        public void GetBalanceSale(int id)
+        {
+            var data = _storeProductRepository.GetById(id);
+            var user = _userRepository.GetUserById(4);
+            user.Balance += data.Price;
+
+            _storeProductRepository.Delete(data);
+          
         }
     }
 }
