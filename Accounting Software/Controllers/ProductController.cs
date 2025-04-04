@@ -9,11 +9,13 @@ namespace Accounting_Software.Controllers
     {
         private readonly IProductService _productService;
         private readonly ISellerService _sellerService;
+        private readonly IUserService _userService;
       
-        public ProductController(IProductService productService, ISellerService sellerService)
+        public ProductController(IProductService productService, ISellerService sellerService,IUserService userservice)
         {
             _productService = productService;
-            _sellerService = sellerService;         
+            _sellerService = sellerService;
+            _userService = userservice;
         }
 
         public IActionResult Index()
@@ -25,18 +27,17 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult Add(int SellerId)
         {
-
             ViewBag.SellerId = SellerId;
+            ViewBag.Users = _userService.GetAll();
             return View();
         }
 
         [HttpPost]
-        public IActionResult Add(ProductViewModel product)
+        public IActionResult Add(ProductViewModel product,int userid)
         {
             try
             {
-                _productService.Add(product);
-
+                _productService.Add(product,userid);
                 TempData["SuccessMessage"] = "Your product is successfuly add!";
             }
             catch (Exception ex)
@@ -46,9 +47,6 @@ namespace Accounting_Software.Controllers
 
             return View(product);
         }
-
-   
-
 
         [HttpGet]
         public IActionResult ShowSellerProduct(int? SellerId)

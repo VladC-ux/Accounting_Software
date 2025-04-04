@@ -25,9 +25,8 @@ namespace Accounting_Software.Service
             _transRepository = transactionHistoryRepository;
         }
 
-        public void Add(ProductViewModel model) 
+        public void Add(ProductViewModel model,int id)//ViewBag? 
         {
-
             Product product = new Product
             {
                 Name = model.Name,
@@ -37,15 +36,14 @@ namespace Accounting_Software.Service
                 Unitofmass = model.unitOfmass,
                 SellerId = model.SellerId,
                 Count = model.Count,
-               
             };
-            var data = _userRepository.GetUserById(4);
-            data.Balance -= model.Total;
+
+            var user = _userRepository.GetUserById(id);
+            user.Balance -= model.Total;
             _productRepository.Add(product);
             _uow.SaveChanges();
 
-
-            TransactionHistory transactionhistory = new TransactionHistory()
+            TransactionHistory transactionHistory = new TransactionHistory()
             {
                 ProductName = model.Name,
                 Price = model.Price,
@@ -54,10 +52,10 @@ namespace Accounting_Software.Service
                 unitOfmass = model.unitOfmass,
                 Count = model.Count,
             };
-            _transRepository.Add(transactionhistory);
-            
+            _transRepository.Add(transactionHistory);
+            _uow.SaveChanges();
+        }
 
-        }      
         public void Delete(ProductViewModel model)
         {
             _productRepository.Delete(model.Id);
@@ -115,7 +113,6 @@ namespace Accounting_Software.Service
             }
             return new List<ProductViewModel>();
         }
-       
 
         public void Update(ProductViewModel Product)
         {

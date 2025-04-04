@@ -2,9 +2,8 @@
 @model SellerViewModel;
 @{
     ViewData["Title"] = "Add";
-
-
 }
+
 <!DOCTYPE html>
 
 <html>
@@ -26,12 +25,12 @@
         <div>
             @foreach (SellerViewModel item in ViewBag.Sellers)
             {
-
                 <div>
                     @item.Name
                 </div>
-
             }
+
+         
             <input type="submit" value="Save" />
         </div>
 
@@ -39,4 +38,3 @@
 </body>
 
 </html>
-
