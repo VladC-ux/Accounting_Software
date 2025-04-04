@@ -7,20 +7,19 @@ namespace Accounting_Software.Controllers
     public class SellerController : Controller
     {
         private readonly ISellerService _sellerService;
+        private readonly IUserService _userService;
 
-        public SellerController(ISellerService userinterface)
+        public SellerController(ISellerService sellerService,IUserService userService)
         {
-            _sellerService = userinterface;
+            _sellerService = sellerService;
+            _userService = userService;
         }
-
-
         public IActionResult Index()
         {
-          
+            ViewBag.Users = _userService.GetAll();
             ViewBag.Sellers = _sellerService.GetAll();
             var list = _sellerService.GetAll();
-            return View(list);
-            
+            return View(list);         
         }
 
         public IActionResult Add(SellerViewModel model)

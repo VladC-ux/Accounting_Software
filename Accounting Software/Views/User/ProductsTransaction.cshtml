@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Transaction</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h2>Products Transaction</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Count</th>
+                <th>Price</th>
+                <th>Sold Date</th>
+                <th>Description</th>
+                <th>Mass</th>
+                <th>Unit of Mass</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Данные будут вставляться динамически -->
+        </tbody>
+    </table>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const transactions = [
+                { Id: 1, ProductName: "Laptop", Count: 1, Price: 1000, SoldDate: "2024-04-01", Description: "Gaming Laptop", Mass: 2.5, unitOfmass: "kg" },
+                { Id: 2, ProductName: "Mouse", Count: 2, Price: 50, SoldDate: "2024-04-02", Description: "Wireless Mouse", Mass: 0.1, unitOfmass: "kg" }
+            ];
+
+            const tbody = document.querySelector("table tbody");
+            transactions.forEach(tran => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${tran.Id}</td>
+                    <td>${tran.ProductName}</td>
+                    <td>${tran.Count}</td>
+                    <td>${tran.Price}</td>
+                    <td>${tran.SoldDate}</td>
+                    <td>${tran.Description}</td>
+                    <td>${tran.Mass}</td>
+                    <td>${tran.unitOfmass}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        });
+    </script>
+</body>
+</html>

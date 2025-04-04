@@ -77,22 +77,25 @@ namespace Accounting_Software.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TransactionHistory",
+                name: "TransactionHistories",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    unitOfmass = table.Column<int>(type: "int", nullable: false),
+                    Mass = table.Column<int>(type: "int", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
                     SoldDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TransactionHistory", x => x.Id);
+                    table.PrimaryKey("PK_TransactionHistories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TransactionHistory_Users_UserId",
+                        name: "FK_TransactionHistories_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -149,8 +152,8 @@ namespace Accounting_Software.Migrations
                 column: "StoreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TransactionHistory_UserId",
-                table: "TransactionHistory",
+                name: "IX_TransactionHistories_UserId",
+                table: "TransactionHistories",
                 column: "UserId");
         }
 
@@ -161,7 +164,7 @@ namespace Accounting_Software.Migrations
                 name: "StoreProducts");
 
             migrationBuilder.DropTable(
-                name: "TransactionHistory");
+                name: "TransactionHistories");
 
             migrationBuilder.DropTable(
                 name: "Products");

@@ -31,8 +31,8 @@ namespace Accounting_Software
             builder.Services.AddScoped<IStoreProductRepository, StoreProductRepository>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
-            //builder.Services.AddScoped<ITransactionHistoryService, TransactionHistoryService>();
-            //builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
+            builder.Services.AddScoped<ITransactionHistoryService, TransactionHistoryService>();
+            builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
             builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
 
             var app = builder.Build();

@@ -8,6 +8,7 @@ namespace Accounting_Software.Repository_Interfaces
         void Add(TransactionHistory transactionHistory);
         void Delete(int id);
         List<TransactionHistory> GetHistoryByUserId(int userId);
+        TransactionHistory GetById(int id);
 
     }
 }

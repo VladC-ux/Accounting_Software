@@ -7,5 +7,9 @@ namespace Accounting_Software.Repository_Interfaces
         decimal GetBalance(int Id);
         User GetUserById(int Id);
         bool Add(User user);
+        int UserCount();
+
+        List<User> GetAll();
+
     }
 }

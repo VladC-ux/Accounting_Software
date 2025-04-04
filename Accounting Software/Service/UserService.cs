@@ -12,16 +12,25 @@ namespace Accounting_Software.Service
         {
             _userRepository = userRepository;
         }
-
         public void Add(UserViewModel userview)
         {          
             User user = new User
             {
-                Id = userview.Id,
-                Name = userview.Name,
+                Name = userview.Name, 
                 Balance = userview.Balance,
             };
             _userRepository.Add(user);        
+        }
+
+        public List<UserViewModel> GetAll()
+        {
+            var data = _userRepository.GetAll();
+            List<UserViewModel> userviewmodel = data.Select(userviewmodel => new UserViewModel
+            {
+                Id = userviewmodel.Id,
+
+            }).ToList();
+            return userviewmodel;
         }
 
         public UserViewModel GetBalance(int id)
@@ -40,5 +49,16 @@ namespace Accounting_Software.Service
                 Name = user.Name
             };
         }
+
+        public UserViewModel GetUserById(int id)
+        {
+            var data = _userRepository.GetUserById(id);
+            return new UserViewModel
+            {
+                Id = data.Id
+            };
+        }
+
+     
     }
 }

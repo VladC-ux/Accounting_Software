@@ -37,9 +37,9 @@
             font-weight: bold;
         }
 
-        .back-button {
+        .button {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 10px;
             padding: 10px 20px;
             background-color: #007bff;
             color: white;
@@ -47,18 +47,20 @@
             border-radius: 5px;
         }
 
-            .back-button:hover {
+            .button:hover {
                 background-color: #0056b3;
             }
     </style>
 </head>
 <body>
     <div class="balance-container">
-        <h2>@Model.Name</h2>  <!-- Имя пользователя добавлено здесь -->
+        <h2>@Model.Name</h2>  
         <div class="balance">
             @Model.Balance.ToString("C")
         </div>
-        <a href="/Seller/Index" class="back-button">Back to Seller</a>
+        <a href="/Seller/Index" class="button">Back to Seller</a>
+        <a href="/User/ProductsTransaction" class="button">Products Transaction</a>
+        <a href="/User/StoreTransaction" class="button">Store Transaction</a>
     </div>
 </body>
 </html>

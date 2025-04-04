@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Accounting_Software.Migrations
 {
     [DbContext(typeof(DBContextAccounting))]
-    [Migration("20250116101448_initial")]
+    [Migration("20250403174852_initial")]
     partial class initial
     {
         /// <inheritdoc />
@@ -139,6 +139,12 @@ namespace Accounting_Software.Migrations
                     b.Property<int>("Count")
                         .HasColumnType("int");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Mass")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
@@ -152,11 +158,14 @@ namespace Accounting_Software.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int>("unitOfmass")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TransactionHistory");
+                    b.ToTable("TransactionHistories");
                 });
 
             modelBuilder.Entity("Accounting_Software.Data.Entites.User", b =>

@@ -10,9 +10,10 @@ namespace Accounting_Software.Repositories
         public readonly DBContextAccounting _context;
         public readonly IUnitofWork _uow;
 
-        public TransactionHistoryRepository(DBContextAccounting context)
+        public TransactionHistoryRepository(DBContextAccounting context,IUnitofWork uow)
         {
             _context = context;
+            _uow = uow;
         }
 
         public void Add(TransactionHistory transactionHistory)
@@ -23,8 +24,17 @@ namespace Accounting_Software.Repositories
 
         public void Delete(int id)
         {
-          _context.Remove(id);
+            _context.Remove(id);
+            _uow.SaveChanges();
         }
+
+        public TransactionHistory GetById(int id)
+        {
+            return _context.TransactionHistories.FirstOrDefault(x=>x.Id==id);
+        }
+
+
+
 
         public List<TransactionHistory> GetHistoryByUserId(int userId)
         {

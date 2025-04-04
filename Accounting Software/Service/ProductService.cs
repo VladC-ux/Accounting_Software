@@ -14,16 +14,18 @@ namespace Accounting_Software.Service
         private readonly IStoreRepository _store;
         private readonly IUnitofWork _uow;
         private readonly IUserRepository _userRepository;
+        private readonly ITransactionHistoryRepository _transRepository;
 
-        public ProductService(IProductRepository poroductrepository, IUnitofWork uow, IStoreRepository store,IUserRepository userRepository)
+        public ProductService(IProductRepository poroductrepository, IUnitofWork uow, IStoreRepository store,IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository)
         {
             _productRepository = poroductrepository;
             _uow = uow;        
             _store = store;
             _userRepository = userRepository;
+            _transRepository = transactionHistoryRepository;
         }
 
-        public void Add(ProductViewModel model)
+        public void Add(ProductViewModel model) 
         {
 
             Product product = new Product
@@ -37,11 +39,23 @@ namespace Accounting_Software.Service
                 Count = model.Count,
                
             };
-
             var data = _userRepository.GetUserById(4);
             data.Balance -= model.Total;
             _productRepository.Add(product);
             _uow.SaveChanges();
+
+
+            TransactionHistory transactionhistory = new TransactionHistory()
+            {
+                ProductName = model.Name,
+                Price = model.Price,
+                Description = model.Description,
+                Mass = model.Mass,
+                unitOfmass = model.unitOfmass,
+                Count = model.Count,
+            };
+            _transRepository.Add(transactionhistory);
+            
 
         }      
         public void Delete(ProductViewModel model)

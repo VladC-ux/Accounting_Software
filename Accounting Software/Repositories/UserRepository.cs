@@ -28,6 +28,11 @@ namespace Accounting_Software.Repositories
     
         }
 
+        public List<User> GetAll()
+        {
+            return _context.Users.ToList();
+        }
+
         public decimal GetBalance(int userId)
         {
             var user = _context.Users
@@ -46,6 +51,10 @@ namespace Accounting_Software.Repositories
         {
             return _context.Users.FirstOrDefault(u => u.Id == id);
         }
-        
+
+        public int UserCount()
+        {
+            return _context.Users.Count();
+        }
     }
 }
