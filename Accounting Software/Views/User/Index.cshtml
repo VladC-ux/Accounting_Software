@@ -59,8 +59,10 @@
             @Model.Balance.ToString("C")
         </div>
         <a href="/Seller/Index" class="button">Back to Seller</a>
-        <a href="/User/ProductsTransaction" class="button">Products Transaction</a>
-        <a href="/User/StoreTransaction" class="button">Store Transaction</a>
+        @foreach (var user in ViewBag.Users)
+        {
+            <a asp-action="ProductsTransaction" asp-controller="User" asp-route-id="@user.Id" class="btn btn-primary">View Transactions</a>
+        }
     </div>
 </body>
 </html>

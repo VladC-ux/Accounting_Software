@@ -25,7 +25,7 @@ namespace Accounting_Software.Service
             _transRepository = transactionHistoryRepository;
         }
 
-        public void Add(ProductViewModel model,int id)//ViewBag? 
+        public void Add(ProductViewModel model,int id)
         {
             Product product = new Product
             {
@@ -42,15 +42,18 @@ namespace Accounting_Software.Service
             user.Balance -= model.Total;
             _productRepository.Add(product);
             _uow.SaveChanges();
+          
 
             TransactionHistory transactionHistory = new TransactionHistory()
-            {
+            {              
                 ProductName = model.Name,
                 Price = model.Price,
                 Description = model.Description,
                 Mass = model.Mass,
+                UserId = id,
                 unitOfmass = model.unitOfmass,
                 Count = model.Count,
+                SoldDate = DateTime.Now
             };
             _transRepository.Add(transactionHistory);
             _uow.SaveChanges();

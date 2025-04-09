@@ -20,7 +20,8 @@ namespace Accounting_Software.Controllers
         }
 
         public IActionResult Index(int Id)
-        {         
+        {
+            ViewBag.Users = _userRepo.GetAll();
             var data = _userService.GetBalance(Id);
             return View(data);
         }
@@ -50,14 +51,10 @@ namespace Accounting_Software.Controllers
             }
         }
 
-        public IActionResult ProductsTransaction(UserViewModel user)
+        public IActionResult ProductsTransaction(int id)
         {
-            var data =  _transHistory.GetHistoryByUserId(user.Id);
+            var data =  _transHistory.GetHistoryByUserId(id);
             return View(data);
         }
-        public IActionResult StoreTransaction(UserViewModel user)
-        {
-            return View();
-        }  
     }
 }

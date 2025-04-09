@@ -22,7 +22,8 @@ namespace Accounting_Software.Service
         private readonly IStoreRepository _storeRepository;
         private readonly ISellerRepository _sellerRepository;
         private readonly IUserRepository _userRepository;
-        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepositoryl, ISellerRepository sellerRepository, IUserRepository userRepository)
+        private readonly ITransactionHistoryRepository _transrepository;
+        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepositoryl, ISellerRepository sellerRepository, IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository)
         {
             _storeProductRepository = storeproduct;
             _uow = uow;
@@ -30,6 +31,7 @@ namespace Accounting_Software.Service
             _storeRepository = storeRepositoryl;
             _sellerRepository = sellerRepository;
             _userRepository = userRepository;
+            _transrepository = transactionHistoryRepository;
         }
         public void Add(StoreProductViewModel storeProduct)
         {
@@ -165,7 +167,6 @@ namespace Accounting_Software.Service
 
             return storeproduct;
         }
-
         public List<StoreProductViewModel> GetProductByStoreId(int? storeid)
         {
             if (storeid.HasValue)
@@ -193,15 +194,13 @@ namespace Accounting_Software.Service
 
                 return storeproduct;
             }
-
             return new List<StoreProductViewModel>();
         }
 
 
         public StoreProductViewModel GetById(int storeId)
         {
-            var st = _storeProductRepository.GetById(storeId);
-            
+            var st = _storeProductRepository.GetById(storeId);  
             return new StoreProductViewModel
             {
                 Id = st.Id,
@@ -218,14 +217,26 @@ namespace Accounting_Software.Service
             };
         }
 
-        public void GetBalanceSale(int id)
+        public void GetBalanceSale(int storeid,int userid)
         {
-            var data = _storeProductRepository.GetById(id);
-            var user = _userRepository.GetUserById(4);
+            var data = _storeProductRepository.GetById(storeid);
+            var user = _userRepository.GetUserById(userid);
             user.Balance += data.Price;
-
             _storeProductRepository.Delete(data);
-          
+
+            TransactionHistory transactionHistory = new TransactionHistory()
+            {
+                ProductName = data.StoreName,
+                Price = data.Price,
+                Description = data.Description,
+                Mass = data.Mass,
+                UserId = userid,
+                unitOfmass = data.Unitofmass,
+                Count = data.Count,
+                SoldDate = DateTime.Now
+            };
+            _transrepository.Add(transactionHistory);
+            _uow.SaveChanges();
         }
     }
 }

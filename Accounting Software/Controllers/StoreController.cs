@@ -16,26 +16,29 @@ namespace Accounting_Software.Controllers
         private readonly IProductService _productService;
         private readonly IStoreProductRepository _storeProductRepository;
         private readonly ISellerService _sellerService;
+        private readonly IUserRepository _userRepository;
 
 
-        public StoreController(IStoreService storeService, IStoreProductService storeproduct, IStoreProductRepository storeProductRepository, IProductService productService, ISellerService sellerService)
+        public StoreController(IStoreService storeService, IStoreProductService storeproduct, IStoreProductRepository storeProductRepository, IProductService productService, ISellerService sellerService,IUserRepository userRepository)
         {
             _storeService = storeService;
             _storeProductService = storeproduct;
             _storeProductRepository = storeProductRepository;
             _productService = productService;
             _sellerService = sellerService;
+            _userRepository = userRepository;
         }
 
         public IActionResult Index()
         {
+           
             var stores = _storeService.GetAll();
             return View(stores);
         }
 
-        public IActionResult Sale(StoreProductViewModel model)
+        public IActionResult Sale(StoreProductViewModel model,int userid)
         {
-            _storeProductService.GetBalanceSale(model.Id);
+            _storeProductService.GetBalanceSale(model.Id,userid);
             return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId });     
         }
 
@@ -82,6 +85,7 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult ShowShops(int id)
         {
+          
             ViewBag.ProductId = id;
             var stores = _storeService.GetAll();
             var storeProducts = _storeProductRepository.GetAll();
@@ -109,7 +113,6 @@ namespace Accounting_Software.Controllers
             {
                 return NotFound("Product not found");
             }
-
 
             var viewModel = new StoreProductViewModel
             {
@@ -152,6 +155,7 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult ShowStoreProduct(int? storeId)
         {
+            ViewBag.Users = _userRepository.GetAll();
             var data = _storeProductService.GetProductByStoreId(storeId);
             return View(data);
 
@@ -177,9 +181,6 @@ namespace Accounting_Software.Controllers
             _storeProductService.Update(model);
             return RedirectToAction("ShowStoreProduct", new { StoreId = model.StoreId });
         }
-
-     
-
     }
 
 }
