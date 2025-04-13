@@ -16,8 +16,9 @@ namespace Accounting_Software.Data.Entites
         public decimal Total
         {
             get { return Price * Count; }
-        }   
-      
+        }
+        public string? StoreName { get; set; }
+        public string typeofAction { get; set; } = null!;
         public DateTime SoldDate { get; set; } 
     }
 }

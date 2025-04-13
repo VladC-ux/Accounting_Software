@@ -1,171 +1,209 @@
 ﻿@using Accounting_Software.ViewModel;
 @model ProductViewModel;
+
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Add Product</title>
-  
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Product</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #e0f7fa, #ffffff);
+            font-family: 'Poppins', sans-serif;
+            animation: fadeIn 1s ease-in;
         }
 
         .container {
             background-color: #ffffff;
-            margzin-top: 50px;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 60px;
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease-in;
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        h1 {
+            font-weight: 600;
+            color: #007bff;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .form-group label {
+            font-weight: 500;
         }
 
         .btn-primary {
             background-color: #007bff;
             border-color: #007bff;
+            transition: all 0.3s ease-in-out;
         }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
-            border-color: #0056b3;
-        }
+            .btn-primary:hover {
+                background-color: #0056b3;
+                border-color: #0056b3;
+                transform: scale(1.05);
+            }
 
         .btn-secondary {
             background-color: #6c757d;
             border-color: #6c757d;
+            transition: all 0.3s ease-in-out;
         }
 
-        .btn-secondary:hover {
-            background-color: #545b62;
-            border-color: #545b62;
-        }
+            .btn-secondary:hover {
+                background-color: #545b62;
+                border-color: #545b62;
+                transform: scale(1.05);
+            }
 
-      
         table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #dee2e6;
+            margin-top: 30px;
+            animation: fadeIn 1s ease-in;
         }
 
         th {
             background-color: #007bff;
-            color: #fff;
+            color: white;
         }
 
-       
-        media (max-width: 767px) {
-            .form-group {
-                margin-bottom: 15px;
+        td, th {
+            text-align: center;
+        }
+
+        .alert {
+            animation: fadeIn 0.8s ease-in;
+        }
+
+        @@keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
             }
         }
     </style>
 </head>
-
 <body>
-
     <div class="container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorMessage"]
+            </div>
+        }
+
+        <h1>Add New Product</h1>
+
         <form method="post">
-
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger mb-4">
-                    @TempData["ErrorMessage"]
-                </div>
-            }
-
-            <h1 class="mb-4">Add New Product</h1>
-
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label asp-for="Name" class="font-weight-bold">Product Name:</label>
+                    <label asp-for="Name">Product Name</label>
                     <input asp-for="Name" class="form-control" required />
                 </div>
-
                 <div class="form-group col-md-6">
-                    <label asp-for="Price" class="font-weight-bold">Price:</label>
+                    <label asp-for="Price">Price</label>
                     <input asp-for="Price" class="form-control" required />
                 </div>
             </div>
 
             <div class="form-group">
-                <label asp-for="Description" class="font-weight-bold">Description:</label>
+                <label asp-for="Description">Description</label>
                 <input asp-for="Description" class="form-control" required />
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label asp-for="Mass" class="font-weight-bold">Mass:</label>
-                    <input asp-for="Mass" class="form-control" required />
+                    <label asp-for="Mass">Mass</label>
+                    <input asp-for="Mass" class="form-control" min="1" required />
+                   
                 </div>
-
-                <div class="form-row">
-                    <div class="form-group col-md-6">
-                        <label asp-for="Count" class="font-weight-bold">Count:</label>
-                        <input asp-for="Count" class="form-control" required />
-                    </div>
-
                 <div class="form-group col-md-6">
-                    <label asp-for="unitOfmass" class="font-weight-bold">Unit of Mass:</label>
-                    <select asp-for="unitOfmass" class="form-control" required>
-                        <option value="Kg">Kg</option>
-                        <option value="Gram">Gram</option>
-                        <option value="Ml">Ml</option>
-                    </select>
+                    <label asp-for="Count">Count</label>
+                    <input asp-for="Count" class="form-control" min="1" required />
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Save</button>
+            <div class="form-group">
+                <label asp-for="unitOfmass">Unit of Mass</label>
+                <select asp-for="unitOfmass" class="form-control" required>
+                    <option value="Kg">Kg</option>
+                    <option value="Gram">Gram</option>
+                    <option value="Ml">Ml</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Save Product</button>
+            <a asp-action="Index" asp-controller="Seller" class="btn btn-secondary ml-2">Back to Index</a>
         </form>
 
         @if (ViewBag.Products != null)
         {
-            <div class="mt-4">
-                <h2 class="mb-3">Added Products:</h2>
-                <table class="table">
-                    <thead>
+            <h2 class="mt-5 mb-3">Added Products</h2>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Mass</th>
+                        <th>Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ProductViewModel item in ViewBag.Products)
+                    {
                         <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                            <th>Mass</th>
-                            <th>Unit of Mass</th>
+                            <td>@item.Name</td>
+                            <td>@item.Price.ToString("F2")</td>
+                            <td>@item.Description</td>
+                            <td>@item.Mass</td>
+                            <td>@item.unitOfmass</td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (ProductViewModel item in ViewBag.Products)
-                        {
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>@item.Price</td>
-                                <td>@item.Description</td>
-                                <td>@item.Mass</td>
-                                <td>@item.unitOfmass</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         }
-
-        <a asp-action="Index" asp-controller="Seller" class="btn btn-secondary mt-3">Return to Seller Index</a>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.6/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <script>
+        $('form').on('submit', function () {
+            setTimeout(function () {
+                $('form')[0].reset();
+            }, 100);
+        });
+    </script>
 </body>
-
-</html> 
+</html>

@@ -53,7 +53,8 @@ namespace Accounting_Software.Service
                 UserId = id,
                 unitOfmass = model.unitOfmass,
                 Count = model.Count,
-                SoldDate = DateTime.Now
+                SoldDate = DateTime.Now,
+                typeofAction = "Add"
             };
             _transRepository.Add(transactionHistory);
             _uow.SaveChanges();

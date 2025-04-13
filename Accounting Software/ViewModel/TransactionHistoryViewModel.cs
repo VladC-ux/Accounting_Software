@@ -18,6 +18,9 @@ namespace Accounting_Software.ViewModel
             get { return Price * Count; }
         }
         public string ProductName { get; set; } = null!;
+        public string typeofAction { get; set; } = null!;
+
+        public string? StoreName { get; set; }
         public DateTime SoldDate { get; set; }
     }
 }

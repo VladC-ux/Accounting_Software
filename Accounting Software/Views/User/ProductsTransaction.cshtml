@@ -8,26 +8,31 @@
     <table class="table table-bordered">
         <thead>
             <tr>
+                <th>TypeOfAction</th>
                 <th>Product Name</th>
                 <th>Count</th>
                 <th>Price</th>
-                <th>Sold Date</th>
                 <th>Description</th>
                 <th>Mass</th>
                 <th>Unit of Mass</th>
+                <th>Sold Date</th>
+                <th>StoreName</th>
             </tr>
         </thead>
         <tbody>
             @foreach (var transaction in Model)
             {
                 <tr>
+                    <td>@transaction.typeofAction</td>
                     <td>@transaction.ProductName</td>
                     <td>@transaction.Count</td>
                     <td>@transaction.Price.ToString("C")</td>
-                    <td>@transaction.SoldDate.ToString("yyyy-MM-dd HH:mm:ss")</td> 
                     <td>@transaction.Description</td>
                     <td>@transaction.Mass</td>
                     <td>@transaction.unitOfmass</td>
+                    <td>@transaction.SoldDate.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@transaction.StoreName</td>
+
                 </tr>
             }
         </tbody>

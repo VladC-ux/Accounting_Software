@@ -10,70 +10,119 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller List</title>
+    <title>Seller Dashboard</title>
+
+   
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-    crossorigin="anonymous">
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
+  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .card:hover {
+                transform: scale(1.02);
+            }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .action-buttons .btn {
+            margin: 2px;
+        }
+
+        .navbar-actions a {
+            margin-right: 10px;
+        }
+
+        h2 {
+            font-weight: 700;
+        }
+
+    </style>
 </head>
 <body>
 
-    <div class="container mt-4">
-        <h2 class="mb-4">Seller List</h2>
-
-        <div class="mb-3">
-            <a class="btn btn-primary" asp-action="Add" asp-controller="Seller">Add new Seller</a>
-            <a class="btn btn-secondary" asp-action="Index" asp-controller="Store">Manage Stores</a>
-
-            <a class="btn btn-secondary" asp-action="AddUser" asp-controller="User">AddUser</a>
-            @if(ViewBag.Users != null)
-            {
-                foreach (var item in ViewBag.Users)
+    <div class="container mt-5">
+        <div class="dashboard-header">
+            <h2><i class="fas fa-store"></i> Seller Dashboard</h2>
+            <div class="navbar-actions">
+                <a class="btn btn-success" asp-action="Add" asp-controller="Seller"><i class="fas fa-plus"></i> Add Seller</a>
+                <a class="btn btn-secondary" asp-action="Index" asp-controller="Store"><i class="fas fa-warehouse"></i> Manage Stores</a>
+                <a class="btn btn-info" asp-action="AddUser" asp-controller="User"><i class="fas fa-user-plus"></i> Add User</a>
+                @if (ViewBag.Users != null)
                 {
-                    <a class="btn btn-secondary" asp-action="Index" asp-controller="User" asp-route-id="@item.Id">Personal Account</a>
-                }
-            }
-
-        </div>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @if (ViewBag.Sellers != null)
-                {
-                    foreach (var item in ViewBag.Sellers)
+                    foreach (var item in ViewBag.Users)
                     {
-                        <tr>
-                            <td>
-                                <a href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">@item.Name</a>
-                            </td>
-                            <td>
-                                @foreach (var el in ViewBag.Users)
-                                {
-                                    <a class="btn btn-secondary" asp-action="Add" asp-controller="Product" asp-route-SellerId="@item.Id" asp-route-userid="@el.Id">Add Product</a>
-                                }
-
-                                <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id">Edit</a>
-                                <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Seller" asp-route-id="@item.Id">Delete</a>
-                            </td>
-                        </tr>
+                        <a class="btn btn-dark" asp-action="Index" asp-controller="User" asp-route-id="@item.Id"><i class="fas fa-user"></i> Personal Account</a>
                     }
                 }
-            </tbody>
-        </table>
+            </div>
+        </div>
+
+        <div class="row">
+            @if (ViewBag.Sellers != null)
+            {
+                foreach (var item in ViewBag.Sellers)
+                {
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <a href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">
+                                        <i class="fas fa-user-tie"></i> @item.Name
+                                    </a>
+                                </h5>
+                                <div class="action-buttons mt-3">
+                                    @foreach (var el in ViewBag.Users)
+                                    {
+                                        <a class="btn btn-outline-primary btn-sm"
+                                           asp-action="Add" asp-controller="Product"
+                                           asp-route-SellerId="@item.Id" asp-route-userid="@el.Id">
+                                            <i class="fas fa-plus"></i> Add Product
+                                        </a>
+                                    }
+
+                                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Seller" asp-route-id="@item.Id">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
     </div>
 
-    <style>
-        .custom-plus {
-            background-color: #28a745;
-            color: #fff;
-        }
-    </style>
-
+  
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>

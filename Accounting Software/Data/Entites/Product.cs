@@ -17,7 +17,7 @@ namespace Accounting_Software.Data.Entites
         {
             get { return Price * Count; }
         }
-
+       
         [NotMapped]
         public double TotalPrice { get; set; }
 

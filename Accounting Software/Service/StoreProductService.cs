@@ -226,14 +226,16 @@ namespace Accounting_Software.Service
 
             TransactionHistory transactionHistory = new TransactionHistory()
             {
-                ProductName = data.StoreName,
+                ProductName = data.ProductName,
                 Price = data.Price,
                 Description = data.Description,
                 Mass = data.Mass,
                 UserId = userid,
                 unitOfmass = data.Unitofmass,
                 Count = data.Count,
-                SoldDate = DateTime.Now
+                SoldDate = DateTime.Now,
+                typeofAction = "Sale",
+                StoreName = data.StoreName
             };
             _transrepository.Add(transactionHistory);
             _uow.SaveChanges();

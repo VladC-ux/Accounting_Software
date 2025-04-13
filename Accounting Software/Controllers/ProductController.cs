@@ -46,21 +46,21 @@ namespace Accounting_Software.Controllers
                 TempData["ErrorMessage"] = $"Error with add product : {ex.Message}";
             }
 
-            return View(product);
+            ModelState.Clear(); 
+            return View(new ProductViewModel()); 
         }
 
         [HttpGet]
         public IActionResult ShowSellerProduct(int? SellerId)
         {
-
+            ViewBag.SellerId = _sellerService.GetAll();
             var data = _productService.GetProductsBySellerId(SellerId);
             return View(data);
         }
 
         [HttpPost]
         public IActionResult ShowSellerProduct()
-        {
-            
+        {           
             var data = _productService.GetAll();
             return View(data);
         }
@@ -77,13 +77,13 @@ namespace Accounting_Software.Controllers
             _productService.Update(model);
             return RedirectToAction("ShowSellerProduct", new { SellerId = model.SellerId });
         }
+       
         public IActionResult Delete(ProductViewModel model)
         {
-            _productService.Delete(model);
-            return RedirectToAction("Index", "Seller");
+            var data = _productService.GetById(model.Id);
+            _productService.Delete(data);
+            return RedirectToAction("ShowSellerProduct", new { SellerId = model.SellerId });
         }     
-       
-
         private void GetDropDownData()
         {
             ViewBag.ProductId = _productService.GetAll();
@@ -91,7 +91,6 @@ namespace Accounting_Software.Controllers
         private void GetDropDownSeller()
         {
             ViewBag.Sellers = _sellerService.GetAll();
-
         }
     }
 }

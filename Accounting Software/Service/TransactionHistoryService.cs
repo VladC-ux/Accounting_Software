@@ -26,6 +26,8 @@ namespace Accounting_Software.Service
                 Description = transationHistoryViewModel.Description,
                 Mass = transationHistoryViewModel.Mass,
                 unitOfmass = transationHistoryViewModel.unitOfmass,  
+                typeofAction = transationHistoryViewModel.typeofAction,
+                StoreName = transationHistoryViewModel.StoreName
             };
         }
 
@@ -33,7 +35,6 @@ namespace Accounting_Software.Service
         {
             var data = _transactionHistoryRepository.GetById(id);
             _transactionHistoryRepository.Delete(data.Id);
-
         }
 
         public List<TransactionHistoryViewModel> GetHistoryByUserId(int Id)
@@ -51,7 +52,8 @@ namespace Accounting_Software.Service
                 Description = transactionHistory.Description,
                 Mass = transactionHistory.Mass,
                 unitOfmass = transactionHistory.unitOfmass,
-
+                typeofAction = transactionHistory.typeofAction,
+                StoreName = transactionHistory.StoreName               
             }).ToList();
 
             return transactionHistoryViewModels;
