@@ -3,150 +3,153 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stores List</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
     <style>
         body {
-            background-color: #f8f9fa;
-            font-family: 'Roboto', sans-serif;
-            overflow-x: hidden;
+            background-color: #f1f3f5;
+            font-family: 'Inter', sans-serif;
+            padding: 40px;
         }
 
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            margin-bottom: 20px;
-            color: #343a40;
+            color: #212529;
             text-align: center;
-            animation: fadeIn 1s ease-out;
+            margin-bottom: 40px;
+            animation: fadeDown 0.8s ease-out;
         }
 
-        @@keyframes fadeIn {
-            0%
+        @@keyframes fadeDown {
+            from
 
         {
             opacity: 0;
-            transform: translateY(50px);
+            transform: translateY(-20px);
         }
 
-        100% {
+        to {
             opacity: 1;
             transform: translateY(0);
         }
 
         }
 
-        .table {
+        .table-container {
             background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            animation: slideIn 1s ease-out;
-            overflow: hidden;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+            animation: fadeInUp 1s ease-out;
         }
 
-        @@keyframes slideIn {
-            0%
+        @@keyframes fadeInUp {
+            from
 
         {
             opacity: 0;
-            transform: translateX(-50px);
+            transform: translateY(30px);
         }
 
-        100% {
+        to {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateY(0);
         }
 
-        }
-
-        .table th, .table td {
-            padding: 15px;
-            text-align: center;
         }
 
         .table th {
-            background-color: dimgray;
-            color: white;
-            font-weight: 700;
+            background-color: #343a40;
+            color: #ffffff;
+            font-weight: 600;
+            text-align: center;
         }
 
-        .table td a {
-            text-decoration: none;
-            transition: color 0.3s ease;
+        .table td {
+            text-align: center;
+            vertical-align: middle;
         }
+
+        .table tbody tr {
+            transition: background 0.2s ease;
+        }
+
+            .table tbody tr:hover {
+                background-color: #f8f9fa;
+            }
 
         .btn {
-            border-radius: 20px;
-            transition: transform 0.2s ease, background-color 0.3s ease;
+            border-radius: 30px;
+            padding: 6px 18px;
             font-weight: 500;
-            padding: 6px 14px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
             .btn:hover {
-                transform: translateY(-2px);
-            }
-
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-        }
-
-            .btn-success:hover {
-                background-color: #218838;
+                transform: translateY(-1px);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             }
 
         .btn-edit {
-            background-color: #e0e0e0 !important;
-            color: #000000 !important;
+            background-color: #dee2e6;
+            color: #212529;
         }
 
             .btn-edit:hover {
-                background-color: #d6d6d6 !important;
+                background-color: #ced4da;
             }
 
         .btn-delete {
-            background-color: #dc3545 !important;
-            color: white !important;
+            background-color: #dc3545;
+            color: white;
         }
 
             .btn-delete:hover {
-                background-color: #c82333 !important;
+                background-color: #b02a37;
+            }
+
+        .btn-success {
+            background-color: #198754;
+        }
+
+            .btn-success:hover {
+                background-color: #146c43;
             }
 
         .btn-secondary {
             background-color: #6c757d;
-            color: white;
         }
 
             .btn-secondary:hover {
                 background-color: #5a6268;
             }
 
-        .container {
-            margin-top: 40px;
-            animation: fadeIn 1s ease-out;
-        }
-
         .actions-container {
             display: flex;
             justify-content: space-between;
             margin-top: 30px;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .fade-appear {
+            animation: fadeInUp 1s ease-out;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div class="container table-container">
         <h1><i class="fas fa-store"></i> Stores List</h1>
 
         @if (Model != null && Model.Any())
         {
-            <table class="table table-striped">
+            <table class="table table-striped table-hover align-middle">
                 <thead>
                     <tr>
                         <th>Store Name</th>
@@ -156,12 +159,14 @@
                 <tbody>
                     @foreach (var store in Model)
                     {
-                        <tr>
+                        <tr class="fade-appear">
                             <td>
-                                <a href="@Url.Action("ShowStoreProduct", "Store", new { storeId = store.Id })">@store.StoreName</a>
+                                <a href="@Url.Action("ShowStoreProduct", "Store", new { storeId = store.Id })" class="text-decoration-none fw-semibold text-dark">
+                                    @store.StoreName
+                                </a>
                             </td>
                             <td>
-                                <a href="@Url.Action("Edit", "Store", new { id = store.Id })" class="btn btn-sm btn-edit">
+                                <a href="@Url.Action("Edit", "Store", new { id = store.Id })" class="btn btn-sm btn-edit me-2">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>
                                 <a href="@Url.Action("Delete", "Store", new { id = store.Id })" class="btn btn-sm btn-delete">
@@ -175,12 +180,16 @@
         }
         else
         {
-            <p class="text-center">No stores available.</p>
+            <p class="text-center text-muted">No stores available.</p>
         }
 
         <div class="actions-container">
-            <a href="@Url.Action("Add", "Store")" class="btn btn-success"><i class="fas fa-plus"></i> Add New Store</a>
-            <a href="@Url.Action("Index", "Seller")" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Seller Index</a>
+            <a href="@Url.Action("Add", "Store")" class="btn btn-success">
+                <i class="fas fa-plus"></i> Add New Store
+            </a>
+            <a href="@Url.Action("Index", "Seller")" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Seller Index
+            </a>
         </div>
     </div>
 

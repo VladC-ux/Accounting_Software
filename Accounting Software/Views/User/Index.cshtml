@@ -7,61 +7,90 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Balance</title>
     <style>
+        @@keyframes fadeInUp {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fc;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            animation: fadeInUp 1s ease-out;
         }
 
         .balance-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 300px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            width: 350px;
             text-align: center;
+            animation: fadeInUp 1.2s ease-out;
+            transition: transform 0.3s ease;
         }
+
+            .balance-container:hover {
+                transform: translateY(-5px) scale(1.01);
+            }
 
             .balance-container h2 {
                 margin-bottom: 20px;
-                color: #333;
+                color: #222;
+                font-size: 1.8rem;
             }
 
         .balance {
-            font-size: 2rem;
+            font-size: 2.5rem;
             color: #28a745;
             font-weight: bold;
+            margin-bottom: 15px;
+            animation: fadeInUp 1.5s ease-out;
         }
 
-        .button {
+        .button, .btn {
             display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
+            margin: 8px 4px;
+            padding: 10px 22px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
         }
 
-            .button:hover {
+            .button:hover, .btn:hover {
                 background-color: #0056b3;
+                transform: scale(1.05);
+                box-shadow: 0 5px 15px rgba(0, 91, 187, 0.3);
             }
     </style>
 </head>
 <body>
     <div class="balance-container">
-        <h2>@Model.Name</h2>  
+        <h2>@Model.Name</h2>
         <div class="balance">
             @Model.Balance.ToString("C")
         </div>
         <a href="/Seller/Index" class="button">Back to Seller</a>
         @foreach (var user in ViewBag.Users)
         {
-            <a asp-action="ProductsTransaction" asp-controller="User" asp-route-id="@user.Id" class="btn btn-primary">View Transactions</a>
+            <a asp-action="ProductsTransaction" asp-controller="User" asp-route-id="@user.Id" class="btn">View Transactions</a>
         }
     </div>
 </body>

@@ -13,32 +13,118 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
+
+    <style>
+        body {
+            background-color: #f2f4f7;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            padding: 40px;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            animation: fadeSlide 0.8s ease-out;
+        }
+
+        h2 {
+            font-weight: 600;
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: #2c3e50;
+        }
+
+        @@keyframes fadeSlide {
+            from
+
+        {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        }
+
+        table.table {
+            margin-top: 20px;
+        }
+
+        thead th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        tbody tr {
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+            tbody tr:hover {
+                background-color: #f9fbfc;
+                transform: scale(1.005);
+            }
+
+        .btn {
+            font-size: 0.9rem;
+            font-weight: 500;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-success, .btn-warning, .btn-danger, .btn-secondary {
+            color: #fff;
+        }
+
+            .btn-success:hover {
+                background-color: #218838;
+            }
+
+            .btn-warning:hover {
+                background-color: #e0a800;
+            }
+
+            .btn-danger:hover {
+                background-color: #c82333;
+            }
+
+            .btn-secondary:hover {
+                background-color: #5a6268;
+            }
+
+        .action-buttons > a {
+            margin-right: 5px;
+        }
+    </style>
 </head>
 <body>
-
-    <div class="container mt-4">
-        <h2 class="mb-4">Products List</h2>
+    <div class="container">
+        <h2>Products List</h2>
 
         @if (Model.Any())
         {
             var firstProduct = Model.First();
-
-            <a class="btn btn-success btn-sm" asp-action="Add" asp-controller="Product" asp-route-SellerId="@firstProduct.SellerId">Add Product</a>
+            <a class="btn btn-success mb-2" asp-action="Add" asp-controller="Product" asp-route-SellerId="@firstProduct.SellerId">Add Product</a>
         }
 
-        <a class="btn btn-secondary btn-sm mt-2" asp-action="Index" asp-controller="Seller">Back to Seller Index</a>
+        <a class="btn btn-secondary mb-3" asp-action="Index" asp-controller="Seller">Back to Seller Index</a>
 
-        <table class="table mt-3">
+        <table class="table table-hover table-bordered">
             <thead>
                 <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Mass</th>
-                    <th scope="col">UnitOfMass</th>
-                    <th scope="col">Count</th>
-                    <th scope="col">Total</th>
-                    <th scope="col">Actions</th>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>Mass</th>
+                    <th>Unit</th>
+                    <th>Count</th>
+                    <th>Total</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -54,15 +140,16 @@
                             <td>@item.unitOfmass</td>
                             <td>@item.Count</td>
                             <td>@item.Total</td>
-                            <td>
-                               
+                            <td class="action-buttons">
                                 <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id">Edit</a>
-                                 @foreach(var el in ViewBag.SellerId)
-                                 {
+
+                                @foreach (var el in ViewBag.SellerId)
+                                {
                                     <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Product" asp-route-id="@item.Id" asp-route-SellerId="@el.Id">Delete</a>
-                                 }
-                               
-                                <a class="btn btn-danger btn-sm" asp-action="ShowShops" asp-controller="Store" asp-route-id="@item.Id">+</a>
+                                    break;
+                                }
+
+                                <a class="btn btn-dark btn-sm" asp-action="ShowShops" asp-controller="Store" asp-route-id="@item.Id">Shops</a>
                             </td>
                         </tr>
                     }
