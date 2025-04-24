@@ -3,6 +3,7 @@ using Accounting_Software.Data.Entites;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
 
 namespace Accounting_Software.Controllers
 {
@@ -52,8 +53,8 @@ namespace Accounting_Software.Controllers
 
         [HttpGet]
         public IActionResult ShowSellerProduct(int? SellerId)
-        {
-            ViewBag.SellerId = _sellerService.GetAll();
+        { 
+            ViewBag.SellerId = _sellerService.GetAll();        
             var data = _productService.GetProductsBySellerId(SellerId);
             return View(data);
         }
@@ -66,9 +67,10 @@ namespace Accounting_Software.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int Id)
         {
-            var data = _productService.GetById(id);
+           
+            var data = _productService.GetById(Id);
             return View(data);
         }
         [HttpPost]

@@ -1,112 +1,66 @@
-﻿@using Accounting_Software.ViewModel;
+﻿@using Accounting_Software.ViewModel
 @model ProductViewModel
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Edit Product";
 }
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-    <!-- Include Bootstrap CSS link here -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-          integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8NySez9QK2n9xXrdCrXbXqFny73D6J3"
-          crossorigin="anonymous">
-    <style>
-        body {
-            padding: 20px;
-        }
-
-        form {
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        label {
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        input,
-        select,
-        textarea {
-            margin-bottom: 1rem;
-            width: 100%;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-
-        textarea {
-            resize: vertical;
-        }
-
-        input[type="submit"] {
-            background-color: #007bff;
-            border-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
-
-            input[type="submit"]:hover {
-                background-color: #0056b3;
-                border-color: #0056b3;
-            }
-    </style>
+    <title>Edit Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
-<body>
+<body class="bg-light">
 
-    <form method="post">
-        <input type="hidden" asp-for="SellerId" />
+    <div class="container mt-5">
+        <div class="card shadow rounded-4">
+            <div class="card-header bg-secondary text-white">
+                <h4 class="mb-0">Edit Product</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    <input type="hidden" asp-for="SellerId" />
 
-        <div class="form-group">
-            <label asp-for="Name">Product Name</label>
-            <input asp-for="Name" class="form-control" />
+                    <div class="form-floating mb-3">
+                        <input asp-for="Name" class="form-control" placeholder="Product Name" required />
+                        <label asp-for="Name">Product Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Price" class="form-control" placeholder="Price" min="1" required />
+                        <label asp-for="Price">Price ($)</label>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6 form-floating">
+                            <input asp-for="Mass" class="form-control" placeholder="Mass" min="1" required />
+                            <label asp-for="Mass">Mass</label>
+                        </div>
+                        <div class="col-md-6 form-floating">
+                            <select asp-for="unitOfmass" class="form-select" required>
+                                <option value="Kg">Kg</option>
+                                <option value="Gram">Gram</option>
+                                <option value="Ml">Ml</option>
+                            </select>
+                            <label asp-for="unitOfmass">Unit</label>
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-4">
+                        <textarea asp-for="Description" class="form-control" placeholder="Description" style="height: 100px"></textarea>
+                        <label asp-for="Description">Description</label>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="ShowSellerProduct" asp-controller="Product" asp-route-SellerId="@Model.SellerId" class="btn btn-outline-secondary px-4">Cancel</a>
+                        <button type="submit" class="btn btn-success px-4">Save</button>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
 
-        <div class="form-group">
-            <label asp-for="Price">Price</label>
-            <input asp-for="Price" class="form-control" min="1" required/>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Mass">Mass</label>
-            <input asp-for="Mass" class="form-control" min="1" required />
-        </div>
-
-        <div class="form-group">
-            <label asp-for="unitOfmass">Unit of Mass</label>
-            <select asp-for="unitOfmass" class="form-control" required>
-                <option value="Kg">Kg</option>
-                <option value="Gram">Gram</option>
-                <option value="Ml">Ml</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label asp-for="Description">Description</label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-        </div>
-
-        <input type="submit" value="Update" class="btn btn-primary" />
-    </form>
-
-    <!-- Include Bootstrap JS and Popper.js scripts here -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-            crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popperjs/core@2.0.7/dist/umd/popper.min.js"
-            integrity="sha384-nvEsg+6PWUJ9/H3kYqCZNm+U2Q4d7QShQI5z2b70F/nv70T+G5L4ez4+DEeVx6iX"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-            integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+Wy8NySez9QK2n9xXrdCrXbXqFny73D6J3"
-            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
