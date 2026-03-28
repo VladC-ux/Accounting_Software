@@ -1,4 +1,4 @@
-﻿using Accounting_Software.Data.Entites;
+﻿using Accounting_Software.Data.Entities;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service;
 using Accounting_Software.Service_Interfaces;
@@ -38,8 +38,16 @@ namespace Accounting_Software.Controllers
 
         public IActionResult Sale(StoreProductViewModel model,int userid)
         {
-            _storeProductService.GetBalanceSale(model.Id,userid);
-            return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId });     
+            try
+            {
+                _storeProductService.GetBalanceSale(model.Id,userid);
+                TempData["SuccessMessage"] = "Sale completed successfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId });
         }
 
         [HttpPost]
@@ -76,11 +84,12 @@ namespace Accounting_Software.Controllers
             }
             return View(store);
         }
-        //public IActionResult ProductToStore(int productId, int storeId)
-        //{a
-        //    _storeProductService.AddProductToStore(productId, storeId);
-        //    return View();
-        //}
+        public IActionResult ProductToStore(int productId, int storeId)
+        {
+
+            _storeProductService.AddProductToStore(productId, storeId);
+            return View();
+        }
 
         [HttpGet]
         public IActionResult ShowShops(int id)
@@ -134,22 +143,30 @@ namespace Accounting_Software.Controllers
         [HttpPost]
         public IActionResult AddProductToStore(StoreProductViewModel model)
         {
-            var storeProduct = new StoreProductViewModel
+            try
             {
-                Id = model.Id,
-                StoreId = model.StoreId,
-                ProductId = model.ProductId,
-                StoreName = model.StoreName,
-                ProductName = model.ProductName,
-                Price = model.Price,
-                Count = model.Count,
-                unitOfmass = model.unitOfmass,
-                Description = model.Description,
-                Mass = model.Mass,
-                AddDate = model.AddDate
-            };
-            _storeProductService.Add(storeProduct);
-            return RedirectToAction("Index", "Seller");
+                var storeProduct = new StoreProductViewModel
+                {
+                    Id = model.Id,
+                    StoreId = model.StoreId,
+                    ProductId = model.ProductId,
+                    StoreName = model.StoreName,
+                    ProductName = model.ProductName,
+                    Price = model.Price,
+                    Count = model.Count,
+                    unitOfmass = model.unitOfmass,
+                    Description = model.Description,
+                    Mass = model.Mass,
+                    AddDate = model.AddDate
+                };
+                _storeProductService.Add(storeProduct);
+                return RedirectToAction("Index", "Seller");
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction("AddProductToStore", new { storeId = model.StoreId, productId = model.ProductId });
+            }
         }
 
         [HttpGet]

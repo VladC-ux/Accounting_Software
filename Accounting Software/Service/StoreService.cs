@@ -1,8 +1,8 @@
-﻿using Accounting_Software.Data.Entites;
+﻿using Accounting_Software.Data.Entities;
 using Accounting_Software.Repositories;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service_Interfaces;
-using Accounting_Software.UnitOfWorkk;
+using Accounting_Software.UnitOfWork;
 using Accounting_Software.ViewModel;
 
 namespace Accounting_Software.Service

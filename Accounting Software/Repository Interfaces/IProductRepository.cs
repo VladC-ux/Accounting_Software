@@ -1,5 +1,4 @@
-﻿using Accounting_Software.Data.Entites;
-using Accounting_Software.Date.Entites;
+﻿using Accounting_Software.Data.Entities;
 
 namespace Accounting_Software.Repository_Interfaces
 {
@@ -11,8 +10,5 @@ namespace Accounting_Software.Repository_Interfaces
         void Delete(int id);   
         List<Product> GetAll();
         Product GetById(int id);
-        
-       
-
     }
 }

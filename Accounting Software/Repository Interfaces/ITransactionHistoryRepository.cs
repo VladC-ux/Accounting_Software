@@ -1,5 +1,5 @@
 ﻿using Accounting_Software.Data;
-using Accounting_Software.Data.Entites;
+using Accounting_Software.Data.Entities;
 
 namespace Accounting_Software.Repository_Interfaces
 {

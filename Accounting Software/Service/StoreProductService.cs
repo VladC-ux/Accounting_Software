@@ -1,9 +1,9 @@
-﻿using Accounting_Software.Data.Entites;
+﻿using Accounting_Software.Data.Entities;
 using Accounting_Software.Enums;
 using Accounting_Software.Repositories;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service_Interfaces;
-using Accounting_Software.UnitOfWorkk;
+using Accounting_Software.UnitOfWork;
 using Accounting_Software.ViewModel;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
@@ -23,18 +23,28 @@ namespace Accounting_Software.Service
         private readonly ISellerRepository _sellerRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITransactionHistoryRepository _transrepository;
-        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepositoryl, ISellerRepository sellerRepository, IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository)
+        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepository, ISellerRepository sellerRepository, IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository)
         {
             _storeProductRepository = storeproduct;
             _uow = uow;
             _productRepository = productrepository;
-            _storeRepository = storeRepositoryl;
+            _storeRepository = storeRepository;
             _sellerRepository = sellerRepository;
             _userRepository = userRepository;
             _transrepository = transactionHistoryRepository;
         }
         public void Add(StoreProductViewModel storeProduct)
         {
+            if (storeProduct.Count <= 0)
+                throw new InvalidOperationException("Count must be greater than zero.");
+
+            var product = _productRepository.GetById(storeProduct.ProductId);
+            if (product == null)
+                throw new InvalidOperationException("Product not found.");
+
+            if (storeProduct.Count > product.Count)
+                throw new InvalidOperationException($"Not enough stock. Available: {product.Count}, Requested: {storeProduct.Count}");
+
             StoreProduct st = new StoreProduct
             {
                 Id = storeProduct.Id,
@@ -79,6 +89,7 @@ namespace Accounting_Software.Service
                 StoreId = storeId
             };
             _storeProductRepository.Add(storeProduct);
+            
         }
 
         public void Delete(StoreProductViewModel storeProduct)
@@ -220,7 +231,12 @@ namespace Accounting_Software.Service
         public void GetBalanceSale(int storeid,int userid)
         {
             var data = _storeProductRepository.GetById(storeid);
+            if (data == null)
+                throw new InvalidOperationException("Product not found in store.");
+
             var user = _userRepository.GetUserById(userid);
+            if (user == null)
+                throw new InvalidOperationException("User not found.");
             user.Balance += data.Price;
             _storeProductRepository.Delete(data);
 

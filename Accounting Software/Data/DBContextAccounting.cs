@@ -1,6 +1,5 @@
-﻿using Accounting_Software.Date.Entites;
+﻿using Accounting_Software.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Accounting_Software.Data.Entites;
 
 namespace Accounting_Software.Data
 {

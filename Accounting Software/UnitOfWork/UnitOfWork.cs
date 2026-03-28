@@ -1,7 +1,7 @@
 ﻿using Accounting_Software.Data;
 using Microsoft.AspNetCore.Authentication;
 
-namespace Accounting_Software.UnitOfWorkk
+namespace Accounting_Software.UnitOfWork
 {
     public class UnitOfWork : IUnitofWork
     {
@@ -16,7 +16,7 @@ namespace Accounting_Software.UnitOfWorkk
             _context.SaveChanges();
         }
 
-        public async Task SaveChangesAsnyc()
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }

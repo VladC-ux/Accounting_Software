@@ -1,10 +1,9 @@
-﻿using Accounting_Software.Data.Entites;
+﻿using Accounting_Software.Data.Entities;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
-using Accounting_Software.UnitOfWorkk;
+using Accounting_Software.UnitOfWork;
 using Microsoft.CodeAnalysis;
-using Accounting_Software.Date.Entites;
 
 namespace Accounting_Software.Service
 {
@@ -16,9 +15,9 @@ namespace Accounting_Software.Service
         private readonly IUserRepository _userRepository;
         private readonly ITransactionHistoryRepository _transRepository;
 
-        public ProductService(IProductRepository poroductrepository, IUnitofWork uow, IStoreRepository store,IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository)
+        public ProductService(IProductRepository productRepository, IUnitofWork uow, IStoreRepository store,IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository)
         {
-            _productRepository = poroductrepository;
+            _productRepository = productRepository;
             _uow = uow;        
             _store = store;
             _userRepository = userRepository;
@@ -27,6 +26,19 @@ namespace Accounting_Software.Service
 
         public void Add(ProductViewModel model,int id)
         {
+            if (model.Price <= 0)
+                throw new InvalidOperationException("Price must be greater than zero.");
+
+            if (model.Count <= 0)
+                throw new InvalidOperationException("Count must be greater than zero.");
+
+            var user = _userRepository.GetUserById(id);
+            if (user == null)
+                throw new InvalidOperationException("User not found.");
+
+            if (user.Balance < model.Total)
+                throw new InvalidOperationException($"Insufficient balance. Available: {user.Balance:C}, Required: {model.Total:C}");
+
             Product product = new Product
             {
                 Name = model.Name,
@@ -38,7 +50,6 @@ namespace Accounting_Software.Service
                 Count = model.Count,
             };
 
-            var user = _userRepository.GetUserById(id);
             user.Balance -= model.Total;
             _productRepository.Add(product);
             _uow.SaveChanges();

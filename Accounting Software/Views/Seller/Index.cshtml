@@ -71,7 +71,9 @@
         <div class="dashboard-header">
             <h2><i class="fas fa-store"></i> Seller Dashboard</h2>
             <div class="navbar-actions">
+                <a class="btn btn-primary" asp-action="Index" asp-controller="Dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
                 <a class="btn btn-success" asp-action="Add" asp-controller="Seller"><i class="fas fa-plus"></i> Add Seller</a>
+                <a class="btn btn-outline-success" href="/Export/Products"><i class="fas fa-file-excel"></i> Export Products</a>
                 <a class="btn btn-secondary" asp-action="Index" asp-controller="Store"><i class="fas fa-warehouse"></i> Manage Stores</a>
                 <a class="btn btn-info" asp-action="AddUser" asp-controller="User"><i class="fas fa-user-plus"></i> Add User</a>
                 @if (ViewBag.Users != null)

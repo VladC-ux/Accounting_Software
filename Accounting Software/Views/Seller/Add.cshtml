@@ -1,126 +1,63 @@
-﻿@using Accounting_Software.ViewModel;
-@model SellerViewModel;
-@{
-    ViewData["Title"] = "Add";
-}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f7fa;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #333;
-        }
-
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-
-        form {
-            background-color: #fff;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            animation: fadeIn 1s ease-out;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 18px;
-            color: #34495e;
-        }
-
-        input[type="text"], input[type="submit"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
-            border: 2px solid #3498db;
-            border-radius: 5px;
-            font-size: 16px;
-            transition: all 0.3s ease-in-out;
-        }
-
-            input[type="text"]:focus, input[type="submit"]:hover {
-                border-color: #2980b9;
-                box-shadow: 0 0 8px rgba(41, 128, 185, 0.5);
-            }
-
-        input[type="submit"] {
-            background-color: #3498db;
-            color: #fff;
-            cursor: pointer;
-        }
-
-            input[type="submit"]:hover {
-                background-color: #2980b9;
-            }
-
-        div {
-            margin-bottom: 15px;
-        }
-
-        @@keyframes fadeIn {
-            0%
-
-        {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        }
-
-        .seller-list div {
-            padding: 8px;
-            background-color: #ecf0f1;
-            margin-bottom: 10px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-            .seller-list div:hover {
-                background-color: #bdc3c7;
-            }
-    </style>
-</head>
-<body>
-    <h1>Add new Seller</h1>
-    <form method="post">
-        <div>
-            <label>
-                Sellers Name
-                <input asp-for="Name" type="text" />
-            </label>
-        </div>
-
-        <div class="seller-list">
-            @foreach (SellerViewModel item in ViewBag.Sellers)
-            {
-                <div>
-                    @item.Name
+﻿<main class="hero">
+    <section class="panel">
+        <h2 class="headline">Добро пожаловать.</h2>
+        <div class="quick-grid">
+            <a class="card" href="/Client/Index">
+                <div class="icon" aria-hidden>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5zM3 21c0-3.866 3.134-7 7-7h4c3.866 0 7 3.134 7 7v1H3v-1z" fill="currentColor" />
+                    </svg>
                 </div>
-            }
+                <div><h3>Клиенты</h3><p>Список и поиск по клиентам</p></div>
+            </a>
+            <a class="card" href="/Coach/Index">
+                <div class="icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2l3 6 6 .5-4.5 3.5L19 20l-7-4-7 4 2.5-8L3 8.5 9 8 12 2z" fill="currentColor" />
+                    </svg>
+                </div>
+                <div><h3>Тренера</h3><p>Управление расписанием и профилями</p></div>
+            </a>
+            <a class="card" href="/Card/Index">
+                <div class="icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="2" y="5" width="20" height="14" rx="2" stroke="currentColor" stroke-width="1.2" />
+                        <path d="M2 10h20" stroke="currentColor" stroke-width="1.2" />
+                    </svg>
+                </div>
+                <div><h3>Абонементы</h3><p>Создавать, продлять, проверять</p></div>
+            </a>
+            <a class="card" href="/Reports/Index">
+                <div class="icon">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 3h18v18H3V3z" fill="currentColor" opacity="0.06" />
+                        <path d="M7 13h10M7 9h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" />
+                    </svg>
+                </div>
+                <div><h3>Отчёты</h3><p>Статистика по тренерам и доходам</p></div>
+            </a>
         </div>
+        <div class="btn-row">
+            <a class="btn" href="/Client/Create">+ Новый клиент</a>
+            <a class="btn ghost" href="/Calendar/Index">Календарь</a>
+        </div>
+    </section>
 
-        <input type="submit" value="Save" />
-    </form>
-</body>
-</html>
+    <!-- Календарь справа -->
+    <aside class="sidebar">
+        <div class="calendar-card">
+            <h4>Сентябрь 2025</h4>
+            <div class="calendar-grid">
+                <div class="day-header">Пн</div><div class="day-header">Вт</div><div class="day-header">Ср</div>
+                <div class="day-header">Чт</div><div class="day-header">Пт</div><div class="day-header">Сб</div><div class="day-header">Вс</div>
+
+                <!-- пустые дни до начала месяца -->
+                <div class="day"></div><div class="day"></div>
+
+                <div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div>
+                <div class="day">6</div><div class="day">7</div><div class="day today">8</div><div class="day">9</div><div class="day">10</div>
+                <div class="day">11</div><div class="day">12</div><div class="day">13</div><div class="day">14</div>
+            </div>
+        </div>
+    </aside>
+</main>

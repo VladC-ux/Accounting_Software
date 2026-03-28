@@ -1,7 +1,7 @@
 ﻿using Accounting_Software.Data;
-using Accounting_Software.Data.Entites;
+using Accounting_Software.Data.Entities;
 using Accounting_Software.Repository_Interfaces;
-using Accounting_Software.UnitOfWorkk;
+using Accounting_Software.UnitOfWork;
 
 namespace Accounting_Software.Repositories
 {
@@ -33,12 +33,9 @@ namespace Accounting_Software.Repositories
             return _context.TransactionHistories.FirstOrDefault(x=>x.Id==id);
         }
 
-
-
-
         public List<TransactionHistory> GetHistoryByUserId(int userId)
         {
-            return _context.TransactionHistories.Where(t => t.UserId == userId)//lyambda expression
+            return _context.TransactionHistories.Where(t => t.UserId == userId)//lambda expression
                  .OrderByDescending(t => t.SoldDate).ToList();
         }
     }

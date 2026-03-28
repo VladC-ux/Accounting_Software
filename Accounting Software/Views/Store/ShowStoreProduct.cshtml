@@ -208,6 +208,18 @@
 </head>
 <body>
     <div class="container">
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div style="background:#e74c3c;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:20px;">
+                ⚠ @TempData["ErrorMessage"]
+            </div>
+        }
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div style="background:#27ae60;color:#fff;padding:12px 20px;border-radius:8px;margin-bottom:20px;">
+                ✓ @TempData["SuccessMessage"]
+            </div>
+        }
         <div class="header">
             <h1>Store Products</h1>
         </div>

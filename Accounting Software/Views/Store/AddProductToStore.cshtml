@@ -6,6 +6,13 @@
 
 <h2>Add Product to Store</h2>
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        ⚠ @TempData["ErrorMessage"]
+    </div>
+}
+
 <form asp-action="AddProductToStore" method="post">
     <div class="form-group">
         <label asp-for="StoreName" class="control-label"></label>

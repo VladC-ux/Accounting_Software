@@ -1,4 +1,4 @@
-﻿using Accounting_Software.Data.Entites;
+﻿using Accounting_Software.Data.Entities;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
@@ -13,21 +13,21 @@ namespace Accounting_Software.Service
             _transactionHistoryRepository = transactionHistoryRepository;
         }
 
-        public void Add(TransactionHistoryViewModel transationHistoryViewModel)
+        public void Add(TransactionHistoryViewModel transactionHistoryViewModel)
         {
             TransactionHistory transactionHistory = new TransactionHistory
             {
-                Id = transationHistoryViewModel.Id,
-                UserId = transationHistoryViewModel.UserId,
-                ProductName = transationHistoryViewModel.ProductName,
-                Count = transationHistoryViewModel.Count,
-                Price = transationHistoryViewModel.Price,
-                SoldDate = transationHistoryViewModel.SoldDate,
-                Description = transationHistoryViewModel.Description,
-                Mass = transationHistoryViewModel.Mass,
-                unitOfmass = transationHistoryViewModel.unitOfmass,  
-                typeofAction = transationHistoryViewModel.typeofAction,
-                StoreName = transationHistoryViewModel.StoreName
+                Id = transactionHistoryViewModel.Id,
+                UserId = transactionHistoryViewModel.UserId,
+                ProductName = transactionHistoryViewModel.ProductName,
+                Count = transactionHistoryViewModel.Count,
+                Price = transactionHistoryViewModel.Price,
+                SoldDate = transactionHistoryViewModel.SoldDate,
+                Description = transactionHistoryViewModel.Description,
+                Mass = transactionHistoryViewModel.Mass,
+                unitOfmass = transactionHistoryViewModel.unitOfmass,  
+                typeofAction = transactionHistoryViewModel.typeofAction,
+                StoreName = transactionHistoryViewModel.StoreName
             };
         }
 

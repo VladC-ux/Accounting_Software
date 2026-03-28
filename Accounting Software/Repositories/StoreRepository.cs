@@ -1,4 +1,4 @@
-﻿using Accounting_Software.Data.Entites;
+﻿using Accounting_Software.Data.Entities;
 using Accounting_Software.Data;
 using Accounting_Software.Repository_Interfaces;
 using Microsoft.EntityFrameworkCore;

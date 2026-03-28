@@ -1,5 +1,5 @@
 ﻿
-using Accounting_Software.Data.Entites;
+using Accounting_Software.Data.Entities;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +40,7 @@ namespace Accounting_Software.Controllers
             try
             {
                 _productService.Add(product,userid);
-                TempData["SuccessMessage"] = "Your product is successfuly add!";
+                TempData["SuccessMessage"] = "Your product is successfully added!";
             }
             catch (Exception ex)
             {

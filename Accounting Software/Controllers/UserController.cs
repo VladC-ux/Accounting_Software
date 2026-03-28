@@ -51,10 +51,29 @@ namespace Accounting_Software.Controllers
             }
         }
 
-        public IActionResult ProductsTransaction(int id)
+        public IActionResult ProductsTransaction(int id, DateTime? dateFrom, DateTime? dateTo, string? actionType)
         {
-            var data =  _transHistory.GetHistoryByUserId(id);
-            return View(data);
+            var all = _transHistory.GetHistoryByUserId(id);
+
+            if (dateFrom.HasValue)
+                all = all.Where(t => t.SoldDate >= dateFrom.Value).ToList();
+
+            if (dateTo.HasValue)
+                all = all.Where(t => t.SoldDate <= dateTo.Value.AddDays(1).AddSeconds(-1)).ToList();
+
+            if (!string.IsNullOrEmpty(actionType) && actionType != "All")
+                all = all.Where(t => t.typeofAction == actionType).ToList();
+
+            var model = new TransactionFilterViewModel
+            {
+                UserId = id,
+                DateFrom = dateFrom,
+                DateTo = dateTo,
+                ActionType = actionType,
+                Transactions = all
+            };
+
+            return View(model);
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using Accounting_Software.Data;
-using Accounting_Software.Date.Entites;
+using Accounting_Software.Data.Entities;
 using Accounting_Software.Repository_Interfaces;
 using Microsoft.Identity.Client;
 
@@ -21,11 +21,11 @@ namespace Accounting_Software.Repositories
 
         public void Delete(int id)
         {
-            var querry = _context.Sellers.Find(id);
+            var query = _context.Sellers.Find(id);
 
-            if (querry != null)
+            if (query != null)
             {
-                _context.Sellers.Remove(querry);
+                _context.Sellers.Remove(query);
                 
             }
         }

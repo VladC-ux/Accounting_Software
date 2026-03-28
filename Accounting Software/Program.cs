@@ -4,11 +4,7 @@ using Accounting_Software.Data;
 using Microsoft.EntityFrameworkCore;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.Repository_Interfaces;
-using Accounting_Software.UnitOfWorkk;
-using Accounting_Software.Data.Entites;
-
-
-
+using Accounting_Software.UnitOfWork;
 
 namespace Accounting_Software
 {
@@ -33,7 +29,7 @@ namespace Accounting_Software
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ITransactionHistoryService, TransactionHistoryService>();
             builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
-            builder.Services.AddScoped<IUnitofWork, UnitOfWork>();
+            builder.Services.AddScoped<IUnitofWork, Accounting_Software.UnitOfWork.UnitOfWork>();
 
             var app = builder.Build();
             
@@ -52,7 +48,7 @@ namespace Accounting_Software
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Seller}/{action=Index}/{id?}");
+                pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
             app.Run();
         }

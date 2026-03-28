@@ -1,6 +1,5 @@
 ﻿using Accounting_Software.Enums;
-using Accounting_Software.Data.Entites;
-using Accounting_Software.Date.Entites;
+using Accounting_Software.Data.Entities;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Accounting_Software.ViewModel

@@ -40,8 +40,8 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            var querryedit = _sellerService.GetById(id);
-            return View(querryedit);
+            var queryEdit = _sellerService.GetById(id);
+            return View(queryEdit);
         }
         [HttpPost]
         public IActionResult Edit(SellerViewModel model)

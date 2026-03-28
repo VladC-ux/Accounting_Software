@@ -25,7 +25,7 @@ namespace Accounting_Software.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.Product", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,7 +62,7 @@ namespace Accounting_Software.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.Store", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.Store", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -79,7 +79,7 @@ namespace Accounting_Software.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.StoreProduct", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.StoreProduct", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -128,7 +128,7 @@ namespace Accounting_Software.Migrations
                     b.ToTable("StoreProducts");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.TransactionHistory", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.TransactionHistory", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,7 +175,7 @@ namespace Accounting_Software.Migrations
                     b.ToTable("TransactionHistories");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.User", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -194,7 +194,7 @@ namespace Accounting_Software.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.Seller", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -211,9 +211,9 @@ namespace Accounting_Software.Migrations
                     b.ToTable("Sellers");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.Product", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.Product", b =>
                 {
-                    b.HasOne("Accounting_Software.Date.Entites.Seller", "Seller")
+                    b.HasOne("Accounting_Software.Data.Entities.Seller", "Seller")
                         .WithMany("Products")
                         .HasForeignKey("SellerId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -222,15 +222,15 @@ namespace Accounting_Software.Migrations
                     b.Navigation("Seller");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.StoreProduct", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.StoreProduct", b =>
                 {
-                    b.HasOne("Accounting_Software.Data.Entites.Product", "Product")
+                    b.HasOne("Accounting_Software.Data.Entities.Product", "Product")
                         .WithMany("StoreProducts")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Accounting_Software.Data.Entites.Store", "Store")
+                    b.HasOne("Accounting_Software.Data.Entities.Store", "Store")
                         .WithMany("StoreProducts")
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -241,9 +241,9 @@ namespace Accounting_Software.Migrations
                     b.Navigation("Store");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.TransactionHistory", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.TransactionHistory", b =>
                 {
-                    b.HasOne("Accounting_Software.Data.Entites.User", "User")
+                    b.HasOne("Accounting_Software.Data.Entities.User", "User")
                         .WithMany("TransactionHistories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -252,22 +252,22 @@ namespace Accounting_Software.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.Product", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.Product", b =>
                 {
                     b.Navigation("StoreProducts");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.Store", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.Store", b =>
                 {
                     b.Navigation("StoreProducts");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Data.Entites.User", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.User", b =>
                 {
                     b.Navigation("TransactionHistories");
                 });
 
-            modelBuilder.Entity("Accounting_Software.Date.Entites.Seller", b =>
+            modelBuilder.Entity("Accounting_Software.Data.Entities.Seller", b =>
                 {
                     b.Navigation("Products");
                 });

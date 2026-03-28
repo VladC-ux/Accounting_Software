@@ -1,4 +1,4 @@
-﻿using Accounting_Software.Data.Entites;
+﻿using Accounting_Software.Data.Entities;
 
 namespace Accounting_Software.ViewModel
 {

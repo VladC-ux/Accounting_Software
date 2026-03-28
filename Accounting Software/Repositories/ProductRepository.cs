@@ -1,6 +1,5 @@
 ﻿using Accounting_Software.Data;
-using Accounting_Software.Data.Entites;
-using Accounting_Software.Date.Entites;
+using Accounting_Software.Data.Entities;
 using Accounting_Software.Repository_Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.CodeAnalysis;
@@ -11,6 +10,7 @@ namespace Accounting_Software.Repositories
     public class ProductRepository : IProductRepository
     {
         private readonly DBContextAccounting _context;
+        
         public ProductRepository(DBContextAccounting context)
         {
             _context = context;
@@ -22,10 +22,10 @@ namespace Accounting_Software.Repositories
         }
         public void Delete(int product)
         {
-            var querry = _context.Products.Find(product);
-            if (querry != null)
+            var query = _context.Products.Find(product);
+            if (query != null)
             {
-                _context.Products.Remove(querry);
+                _context.Products.Remove(query);
             }
         }
         public List<Product> GetAll()

@@ -1,11 +1,10 @@
 ﻿using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
-using Accounting_Software.Data.Entites;
+using Accounting_Software.Data.Entities;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
-using Accounting_Software.UnitOfWorkk;
-using Accounting_Software.Date.Entites;
+using Accounting_Software.UnitOfWork;
 using Accounting_Software.Data;
 using Accounting_Software.Repositories;
 using Microsoft.CodeAnalysis;
