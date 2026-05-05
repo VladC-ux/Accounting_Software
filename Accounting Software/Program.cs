@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.UnitOfWork;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Accounting_Software
 {
@@ -15,6 +16,15 @@ namespace Accounting_Software
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<DBContextAccounting>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AccountingDatabase")));
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Auth/Login";
+                    options.LogoutPath = "/Auth/Logout";
+                    options.AccessDeniedPath = "/Auth/Login";
+                    options.ExpireTimeSpan = TimeSpan.FromHours(8);
+                });
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddScoped<ISellerService, SellerService>();
@@ -30,9 +40,10 @@ namespace Accounting_Software
             builder.Services.AddScoped<ITransactionHistoryService, TransactionHistoryService>();
             builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
             builder.Services.AddScoped<IUnitofWork, Accounting_Software.UnitOfWork.UnitOfWork>();
+            builder.Services.AddScoped<IEmailService, EmailService>();
 
             var app = builder.Build();
-            
+
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
@@ -44,6 +55,7 @@ namespace Accounting_Software
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

@@ -1,103 +1,350 @@
-﻿@model Accounting_Software.ViewModel.UserViewModel
+@model Accounting_Software.ViewModel.UserViewModel
+@{
+    Layout = null;
+    var recentTx = ViewBag.RecentTx as List<Accounting_Software.ViewModel.TransactionHistoryViewModel> ?? new();
+    decimal totalSpent     = ViewBag.TotalSpent ?? 0m;
+    decimal totalEarned    = ViewBag.TotalEarned ?? 0m;
+    decimal totalDeposited = ViewBag.TotalDeposited ?? 0m;
+    decimal netProfit      = totalEarned - totalSpent;
+    string email           = ViewBag.Email ?? "";
+}
 
 <!DOCTYPE html>
-<html lang="en" style="margin: 0;">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Balance</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Account – Accounting Software</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        @@keyframes fadeInBlur {
-            from
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #f0f2f5; font-family: 'Inter', sans-serif; color: #1a1a2e; }
 
-        {
-            opacity: 0;
-            transform: translateY(30px);
-            filter: blur(4px);
+        /* NAV */
+        .top-nav {
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            padding: 14px 32px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+            position: sticky; top: 0; z-index: 100;
         }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
+        .brand { color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .brand:hover { color: #fff; text-decoration: none; }
+        .nav-links { display: flex; gap: 10px; align-items: center; }
+        .btn-nav {
+            background: transparent; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.85);
+            border-radius: 8px; padding: 7px 14px; font-size: 0.82rem; font-weight: 500;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;
         }
+        .btn-nav:hover { background: rgba(255,255,255,0.1); color: #fff; text-decoration: none; }
+        .btn-nav.danger { border-color: rgba(255,100,100,0.4); color: rgba(255,130,130,0.9); }
+        .btn-nav.danger:hover { background: rgba(255,80,80,0.1); color: #ff8080; }
 
+        /* HERO PROFILE */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 36px 32px 80px;
+            color: #fff;
         }
-
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(120deg, #1c1c1c, #2e2e2e);
-            color: #f5f5f5;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            animation: fadeInBlur 1s ease-out;
-            margin: 0;
+        .profile-row { display: flex; align-items: center; gap: 20px; }
+        .avatar {
+            width: 72px; height: 72px; border-radius: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; font-weight: 700; color: #fff; flex-shrink: 0;
         }
+        .profile-info h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: 4px; }
+        .profile-info .email { color: rgba(255,255,255,0.6); font-size: 0.88rem; }
 
-        .balance-container {
-            background: #121212;
-            border-radius: 16px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-            padding: 40px;
-            width: 380px;
-            text-align: center;
-            animation: fadeInBlur 1.2s ease-out;
-            transition: all 0.3s ease;
+        /* MAIN */
+        .main { padding: 0 32px 40px; margin-top: -52px; }
+
+        /* BALANCE CARD */
+        .balance-card {
+            background: #fff; border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            padding: 28px 32px; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: space-between; gap: 24px;
+            flex-wrap: wrap;
         }
+        .balance-left {}
+        .balance-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #888; margin-bottom: 6px; }
+        .balance-amount { font-size: 3rem; font-weight: 700; color: #1a1a2e; line-height: 1; }
+        .balance-amount.green { color: #28d17f; }
+        .balance-sub { color: #aaa; font-size: 0.85rem; margin-top: 6px; }
 
-            .balance-container:hover {
-                transform: scale(1.015);
-                box-shadow: 0 20px 45px rgba(0, 0, 0, 0.6);
-            }
-
-            .balance-container h2 {
-                margin-bottom: 20px;
-                font-size: 1.9rem;
-                color: #ffffff;
-                letter-spacing: 1px;
-            }
-
-        .balance {
-            font-size: 2.6rem;
-            color: #28d17f;
-            font-weight: bold;
-            margin-bottom: 25px;
+        /* TOP-UP FORM */
+        .topup-form { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+        .topup-form .field { display: flex; flex-direction: column; gap: 6px; }
+        .topup-form label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #888; }
+        .topup-input {
+            border: 1.5px solid #e0e0e0; border-radius: 12px; padding: 12px 16px;
+            font-size: 1.1rem; font-weight: 600; width: 180px; color: #1a1a2e;
+            font-family: 'Inter', sans-serif; transition: border-color 0.2s;
         }
-
-        .button, .btn {
-            display: inline-block;
-            margin: 8px 5px;
-            padding: 10px 24px;
-            background: #444;
-            color: #f5f5f5;
-            border-radius: 10px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid #666;
+        .topup-input:focus { border-color: #28d17f; box-shadow: 0 0 0 3px rgba(40,209,127,0.15); outline: none; }
+        .btn-topup {
+            background: linear-gradient(135deg, #28d17f, #20b870);
+            color: #fff; border: none; border-radius: 12px; padding: 13px 24px;
+            font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.2s;
+            display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
         }
+        .btn-topup:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(40,209,127,0.35); }
 
-            .button:hover, .btn:hover {
-                background: #28d17f;
-                color: #121212;
-                transform: translateY(-2px) scale(1.04);
-                box-shadow: 0 8px 20px rgba(40, 209, 127, 0.3);
-            }
+        /* PRESET BUTTONS */
+        .preset-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+        .preset-btn {
+            background: #f0f2f5; border: 1.5px solid #e0e0e0; border-radius: 8px;
+            padding: 5px 14px; font-size: 0.82rem; font-weight: 600; color: #555;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .preset-btn:hover { background: #28d17f; color: #fff; border-color: #28d17f; }
+
+        /* STAT CARDS */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+        .stat-card {
+            background: #fff; border-radius: 16px; padding: 20px 22px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .stat-card .s-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #aaa; margin-bottom: 8px; }
+        .stat-card .s-val { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; }
+        .stat-card .s-icon { float: right; font-size: 1.4rem; opacity: 0.15; margin-top: -4px; }
+        .stat-card.spent  .s-val { color: #f5576c; }
+        .stat-card.earned .s-val { color: #4facfe; }
+        .stat-card.profit .s-val { color: @(netProfit >= 0 ? "#28d17f" : "#f5576c"); }
+        .stat-card.deposit .s-val { color: #764ba2; }
+
+        /* ALERTS */
+        .alert-custom {
+            border-radius: 12px; padding: 13px 18px; margin-bottom: 16px;
+            font-size: 0.9rem; font-weight: 500; display: flex; align-items: center; gap: 10px;
+        }
+        .alert-success-c { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
+        .alert-error-c   { background: #fdecea; color: #b71c1c; border: 1px solid #ef9a9a; }
+
+        /* TRANSACTIONS */
+        .section-card { background: #fff; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); overflow: hidden; }
+        .section-header {
+            padding: 18px 24px; border-bottom: 1px solid #f0f2f5;
+            display: flex; align-items: center; justify-content: space-between;
+        }
+        .section-header h3 { font-size: 1rem; font-weight: 700; color: #1a1a2e; margin: 0; display: flex; align-items: center; gap: 8px; }
+        .section-header a { font-size: 0.82rem; color: #667eea; text-decoration: none; }
+        .section-header a:hover { text-decoration: underline; }
+        table.tx-table { width: 100%; border-collapse: collapse; }
+        .tx-table th { background: #f8f9fa; padding: 10px 20px; font-size: 0.73rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: #999; border-bottom: 1px solid #f0f2f5; text-align: left; }
+        .tx-table td { padding: 13px 20px; font-size: 0.88rem; border-bottom: 1px solid #f8f9fa; color: #333; }
+        .tx-table tr:last-child td { border-bottom: none; }
+        .tx-table tr:hover td { background: #fafbfc; }
+        .badge-type {
+            padding: 3px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block;
+        }
+        .badge-add     { background: #fce4ec; color: #c62828; }
+        .badge-sale    { background: #e3f2fd; color: #1565c0; }
+        .badge-deposit { background: #f3e5f5; color: #6a1b9a; }
+        .tx-amount { font-weight: 700; }
+        .tx-amount.neg { color: #f5576c; }
+        .tx-amount.pos { color: #28d17f; }
+        .tx-amount.dep { color: #764ba2; }
+        .empty-state { text-align: center; padding: 36px; color: #ccc; font-size: 0.9rem; }
+        .empty-state i { font-size: 2.5rem; margin-bottom: 10px; display: block; }
+
+        @@media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .balance-card { flex-direction: column; align-items: flex-start; }
+            .main { padding: 0 16px 32px; }
+            .top-nav { padding: 12px 16px; }
+            .hero { padding: 24px 16px 70px; }
+        }
+        @@media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .balance-amount { font-size: 2.2rem; }
+        }
     </style>
 </head>
 <body>
-    <div class="balance-container">
-        <h2>@Model.Name</h2>
-        <div class="balance">
-            @Model.Balance.ToString("C")
+
+    <!-- NAV -->
+    <nav class="top-nav">
+        <a class="brand" asp-controller="Dashboard" asp-action="Index">
+            <i class="fas fa-chart-line" style="color:#667eea;"></i> Accounting Software
+        </a>
+        <div class="nav-links">
+            <a class="btn-nav" asp-controller="Dashboard" asp-action="Index">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a class="btn-nav" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.Id">
+                <i class="fas fa-history"></i> Full History
+            </a>
+            <a class="btn-nav danger" asp-controller="Auth" asp-action="Logout">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
         </div>
-        <a href="/Seller/Index" class="button">Back to Seller</a>
-        @foreach (var user in ViewBag.Users)
-        {
-            <a asp-action="ProductsTransaction" asp-controller="User" asp-route-id="@user.Id" class="btn">View Transactions</a>
-        }
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="profile-row">
+            <div class="avatar">@(Model.Name?.Substring(0, 1).ToUpper() ?? "?")</div>
+            <div class="profile-info">
+                <h1>@Model.Name</h1>
+                <div class="email"><i class="fas fa-envelope mr-1" style="opacity:0.5;"></i>@email</div>
+            </div>
+        </div>
     </div>
+
+    <div class="main">
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert-custom alert-success-c mb-3">
+                <i class="fas fa-check-circle"></i> @TempData["Success"]
+            </div>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <div class="alert-custom alert-error-c mb-3">
+                <i class="fas fa-exclamation-circle"></i> @TempData["Error"]
+            </div>
+        }
+
+        <!-- BALANCE + TOP-UP -->
+        <div class="balance-card">
+            <div class="balance-left">
+                <div class="balance-label">Current Balance</div>
+                <div class="balance-amount green">@Model.Balance.ToString("F2")</div>
+                <div class="balance-sub">Available funds for purchases</div>
+            </div>
+
+            <div>
+                <form asp-action="TopUp" asp-controller="User" method="post">
+                    <div class="topup-form">
+                        <div class="field">
+                            <label>Add Money</label>
+                            <input type="number" name="amount" id="topupAmount" class="topup-input"
+                                   placeholder="0.00" step="0.01" min="0.01" required />
+                        </div>
+                        <button type="submit" class="btn-topup">
+                            <i class="fas fa-plus-circle"></i> Top Up
+                        </button>
+                    </div>
+                    <div class="preset-row">
+                        <button type="button" class="preset-btn" onclick="setAmount(50)">+50</button>
+                        <button type="button" class="preset-btn" onclick="setAmount(100)">+100</button>
+                        <button type="button" class="preset-btn" onclick="setAmount(250)">+250</button>
+                        <button type="button" class="preset-btn" onclick="setAmount(500)">+500</button>
+                        <button type="button" class="preset-btn" onclick="setAmount(1000)">+1000</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- STATS -->
+        <div class="stats-grid">
+            <div class="stat-card deposit">
+                <div class="s-icon"><i class="fas fa-piggy-bank"></i></div>
+                <div class="s-label">Total Deposited</div>
+                <div class="s-val">@totalDeposited.ToString("F2")</div>
+            </div>
+            <div class="stat-card spent">
+                <div class="s-icon"><i class="fas fa-arrow-circle-down"></i></div>
+                <div class="s-label">Total Spent</div>
+                <div class="s-val">@totalSpent.ToString("F2")</div>
+            </div>
+            <div class="stat-card earned">
+                <div class="s-icon"><i class="fas fa-arrow-circle-up"></i></div>
+                <div class="s-label">Total Earned</div>
+                <div class="s-val">@totalEarned.ToString("F2")</div>
+            </div>
+            <div class="stat-card profit">
+                <div class="s-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="s-label">Net Profit</div>
+                <div class="s-val">@netProfit.ToString("F2")</div>
+            </div>
+        </div>
+
+        <!-- RECENT TRANSACTIONS -->
+        <div class="section-card">
+            <div class="section-header">
+                <h3><i class="fas fa-history" style="color:#667eea;"></i> Recent Transactions</h3>
+                <a asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.Id">
+                    View all <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+
+            @if (recentTx.Any())
+            {
+                <table class="tx-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Product / Note</th>
+                            <th>Store</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var t in recentTx)
+                        {
+                            <tr>
+                                <td style="color:#888;">@t.SoldDate.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    @if (t.typeofAction == "Add")
+                                    {
+                                        <span class="badge-type badge-add"><i class="fas fa-shopping-cart mr-1"></i>Purchase</span>
+                                    }
+                                    else if (t.typeofAction == "Sale")
+                                    {
+                                        <span class="badge-type badge-sale"><i class="fas fa-tag mr-1"></i>Sale</span>
+                                    }
+                                    else if (t.typeofAction == "Deposit")
+                                    {
+                                        <span class="badge-type badge-deposit"><i class="fas fa-plus mr-1"></i>Deposit</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-type" style="background:#f0f2f5;color:#555;">@t.typeofAction</span>
+                                    }
+                                </td>
+                                <td><strong>@t.ProductName</strong></td>
+                                <td style="color:#888;">@(t.StoreName ?? "—")</td>
+                                <td class="text-right">
+                                    @if (t.typeofAction == "Add")
+                                    {
+                                        <span class="tx-amount neg">-@t.Total.ToString("F2")</span>
+                                    }
+                                    else if (t.typeofAction == "Sale")
+                                    {
+                                        <span class="tx-amount pos">+@t.Total.ToString("F2")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="tx-amount dep">+@t.Price.ToString("F2")</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    No transactions yet
+                </div>
+            }
+        </div>
+
+    </div>
+
+    <script>
+        function setAmount(val) {
+            document.getElementById('topupAmount').value = val;
+        }
+    </script>
 </body>
 </html>

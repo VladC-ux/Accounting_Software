@@ -1,9 +1,11 @@
 ﻿using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Accounting_Software.Controllers
 {
+    [Authorize]
     public class SellerController : Controller
     {
         private readonly ISellerService _sellerService;

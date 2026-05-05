@@ -1,10 +1,12 @@
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service_Interfaces;
 using ClosedXML.Excel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Accounting_Software.Controllers
 {
+    [Authorize]
     public class ExportController : Controller
     {
         private readonly IUserRepository _userRepository;

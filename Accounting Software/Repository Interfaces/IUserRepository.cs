@@ -8,8 +8,8 @@ namespace Accounting_Software.Repository_Interfaces
         User GetUserById(int Id);
         bool Add(User user);
         int UserCount();
-
         List<User> GetAll();
-
+        User? GetByEmail(string email);
+        void Update(User user);
     }
 }

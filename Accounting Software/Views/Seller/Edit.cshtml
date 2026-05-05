@@ -1,38 +1,301 @@
-﻿@using Accounting_Software.ViewModel
+@using Accounting_Software.ViewModel
 @model SellerViewModel
 @{
-    ViewData["Title"] = "Edit";
+    Layout = null;
 }
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Seller</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-</head>
-<body class="bg-light">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <div class="container mt-5">
-        <div class="card shadow rounded-4">
-            <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">Edit Seller</h3>
-            </div>
-            <div class="card-body">
-                <form method="post">
-                    <input type="hidden" asp-for="Id"/>
-                    <div class="mb-3">
-                        <label asp-for="Name" class="form-label">New Seller Name <span class="text-danger">*</span></label>
-                        <input asp-for="Name" class="form-control" required />
-                      
-                        <span asp-validation-for="Name" class="text-danger"></span>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            background: #f0f2f5;
+            font-family: 'Inter', sans-serif;
+            color: #1a1a2e;
+            margin: 0;
+        }
+
+        /* NAV */
+        .top-nav {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+            padding: 14px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-nav .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+        }
+
+        .top-nav .brand i { color: #e94560; }
+
+        .btn-nav-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.85);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 7px 14px;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-nav-outline:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
+            padding: 36px 32px 46px;
+            color: #fff;
+        }
+
+        .hero h1 { font-size: 1.8rem; font-weight: 700; margin: 0 0 4px; }
+        .hero p { opacity: 0.8; margin: 0; font-size: 0.9rem; }
+
+        /* MAIN */
+        .main-content {
+            padding: 32px;
+            margin-top: -24px;
+        }
+
+        /* FORM CARD */
+        .form-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+            overflow: hidden;
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+        .form-card-accent {
+            height: 5px;
+            background: linear-gradient(90deg, #0f3460, #e94560);
+        }
+
+        .form-card-body { padding: 32px; }
+
+        /* SELLER INFO */
+        .seller-info-badge {
+            background: #f0f2f5;
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 26px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .seller-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e94560, #0f3460);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.3rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .seller-info-badge .seller-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #1a1a2e;
+        }
+
+        .seller-info-badge .seller-subtitle {
+            font-size: 0.78rem;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* FORM */
+        .form-label {
+            font-weight: 600;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #555;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .form-control {
+            border: 1.5px solid #e8e8e8;
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            color: #1a1a2e;
+            width: 100%;
+        }
+
+        .form-control:focus {
+            border-color: #0f3460;
+            box-shadow: 0 0 0 3px rgba(15,52,96,0.1);
+            outline: none;
+        }
+
+        .form-group { margin-bottom: 22px; }
+
+        .validation-error {
+            color: #e53935;
+            font-size: 0.8rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn-save {
+            background: linear-gradient(135deg, #0f3460, #16213e);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 11px 28px;
+            font-size: 0.92rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(15,52,96,0.35);
+        }
+
+        .btn-cancel {
+            background: #fdecea;
+            color: #b71c1c;
+            border: 1px solid #ef9a9a;
+            border-radius: 10px;
+            padding: 11px 22px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+        }
+        .btn-cancel:hover {
+            background: #e53935;
+            color: #fff;
+            border-color: #e53935;
+            text-decoration: none;
+        }
+
+        @@media (max-width: 600px) {
+            .main-content { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav class="top-nav">
+        <a class="brand" href="#">
+            <i class="fas fa-user-edit"></i> Edit Seller
+        </a>
+        <a class="btn-nav-outline" asp-action="Index" asp-controller="Seller">
+            <i class="fas fa-arrow-left"></i> Back to Sellers
+        </a>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1><i class="fas fa-user-edit" style="margin-right:10px;"></i>Edit Seller</h1>
+        <p>Update the seller name below</p>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main-content">
+        <div class="form-card">
+            <div class="form-card-accent"></div>
+            <div class="form-card-body">
+
+                <div class="seller-info-badge">
+                    <div class="seller-avatar">
+                        @Model.Name.Substring(0, 1).ToUpper()
                     </div>
-                    <button type="submit" class="btn btn-success">Save</button> 
+                    <div>
+                        <div class="seller-title">@Model.Name</div>
+                        <div class="seller-subtitle">Seller ID: @Model.Id</div>
+                    </div>
+                </div>
+
+                <form method="post">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="form-group">
+                        <label class="form-label">Seller Name</label>
+                        <input asp-for="Name" class="form-control" placeholder="Enter new name..." required />
+                        <span asp-validation-for="Name" class="validation-error"></span>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                        <a asp-action="Index" asp-controller="Seller" class="btn-cancel">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                    </div>
                 </form>
+
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
 </body>
 </html>

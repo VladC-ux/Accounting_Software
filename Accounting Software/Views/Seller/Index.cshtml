@@ -1,5 +1,4 @@
-﻿@using Accounting_Software.ViewModel
-@using Newtonsoft.Json
+@using Accounting_Software.ViewModel
 @model List<SellerViewModel>
 @{
     Layout = null;
@@ -11,120 +10,391 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Seller Dashboard</title>
-
-   
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
-
-  
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-    
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
+        * { box-sizing: border-box; }
+
         body {
-            background-color: #f8f9fa;
-            font-family: 'Roboto', sans-serif;
+            background: #f0f2f5;
+            font-family: 'Inter', sans-serif;
+            color: #1a1a2e;
         }
 
-        .dashboard-header {
+        /* ── TOP NAV ── */
+        .top-nav {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+            padding: 14px 32px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease-in-out;
-        }
-
-            .card:hover {
-                transform: scale(1.02);
-            }
-
-        .card-body {
-            padding: 20px;
-        }
-
-        .action-buttons .btn {
-            margin: 2px;
-        }
-
-        .navbar-actions a {
-            margin-right: 10px;
-        }
-
-        h2 {
+        .top-nav .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
             font-weight: 700;
+            font-size: 1.2rem;
+            text-decoration: none;
         }
 
+        .top-nav .brand i {
+            color: #e94560;
+            font-size: 1.4rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .nav-links .btn {
+            border-radius: 8px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 7px 14px;
+            transition: all 0.2s;
+        }
+
+        .btn-nav-primary   { background: #e94560; border: none; color: #fff; }
+        .btn-nav-primary:hover { background: #c73652; color: #fff; transform: translateY(-1px); }
+
+        .btn-nav-outline {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.85);
+        }
+        .btn-nav-outline:hover {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-1px);
+        }
+
+        /* ── HERO BANNER ── */
+        .hero {
+            background: linear-gradient(135deg, #e94560 0%, #0f3460 100%);
+            padding: 40px 32px 50px;
+            color: #fff;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .hero p {
+            opacity: 0.8;
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .stat-pills {
+            display: flex;
+            gap: 16px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-pill {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 50px;
+            padding: 8px 20px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stat-pill i { font-size: 1rem; }
+
+        /* ── MAIN CONTENT ── */
+        .main-content {
+            padding: 32px;
+            margin-top: -24px;
+        }
+
+        /* ── SEARCH BAR ── */
+        .search-wrap {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            padding: 16px 20px;
+            margin-bottom: 28px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-wrap i {
+            color: #aaa;
+            font-size: 1rem;
+        }
+
+        .search-wrap input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            color: #333;
+        }
+
+        .search-wrap input::placeholder { color: #bbb; }
+
+        /* ── SELLER CARDS ── */
+        .sellers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .seller-card {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .seller-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+        }
+
+        .card-accent {
+            height: 5px;
+            background: linear-gradient(90deg, #e94560, #0f3460);
+        }
+
+        .seller-card-body {
+            padding: 22px 22px 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .seller-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e94560, #0f3460);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 14px;
+            flex-shrink: 0;
+        }
+
+        .seller-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 4px;
+            text-decoration: none;
+        }
+
+        .seller-name:hover {
+            color: #e94560;
+        }
+
+        .seller-meta {
+            font-size: 0.78rem;
+            color: #aaa;
+            margin-bottom: 18px;
+        }
+
+        .seller-meta i { margin-right: 4px; }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: auto;
+        }
+
+        .btn-card {
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 7px 14px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+        }
+
+        .btn-card:hover { transform: translateY(-1px); text-decoration: none; }
+
+        .btn-add-product {
+            background: #e94560;
+            color: #fff;
+            border: none;
+        }
+        .btn-add-product:hover { background: #c73652; color: #fff; }
+
+        .btn-edit {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        .btn-edit:hover { background: #ffc107; color: #fff; }
+
+        .btn-delete {
+            background: #fdecea;
+            color: #b71c1c;
+            border: 1px solid #ef9a9a;
+        }
+        .btn-delete:hover { background: #e53935; color: #fff; border-color: #e53935; }
+
+        .btn-view {
+            background: #e8f4fd;
+            color: #0f3460;
+            border: 1px solid #90caf9;
+        }
+        .btn-view:hover { background: #0f3460; color: #fff; border-color: #0f3460; }
+
+        /* ── EMPTY STATE ── */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #aaa;
+        }
+
+        .empty-state i {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            color: #ddd;
+        }
+
+        .empty-state h4 { color: #ccc; font-weight: 600; }
+        .empty-state p  { font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div class="container mt-5">
-        <div class="dashboard-header">
-            <h2><i class="fas fa-store"></i> Seller Dashboard</h2>
-            <div class="navbar-actions">
-                <a class="btn btn-primary" asp-action="Index" asp-controller="Dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
-                <a class="btn btn-success" asp-action="Add" asp-controller="Seller"><i class="fas fa-plus"></i> Add Seller</a>
-                <a class="btn btn-outline-success" href="/Export/Products"><i class="fas fa-file-excel"></i> Export Products</a>
-                <a class="btn btn-secondary" asp-action="Index" asp-controller="Store"><i class="fas fa-warehouse"></i> Manage Stores</a>
-                <a class="btn btn-info" asp-action="AddUser" asp-controller="User"><i class="fas fa-user-plus"></i> Add User</a>
-                @if (ViewBag.Users != null)
-                {
-                    foreach (var item in ViewBag.Users)
-                    {
-                        <a class="btn btn-dark" asp-action="Index" asp-controller="User" asp-route-id="@item.Id"><i class="fas fa-user"></i> Personal Account</a>
-                    }
-                }
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <a class="brand" href="#">
+            <i class="fas fa-user-tie"></i>
+            Seller Dashboard
+        </a>
+        <div class="nav-links">
+            <a class="btn btn-nav-outline" asp-action="Index" asp-controller="Dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </a>
+            <a class="btn btn-nav-outline" asp-action="Index" asp-controller="Store">
+                <i class="fas fa-warehouse"></i> Stores
+            </a>
+            <a class="btn btn-nav-outline" href="/Export/Products">
+                <i class="fas fa-file-excel"></i> Export
+            </a>
+            <a class="btn btn-nav-primary" asp-action="Add" asp-controller="Seller">
+                <i class="fas fa-plus"></i> Add Seller
+            </a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <h1><i class="fas fa-user-tie" style="margin-right:10px;"></i>Sellers</h1>
+        <p>Manage your sellers, their products and performance</p>
+        <div class="stat-pills">
+            <div class="stat-pill">
+                <i class="fas fa-users"></i>
+                @(ViewBag.Sellers != null ? ((IEnumerable<dynamic>)ViewBag.Sellers).Count() : 0) Sellers
             </div>
         </div>
+    </div>
 
-        <div class="row">
-            @if (ViewBag.Sellers != null)
-            {
-                foreach (var item in ViewBag.Sellers)
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- SEARCH -->
+        <div class="search-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" id="sellerSearch" placeholder="Search sellers..." />
+        </div>
+
+        <!-- GRID -->
+        @if (ViewBag.Sellers != null && ((IEnumerable<dynamic>)ViewBag.Sellers).Any())
+        {
+            <div class="sellers-grid" id="sellersGrid">
+                @foreach (var item in ViewBag.Sellers)
                 {
-                    <div class="col-md-6 col-lg-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">
-                                        <i class="fas fa-user-tie"></i> @item.Name
-                                    </a>
-                                </h5>
-                                <div class="action-buttons mt-3">
-                                    @foreach (var el in ViewBag.Users)
-                                    {
-                                        <a class="btn btn-outline-primary btn-sm"
-                                           asp-action="Add" asp-controller="Product"
-                                           asp-route-SellerId="@item.Id" asp-route-userid="@el.Id">
-                                            <i class="fas fa-plus"></i> Add Product
-                                        </a>
-                                    }
-
-                                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
-                                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-controller="Seller" asp-route-id="@item.Id">
-                                        <i class="fas fa-trash-alt"></i> Delete
-                                    </a>
-                                </div>
+                    <div class="seller-card" data-name="@item.Name.ToLower()">
+                        <div class="card-accent"></div>
+                        <div class="seller-card-body">
+                            <div class="seller-avatar">
+                                @item.Name.ToString().Substring(0, 1).ToUpper()
+                            </div>
+                            <a class="seller-name" href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">
+                                @item.Name
+                            </a>
+                            <div class="seller-meta">
+                                <i class="fas fa-tag"></i> Seller ID: @item.Id
+                            </div>
+                            <div class="card-actions">
+                                <a class="btn-card btn-view"
+                                   href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">
+                                    <i class="fas fa-eye"></i> View Products
+                                </a>
+                                <a class="btn-card btn-add-product"
+                                   asp-action="Add" asp-controller="Product"
+                                   asp-route-SellerId="@item.Id">
+                                    <i class="fas fa-plus"></i> Add Product
+                                </a>
+                                <a class="btn-card btn-edit"
+                                   asp-action="Edit" asp-controller="Seller"
+                                   asp-route-id="@item.Id">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a class="btn-card btn-delete"
+                                   asp-action="Delete" asp-controller="Seller"
+                                   asp-route-id="@item.Id"
+                                   onclick="return confirm('Delete seller @item.Name?')">
+                                    <i class="fas fa-trash-alt"></i> Delete
+                                </a>
                             </div>
                         </div>
                     </div>
                 }
-            }
-        </div>
+            </div>
+        }
+        else
+        {
+            <div class="empty-state">
+                <i class="fas fa-user-slash"></i>
+                <h4>No sellers yet</h4>
+                <p>Click "Add Seller" to get started.</p>
+                <a class="btn btn-nav-primary btn-card mt-2" asp-action="Add" asp-controller="Seller">
+                    <i class="fas fa-plus"></i> Add Seller
+                </a>
+            </div>
+        }
     </div>
 
-  
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
             integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
             crossorigin="anonymous"></script>
@@ -134,5 +404,16 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+
+    <script>
+        // Live search
+        document.getElementById('sellerSearch').addEventListener('input', function () {
+            const query = this.value.toLowerCase().trim();
+            document.querySelectorAll('.seller-card').forEach(function (card) {
+                const name = card.getAttribute('data-name') || '';
+                card.style.display = name.includes(query) ? '' : 'none';
+            });
+        });
+    </script>
 </body>
 </html>

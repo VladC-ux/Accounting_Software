@@ -3,12 +3,14 @@ using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Accounting_Software.Controllers
 {
+    [Authorize]
     public class StoreController : Controller
     {
         private readonly IStoreService _storeService;

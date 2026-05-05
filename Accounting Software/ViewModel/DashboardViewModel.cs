@@ -13,6 +13,11 @@ namespace Accounting_Software.ViewModel
         public decimal TotalSpent { get; set; }
         public decimal TotalEarned { get; set; }
 
+        // This month
+        public decimal MonthSpent { get; set; }
+        public decimal MonthEarned { get; set; }
+        public decimal TotalDeposited { get; set; }
+
         public List<TransactionHistoryViewModel> LastTransactions { get; set; } = new();
     }
 }

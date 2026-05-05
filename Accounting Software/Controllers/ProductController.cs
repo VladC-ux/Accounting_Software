@@ -2,11 +2,13 @@
 using Accounting_Software.Data.Entities;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 
 namespace Accounting_Software.Controllers
 {
+    [Authorize]
     public class ProductController : Controller
     {
         private readonly IProductService _productService;
@@ -29,26 +31,40 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult Add(int SellerId)
         {
+            var user = _userService.GetAll().FirstOrDefault();
             ViewBag.SellerId = SellerId;
-            ViewBag.Users = _userService.GetAll();
-            return View();
+            ViewBag.UserBalance = user?.Balance ?? 0;
+            ViewBag.Products = _productService.GetProductsBySellerId(SellerId);
+            return View(new ProductViewModel { SellerId = SellerId });
         }
 
         [HttpPost]
-        public IActionResult Add(ProductViewModel product,int userid)
+        public IActionResult Add(ProductViewModel product)
         {
-            try
+            var user = _userService.GetAll().FirstOrDefault();
+            if (user == null)
             {
-                _productService.Add(product,userid);
-                TempData["SuccessMessage"] = "Your product is successfully added!";
+                TempData["ErrorMessage"] = "User not found.";
             }
-            catch (Exception ex)
+            else
             {
-                TempData["ErrorMessage"] = $"Error with add product : {ex.Message}";
+                try
+                {
+                    _productService.Add(product, user.Id);
+                    TempData["SuccessMessage"] = $"'{product.Name}' added successfully!";
+                }
+                catch (Exception ex)
+                {
+                    TempData["ErrorMessage"] = ex.Message;
+                }
             }
 
-            ModelState.Clear(); 
-            return View(new ProductViewModel()); 
+            ModelState.Clear();
+            var updatedUser = _userService.GetAll().FirstOrDefault();
+            ViewBag.SellerId = product.SellerId;
+            ViewBag.UserBalance = updatedUser?.Balance ?? 0;
+            ViewBag.Products = _productService.GetProductsBySellerId(product.SellerId);
+            return View(new ProductViewModel { SellerId = product.SellerId });
         }
 
         [HttpGet]

@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(update-config)",
+      "mcp__ide__getDiagnostics",
+      "Bash(dotnet ef:*)",
+      "Bash(dotnet-ef migrations:*)",
+      "Bash(dotnet build:*)"
+    ]
+  }
+}

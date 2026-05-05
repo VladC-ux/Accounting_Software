@@ -1,240 +1,395 @@
-﻿@using Accounting_Software.ViewModel;
+@using Accounting_Software.ViewModel;
 @model ProductViewModel;
+@{
+    Layout = null;
+}
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Product</title>
-
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-
+    <title>Add Product</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #f0f4f7, #ffffff);
-            font-family: 'Poppins', sans-serif;
-            margin: 0;
-            padding: 0;
-            animation: fadeIn 1s ease-in;
-        }
+        * { box-sizing: border-box; }
+        body { background: #f0f2f5; font-family: 'Inter', sans-serif; color: #1a1a2e; margin: 0; }
 
-        .container {
-            background-color: #ffffff;
-            margin-top: 60px;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 1s ease-in;
+        /* NAV */
+        .top-nav {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+            padding: 14px 32px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+            position: sticky; top: 0; z-index: 100;
         }
+        .top-nav .brand { display: flex; align-items: center; gap: 10px; color: #fff; font-weight: 700; font-size: 1.1rem; text-decoration: none; }
+        .top-nav .brand i { color: #e94560; }
+        .btn-nav-outline {
+            background: transparent; border: 1px solid rgba(255,255,255,0.3); color: rgba(255,255,255,0.85);
+            border-radius: 8px; font-size: 0.82rem; font-weight: 500; padding: 7px 14px;
+            transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .btn-nav-outline:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.6); text-decoration: none; }
 
-        h1 {
+        /* HERO */
+        .hero {
+            background: linear-gradient(135deg, #e94560 0%, #0f3460 100%);
+            padding: 28px 32px 44px; color: #fff;
+        }
+        .hero h1 { font-size: 1.6rem; font-weight: 700; margin: 0 0 4px; }
+        .hero p { opacity: 0.8; margin: 0; font-size: 0.9rem; }
+
+        /* BALANCE BADGE */
+        .balance-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 10px; padding: 8px 16px; margin-top: 14px;
+            font-size: 0.92rem; font-weight: 600;
+        }
+        .balance-badge i { opacity: 0.85; }
+
+        /* MAIN */
+        .main-content { padding: 28px 32px; margin-top: -20px; max-width: 800px; margin-left: auto; margin-right: auto; }
+
+        /* FORM CARD */
+        .form-card {
+            background: #fff; border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07); overflow: hidden;
+        }
+        .form-card-accent { height: 4px; background: linear-gradient(90deg, #e94560, #0f3460); }
+        .form-card-body { padding: 28px; }
+
+        .form-label {
+            font-weight: 600; font-size: 0.8rem; text-transform: uppercase;
+            letter-spacing: 0.5px; color: #666; margin-bottom: 5px;
+        }
+        .form-control, .form-select {
+            border: 1.5px solid #e8e8e8; border-radius: 10px;
+            padding: 10px 14px; font-size: 0.92rem; font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s, box-shadow 0.2s; color: #1a1a2e; width: 100%;
+            background-color: #fff;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #e94560; box-shadow: 0 0 0 3px rgba(233,69,96,0.1); outline: none;
+        }
+        select.form-control {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231a1a2e' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+            color: #1a1a2e !important;
             font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 30px;
-            text-align: center;
-            font-size: 2rem;
+            line-height: 1.4;
+            min-height: 44px;
+            text-indent: 0;
         }
-
-        .form-group label {
+        select.form-control option {
+            color: #1a1a2e;
+            background: #fff;
             font-weight: 500;
-            color: #34495e;
+            padding: 8px;
+        }
+        .form-group { margin-bottom: 16px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+        /* PURCHASE TYPE TOGGLE */
+        .type-toggle {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+            background: #f0f2f5; border-radius: 10px; padding: 4px;
+        }
+        .type-toggle input[type="radio"] { display: none; }
+        .type-toggle label {
+            text-align: center; padding: 9px 12px; border-radius: 8px;
+            font-size: 0.88rem; font-weight: 600; color: #666; cursor: pointer;
+            transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+            margin: 0;
+        }
+        .type-toggle input[type="radio"]:checked + label {
+            background: #fff; color: #e94560; box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
 
-        .form-control {
-            font-size: 0.9rem;
+        /* TOTAL BOX */
+        .total-box {
+            background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            border-radius: 12px; padding: 16px 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            margin-top: 8px; margin-bottom: 20px;
         }
+        .total-box .label { color: rgba(255,255,255,0.7); font-size: 0.88rem; font-weight: 500; }
+        .total-box .amount { color: #fff; font-size: 1.5rem; font-weight: 700; }
+        .total-box .balance-left { color: rgba(255,255,255,0.65); font-size: 0.82rem; margin-top: 2px; }
+        .total-box .warning { color: #ff6b6b; }
 
-        .btn-primary {
-            background-color: #2980b9;
-            border-color: #2980b9;
-            transition: all 0.3s ease-in-out;
-            font-weight: 500;
-            border-radius: 8px;
+        /* ALERTS */
+        .alert-box {
+            border-radius: 10px; padding: 12px 16px; margin-bottom: 18px;
+            font-size: 0.88rem; font-weight: 500; display: flex; align-items: center; gap: 8px;
         }
+        .alert-error { background: #fdecea; color: #b71c1c; border: 1px solid #ef9a9a; }
+        .alert-success { background: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; }
 
-            .btn-primary:hover {
-                background-color: #1d6f99;
-                border-color: #1d6f99;
-                transform: scale(1.05);
-            }
-
-        .btn-secondary {
-            background-color: #7f8c8d;
-            border-color: #7f8c8d;
-            transition: all 0.3s ease-in-out;
-            font-weight: 500;
-            border-radius: 8px;
+        /* BUTTONS */
+        .btn-save {
+            background: linear-gradient(135deg, #e94560, #c73652); color: #fff; border: none;
+            border-radius: 10px; padding: 12px 28px; font-size: 0.95rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px; flex: 1;
         }
-
-            .btn-secondary:hover {
-                background-color: #5d6d7e;
-                border-color: #5d6d7e;
-                transform: scale(1.05);
-            }
-
-        table {
-            margin-top: 30px;
-            animation: fadeIn 1s ease-in;
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(233,69,96,0.35); }
+        .btn-back {
+            background: #f0f2f5; color: #555; border: none; border-radius: 10px;
+            padding: 12px 22px; font-size: 0.92rem; font-weight: 500; cursor: pointer;
+            transition: all 0.2s; text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
         }
+        .btn-back:hover { background: #e2e5ea; color: #333; text-decoration: none; }
+        .form-actions { display: flex; gap: 12px; margin-top: 4px; }
 
-        th {
-            background-color: #2c3e50;
-            color: white;
+        /* PRODUCTS TABLE */
+        .products-section {
+            background: #fff; border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.07); overflow: hidden; margin-top: 20px;
         }
-
-        td, th {
-            text-align: center;
-            padding: 12px;
+        .products-header {
+            padding: 16px 22px; border-bottom: 1px solid #f0f2f5;
+            font-weight: 700; font-size: 0.95rem; color: #1a1a2e;
+            display: flex; align-items: center; gap: 8px;
         }
-
-        .alert {
-            animation: fadeIn 0.8s ease-in;
+        .products-header i { color: #e94560; }
+        table.products-table { width: 100%; border-collapse: collapse; }
+        .products-table th {
+            background: #f8f9fa; padding: 10px 16px; text-align: left;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; color: #888; border-bottom: 1px solid #f0f2f5;
         }
+        .products-table td { padding: 11px 16px; font-size: 0.88rem; border-bottom: 1px solid #f8f9fa; color: #333; }
+        .products-table tr:last-child td { border-bottom: none; }
+        .products-table tr:hover td { background: #fafbfc; }
+        .badge-price { background: #e8f5e9; color: #2e7d32; padding: 3px 10px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; }
+        .badge-unit { background: #e3f2fd; color: #1565c0; padding: 3px 10px; border-radius: 20px; font-size: 0.78rem; }
+        .badge-total { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #fff; padding: 3px 10px; border-radius: 20px; font-weight: 700; font-size: 0.8rem; }
+        .empty-state { text-align: center; padding: 28px; color: #aaa; font-size: 0.9rem; }
 
-        @@keyframes fadeInUp {
-            from
-
-        {
-            opacity: 0;
-            transform: translateY(40px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        }
-
-        @@keyframes fadeIn {
-            from
-
-        {
-            opacity: 0;
-        }
-
-        to {
-            opacity: 1;
-        }
-
-        }
-
-        @@media (max-width: 768px) {
-            .container
-
-        {
-            padding: 20px;
-        }
-
-        h1 {
-            font-size: 22px;
-        }
-
-        }
-
-        .form-control.description,
-        .form-control.unit-of-mass {
-            height: 38px; /* уменьшенная высота */
-            font-size: 0.9rem;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
+        @@media (max-width: 600px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .main-content { padding: 16px; }
+            .top-nav { padding: 12px 16px; }
+            .hero { padding: 20px 16px 36px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="alert alert-danger">
-                @TempData["ErrorMessage"]
-            </div>
-        }
 
-        <h1>Add New Product</h1>
+    <nav class="top-nav">
+        <a class="brand" href="#">
+            <i class="fas fa-box-open"></i> Add Product
+        </a>
+        <a class="btn-nav-outline" asp-action="Index" asp-controller="Seller">
+            <i class="fas fa-arrow-left"></i> Back to Sellers
+        </a>
+    </nav>
 
-        <form method="post">
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label asp-for="Name">Product Name</label>
-                    <input asp-for="Name" class="form-control" required />
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Price">Price</label>
-                    <input asp-for="Price" class="form-control" required />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Description">Description</label>
-                <input asp-for="Description" class="form-control description" required />
-            </div>
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label asp-for="Mass">Mass</label>
-                    <input asp-for="Mass" class="form-control" min="1" required />
-                </div>
-                <div class="form-group col-md-6">
-                    <label asp-for="Count">Count</label>
-                    <input asp-for="Count" class="form-control" min="1" required />
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="unitOfmass">Unit of Mass</label>
-                <select asp-for="unitOfmass" class="form-control unit-of-mass" required>
-                    <option value="Kg">Kg</option>
-                    <option value="Gram">Gram</option>
-                    <option value="Ml">Ml</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Save Product</button>
-            <a asp-action="Index" asp-controller="Seller" class="btn btn-secondary ml-2">Back to Index</a>
-        </form>
-
-        @if (ViewBag.Products != null)
-        {
-            <h2 class="mt-5 mb-3 text-center" style="color: #2c3e50;">Added Products</h2>
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th>Mass</th>
-                        <th>Unit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (ProductViewModel item in ViewBag.Products)
-                    {
-                        <tr>
-                            <td>@item.Name</td>
-                            <td>@item.Price.ToString("F2")</td>
-                            <td>@item.Description</td>
-                            <td>@item.Mass</td>
-                            <td>@item.unitOfmass</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+    <div class="hero">
+        <h1><i class="fas fa-plus-circle" style="margin-right:10px;"></i>New Product</h1>
+        <p>Fill in the details to register a purchase</p>
+        <div class="balance-badge">
+            <i class="fas fa-wallet"></i>
+            Current Balance: <strong id="balanceDisplay">@((ViewBag.UserBalance as decimal? ?? 0m).ToString("F2"))</strong>
+        </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="main-content">
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert-box alert-error">
+                <i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]
+            </div>
+        }
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert-box alert-success">
+                <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+            </div>
+        }
+
+        <div class="form-card">
+            <div class="form-card-accent"></div>
+            <div class="form-card-body">
+
+                <form method="post" id="productForm">
+                    <input type="hidden" name="SellerId" value="@ViewBag.SellerId" />
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Product Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="e.g. Apple" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Price per unit</label>
+                            <input type="number" name="Price" id="priceInput" class="form-control" placeholder="0.00" step="0.01" min="0.01" required />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Purchase type</label>
+                        <div class="type-toggle">
+                            <input type="radio" id="typePiece" name="purchaseType" value="piece" checked />
+                            <label for="typePiece"><i class="fas fa-cubes"></i> By piece</label>
+                            <input type="radio" id="typeWeight" name="purchaseType" value="weight" />
+                            <label for="typeWeight"><i class="fas fa-weight-hanging"></i> By weight</label>
+                        </div>
+                    </div>
+
+                    <div class="grid-3" id="quantityGrid">
+                        <div class="form-group">
+                            <label class="form-label">Count (pcs)</label>
+                            <input type="number" name="Count" id="countInput" class="form-control" placeholder="0" min="1" required />
+                        </div>
+                        <div class="form-group weight-only">
+                            <label class="form-label">Mass</label>
+                            <input type="number" name="Mass" id="massInput" class="form-control" placeholder="0" min="1" />
+                        </div>
+                        <div class="form-group weight-only">
+                            <label class="form-label">Unit</label>
+                            <select name="unitOfmass" id="unitInput" class="form-control">
+                                <option value="Kg">Kg</option>
+                                <option value="Gram">Gram</option>
+                                <option value="Ml">Ml</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description (optional)</label>
+                        <input asp-for="Description" class="form-control" placeholder="Short description..." />
+                    </div>
+
+                    <!-- TOTAL PREVIEW -->
+                    <div class="total-box">
+                        <div>
+                            <div class="label">Total cost</div>
+                            <div class="amount" id="totalDisplay">0.00</div>
+                            <div class="balance-left" id="balanceAfter">Balance after: <span id="balanceAfterVal">—</span></div>
+                        </div>
+                        <i class="fas fa-calculator" style="color:rgba(255,255,255,0.25);font-size:2rem;"></i>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-save">
+                            <i class="fas fa-save"></i> Save Product
+                        </button>
+                        <a asp-action="ShowSellerProduct" asp-controller="Product" asp-route-SellerId="@ViewBag.SellerId" class="btn-back">
+                            <i class="fas fa-list"></i> View Products
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- RECENTLY ADDED PRODUCTS -->
+        <div class="products-section">
+            <div class="products-header">
+                <i class="fas fa-list"></i> Products of this Seller
+            </div>
+            @{
+                var products = ViewBag.Products as List<Accounting_Software.ViewModel.ProductViewModel>;
+            }
+            @if (products != null && products.Any())
+            {
+                <table class="products-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Count</th>
+                            <th>Mass</th>
+                            <th>Unit</th>
+                            <th>Total Cost</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in products)
+                        {
+                            <tr>
+                                <td><strong>@item.Name</strong></td>
+                                <td><span class="badge-price">@item.Price.ToString("F2")</span></td>
+                                <td>@item.Count</td>
+                                <td>@item.Mass</td>
+                                <td><span class="badge-unit">@item.unitOfmass</span></td>
+                                <td><span class="badge-total">@item.Total.ToString("F2")</span></td>
+                                <td style="color:#888;">@item.Description</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty-state">
+                    <i class="fas fa-box-open" style="font-size:2rem;margin-bottom:8px;display:block;"></i>
+                    No products yet for this seller
+                </div>
+            }
+        </div>
+
+    </div>
 
     <script>
-        $('form').on('submit', function () {
-            setTimeout(function () {
-                $('form')[0].reset();
-            }, 100);
+        const balance = @((ViewBag.UserBalance as decimal? ?? 0m).ToString("F2", System.Globalization.CultureInfo.InvariantCulture));
+        const priceInput = document.getElementById('priceInput');
+        const countInput = document.getElementById('countInput');
+        const massInput = document.getElementById('massInput');
+        const unitInput = document.getElementById('unitInput');
+        const totalDisplay = document.getElementById('totalDisplay');
+        const balanceAfterVal = document.getElementById('balanceAfterVal');
+        const balanceAfter = document.getElementById('balanceAfter');
+        const typePiece = document.getElementById('typePiece');
+        const typeWeight = document.getElementById('typeWeight');
+        const weightFields = document.querySelectorAll('.weight-only');
+        const productForm = document.getElementById('productForm');
+
+        function updateTotal() {
+            const price = parseFloat(priceInput.value) || 0;
+            const count = parseInt(countInput.value) || 0;
+            const total = price * count;
+            const remaining = balance - total;
+
+            totalDisplay.textContent = total.toFixed(2);
+            balanceAfterVal.textContent = remaining.toFixed(2);
+
+            if (remaining < 0) {
+                balanceAfter.classList.add('warning');
+                totalDisplay.style.color = '#ff6b6b';
+            } else {
+                balanceAfter.classList.remove('warning');
+                totalDisplay.style.color = '#fff';
+            }
+        }
+
+        function applyPurchaseType() {
+            const isWeight = typeWeight.checked;
+            weightFields.forEach(el => { el.style.display = isWeight ? '' : 'none'; });
+            massInput.required = isWeight;
+        }
+
+        priceInput.addEventListener('input', updateTotal);
+        countInput.addEventListener('input', updateTotal);
+        typePiece.addEventListener('change', applyPurchaseType);
+        typeWeight.addEventListener('change', applyPurchaseType);
+
+        productForm.addEventListener('submit', function () {
+            if (!typeWeight.checked) {
+                if (!massInput.value) massInput.value = 0;
+            }
         });
+
+        applyPurchaseType();
+        updateTotal();
     </script>
 </body>
 </html>

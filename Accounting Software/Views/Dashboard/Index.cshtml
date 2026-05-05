@@ -1,357 +1,470 @@
 @model Accounting_Software.ViewModel.DashboardViewModel
 @{
     Layout = null;
+    var profit      = Model.TotalEarned - Model.TotalSpent;
+    var monthProfit = Model.MonthEarned - Model.MonthSpent;
+    var maxBar      = Math.Max(Model.TotalSpent, Model.TotalEarned);
+    var spentPct    = maxBar > 0 ? (double)Model.TotalSpent  / (double)maxBar * 100 : 0;
+    var earnedPct   = maxBar > 0 ? (double)Model.TotalEarned / (double)maxBar * 100 : 0;
+    var monthName   = DateTime.Now.ToString("MMMM yyyy");
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Dashboard — Accounting Software</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Roboto', sans-serif;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html,body{height:100%;}
+        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;display:flex;flex-direction:column;}
+
+        /* ── TOP BAR ── */
+        .topbar{
+            height:56px;background:#ffffff;border-bottom:1px solid #e5e7eb;
+            display:flex;align-items:center;justify-content:space-between;
+            padding:0 28px;position:sticky;top:0;z-index:200;
         }
+        .topbar-left{display:flex;align-items:center;gap:32px;}
+        .brand{font-size:0.92rem;font-weight:700;color:#111827;letter-spacing:0.2px;display:flex;align-items:center;gap:8px;}
+        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
+        .top-nav{display:flex;align-items:center;gap:2px;}
+        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;transition:all .15s;}
+        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
+        .tn.active{color:#2563eb;font-weight:600;}
+        .topbar-right{display:flex;align-items:center;gap:12px;}
+        .user-chip{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#374151;font-weight:500;}
+        .user-avatar{width:30px;height:30px;border-radius:8px;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;}
+        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;transition:all .15s;}
+        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
 
-        .topbar {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            padding: 16px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        /* ── LAYOUT ── */
+        .layout{display:flex;flex:1;overflow:hidden;}
+
+        /* ── SIDEBAR ── */
+        .sidebar{
+            width:200px;background:#ffffff;border-right:1px solid #e5e7eb;
+            padding:20px 0;flex-shrink:0;overflow-y:auto;
         }
-
-        .topbar .brand {
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: 1px;
+        .sb-section{margin-bottom:20px;}
+        .sb-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#9ca3af;padding:0 16px 6px;}
+        .sb-link{
+            display:flex;align-items:center;gap:9px;padding:8px 16px;
+            font-size:0.8rem;font-weight:500;color:#6b7280;text-decoration:none;
+            border-left:2px solid transparent;transition:all .12s;
         }
+        .sb-link:hover{background:#f9fafb;color:#111827;text-decoration:none;}
+        .sb-link.active{background:#eff6ff;color:#2563eb;border-left-color:#2563eb;font-weight:600;}
+        .sb-link i{width:14px;text-align:center;font-size:0.82rem;}
 
-        .topbar .nav-links a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.95rem;
-            transition: color 0.2s;
+        /* ── MAIN ── */
+        .main{flex:1;padding:28px 32px;overflow-y:auto;}
+
+        /* ── PAGE TITLE ── */
+        .pg-title{margin-bottom:24px;}
+        .pg-title h1{font-size:1.25rem;font-weight:700;color:#111827;margin-bottom:2px;}
+        .pg-title .sub{font-size:0.78rem;color:#9ca3af;}
+
+        /* ── KPI ROW ── */
+        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
+        .kpi{
+            background:#fff;border:1px solid #e5e7eb;border-radius:10px;
+            padding:18px 20px;position:relative;overflow:hidden;
         }
+        .kpi-accent{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:10px 0 0 10px;}
+        .ac-blue{background:#2563eb;}
+        .ac-red{background:#ef4444;}
+        .ac-green{background:#16a34a;}
+        .ac-indigo{background:@(profit>=0?"#0891b2":"#ef4444");}
+        .kpi-lbl{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;margin-bottom:8px;}
+        .kpi-val{font-size:1.6rem;font-weight:700;line-height:1;color:#111827;}
+        .kpi-val.c-blue{color:#2563eb;}
+        .kpi-val.c-red{color:#ef4444;}
+        .kpi-val.c-green{color:#16a34a;}
+        .kpi-val.c-teal{color:#0891b2;}
+        .kpi-sub{font-size:0.7rem;color:#9ca3af;margin-top:5px;}
+        .kpi-ico{position:absolute;right:16px;top:16px;font-size:1rem;color:#f3f4f6;}
 
-        .topbar .nav-links a:hover {
-            color: #fff;
+        /* ── CONTENT GRID ── */
+        .content-grid{display:grid;grid-template-columns:1fr 320px;gap:20px;}
+
+        /* ── CARD ── */
+        .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:0;}
+        .card-hd{padding:14px 20px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;}
+        .card-hd h3{font-size:0.84rem;font-weight:700;color:#111827;margin:0;}
+        .card-hd .hd-link{font-size:0.75rem;color:#2563eb;text-decoration:none;}
+        .card-hd .hd-link:hover{text-decoration:underline;}
+        .card-body{padding:20px;}
+
+        /* ── ACTION TILES ── */
+        .action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+        .action-tile{
+            border:1px solid #e5e7eb;border-radius:10px;padding:18px 16px;
+            text-decoration:none;color:#374151;transition:all .15s;
+            display:flex;flex-direction:column;gap:10px;
+            background:#fff;
         }
+        .action-tile:hover{border-color:#2563eb;background:#eff6ff;text-decoration:none;color:#1d4ed8;transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.1);}
+        .tile-icon{width:38px;height:38px;border-radius:8px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#6b7280;transition:all .15s;}
+        .action-tile:hover .tile-icon{background:#dbeafe;color:#2563eb;}
+        .tile-label{font-size:0.8rem;font-weight:600;}
+        .tile-desc{font-size:0.72rem;color:#9ca3af;line-height:1.4;}
+        .action-tile:hover .tile-desc{color:#93c5fd;}
 
-        .page-body {
-            padding: 30px;
+        /* ── ACTIVITY FEED ── */
+        .activity-item{
+            display:flex;align-items:center;gap:12px;
+            padding:10px 0;border-bottom:1px solid #f3f4f6;
         }
+        .activity-item:last-child{border-bottom:none;}
+        .act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+        .act-dot.buy{background:#ef4444;}
+        .act-dot.sale{background:#16a34a;}
+        .act-dot.dep{background:#2563eb;}
+        .act-info{flex:1;min-width:0;}
+        .act-name{font-size:0.8rem;font-weight:500;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+        .act-date{font-size:0.7rem;color:#9ca3af;margin-top:1px;}
+        .act-amt{font-size:0.82rem;font-weight:600;white-space:nowrap;}
+        .act-amt.neg{color:#ef4444;}
+        .act-amt.pos{color:#16a34a;}
+        .act-amt.dep{color:#2563eb;}
 
-        .welcome-text {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 6px;
-        }
+        /* ── RIGHT PANEL ── */
+        .right-stack{display:flex;flex-direction:column;gap:14px;}
 
-        .welcome-sub {
-            color: #6c757d;
-            margin-bottom: 30px;
-            font-size: 0.95rem;
-        }
+        /* ── FINANCIAL HEALTH ── */
+        .health-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+        .health-label{font-size:0.75rem;color:#6b7280;font-weight:500;}
+        .health-val{font-size:0.82rem;font-weight:700;}
+        .bar-track{height:6px;background:#f3f4f6;border-radius:99px;overflow:hidden;margin-bottom:4px;}
+        .bar-fill{height:100%;border-radius:99px;transition:width .6s;}
+        .bar-fill.red{background:#ef4444;}
+        .bar-fill.green{background:#16a34a;}
+        .divider{height:1px;background:#f3f4f6;margin:14px 0;}
+        .fin-stat{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+        .fin-stat:last-child{margin-bottom:0;}
+        .fin-stat .fs-label{font-size:0.75rem;color:#6b7280;}
+        .fin-stat .fs-val{font-size:0.82rem;font-weight:700;color:#111827;}
 
-        /* Stat cards */
-        .stat-card {
-            border: none;
-            border-radius: 14px;
-            padding: 24px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
-            margin-bottom: 20px;
-        }
+        /* ── MONTH CARD ── */
+        .month-row{display:flex;justify-content:space-between;gap:10px;}
+        .month-block{flex:1;text-align:center;padding:12px 8px;border-radius:8px;}
+        .month-block.spend-block{background:#fef2f2;}
+        .month-block.earn-block{background:#f0fdf4;}
+        .mb-lbl{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#9ca3af;margin-bottom:4px;}
+        .mb-val{font-size:1.1rem;font-weight:700;}
+        .mb-val.red{color:#dc2626;}
+        .mb-val.green{color:#16a34a;}
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-        }
+        /* ── INVENTORY ── */
+        .inv-row{display:flex;justify-content:space-between;text-align:center;padding:4px 0;}
+        .inv-block{}
+        .inv-num{font-size:1.4rem;font-weight:700;color:#111827;}
+        .inv-lbl{font-size:0.68rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.4px;font-weight:600;}
 
-        .stat-card .stat-icon {
-            font-size: 2.2rem;
-            opacity: 0.85;
-            float: right;
-        }
-
-        .stat-card .stat-label {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .stat-card .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-top: 6px;
-        }
-
-        .bg-balance   { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .bg-spent     { background: linear-gradient(135deg, #f093fb, #f5576c); }
-        .bg-earned    { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .bg-profit    { background: linear-gradient(135deg, #43e97b, #38f9d7); }
-        .bg-sellers   { background: linear-gradient(135deg, #fa709a, #fee140); }
-        .bg-products  { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-        .bg-stores    { background: linear-gradient(135deg, #fccb90, #d57eeb); }
-
-        /* Transaction table */
-        .section-card {
-            background: white;
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .table th {
-            background-color: #f8f9fa;
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            color: #6c757d;
-            border-top: none;
-            font-weight: 600;
-        }
-
-        .table td {
-            vertical-align: middle;
-            font-size: 0.92rem;
-        }
-
-        .badge-add  { background-color: #e3f2fd; color: #1565c0; }
-        .badge-sale { background-color: #e8f5e9; color: #2e7d32; }
-
-        .action-type {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-        }
-
-        .no-transactions {
-            text-align: center;
-            color: #aaa;
-            padding: 30px 0;
-            font-size: 1rem;
-        }
-
-        /* Quick actions */
-        .quick-btn {
-            border-radius: 10px;
-            padding: 12px 18px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-            transition: transform 0.15s;
-            text-decoration: none;
-        }
-
-        .quick-btn:hover {
-            transform: translateX(4px);
-            text-decoration: none;
-        }
+        @@media(max-width:1100px){.content-grid{grid-template-columns:1fr;}}
+        @@media(max-width:900px){.sidebar{display:none;}.kpi-row{grid-template-columns:1fr 1fr;}}
+        @@media(max-width:600px){.kpi-row{grid-template-columns:1fr;}.action-grid{grid-template-columns:1fr 1fr;}.main{padding:16px;}}
     </style>
 </head>
 <body>
 
-    <!-- Top navigation -->
-    <div class="topbar">
-        <div class="brand"><i class="fas fa-chart-line mr-2"></i>Accounting Software</div>
-        <div class="nav-links">
-            <a asp-controller="Seller" asp-action="Index"><i class="fas fa-users mr-1"></i>Sellers</a>
-            <a asp-controller="Store" asp-action="Index"><i class="fas fa-store mr-1"></i>Stores</a>
-            <a asp-controller="User" asp-action="Index" asp-route-id="@Model.UserId">
-                <i class="fas fa-user mr-1"></i>Account
-            </a>
-            <a asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId">
-                <i class="fas fa-history mr-1"></i>History
-            </a>
-            <a asp-controller="Statistics" asp-action="Index">
-                <i class="fas fa-chart-bar mr-1"></i>Statistics
-            </a>
+<!-- TOP BAR -->
+<header class="topbar">
+    <div class="topbar-left">
+        <div class="brand">
+            <span class="brand-dot"></span>
+            Accounting Software
         </div>
+        <nav class="top-nav">
+            <a class="tn active" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
+            <a class="tn" asp-controller="Store" asp-action="Index">Stores</a>
+            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
+        </nav>
     </div>
+    <div class="topbar-right">
+        <div class="user-chip">
+            <div class="user-avatar">@(Model.UserName.Substring(0,1).ToUpper())</div>
+            @Model.UserName
+        </div>
+        <a class="btn-logout" asp-controller="Auth" asp-action="Logout">
+            <i class="fas fa-sign-out-alt"></i> Sign out
+        </a>
+    </div>
+</header>
 
-    <div class="page-body">
+<div class="layout">
 
-        <div class="welcome-text">Welcome, @Model.UserName</div>
-        <div class="welcome-sub">@DateTime.Now.ToString("dddd, dd MMMM yyyy")</div>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sb-section">
+            <div class="sb-label">Main</div>
+            <a class="sb-link active" asp-controller="Dashboard" asp-action="Index">
+                <i class="fas fa-th-large"></i> Overview
+            </a>
+            <a class="sb-link" asp-controller="Statistics" asp-action="Index">
+                <i class="fas fa-chart-line"></i> Reports
+            </a>
+            <a class="sb-link" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId">
+                <i class="fas fa-receipt"></i> Transactions
+            </a>
+        </div>
+        <div class="sb-section">
+            <div class="sb-label">Business</div>
+            <a class="sb-link" asp-controller="Seller" asp-action="Index">
+                <i class="fas fa-user-tie"></i> Sellers
+            </a>
+            <a class="sb-link" asp-controller="Store" asp-action="Index">
+                <i class="fas fa-store"></i> Stores
+            </a>
+        </div>
+        <div class="sb-section">
+            <div class="sb-label">Finance</div>
+            <a class="sb-link" asp-controller="User" asp-action="Index" asp-route-id="@Model.UserId">
+                <i class="fas fa-wallet"></i> Account
+            </a>
+            <a class="sb-link" href="/Export/Transactions?userId=@Model.UserId">
+                <i class="fas fa-file-export"></i> Export
+            </a>
+        </div>
+    </aside>
 
-        <!-- Stats row 1: financial -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="stat-card bg-balance">
-                    <i class="fas fa-wallet stat-icon"></i>
-                    <div class="stat-label">Current Balance</div>
-                    <div class="stat-value">@Model.Balance.ToString("C")</div>
-                </div>
+    <!-- MAIN -->
+    <main class="main">
+
+        <div class="pg-title">
+            <h1>Financial Overview</h1>
+            <div class="sub">@DateTime.Now.ToString("dddd, d MMMM yyyy") &nbsp;·&nbsp; @Model.UserName</div>
+        </div>
+
+        <!-- KPI -->
+        <div class="kpi-row">
+            <div class="kpi">
+                <div class="kpi-accent ac-blue"></div>
+                <i class="fas fa-wallet kpi-ico"></i>
+                <div class="kpi-lbl">Cash Balance</div>
+                <div class="kpi-val c-blue">@Model.Balance.ToString("N2")</div>
+                <div class="kpi-sub">Available funds</div>
             </div>
-            <div class="col-md-3">
-                <div class="stat-card bg-spent">
-                    <i class="fas fa-arrow-circle-down stat-icon"></i>
-                    <div class="stat-label">Total Spent</div>
-                    <div class="stat-value">@Model.TotalSpent.ToString("C")</div>
-                </div>
+            <div class="kpi">
+                <div class="kpi-accent ac-red"></div>
+                <i class="fas fa-arrow-down kpi-ico"></i>
+                <div class="kpi-lbl">Total Purchases</div>
+                <div class="kpi-val c-red">@Model.TotalSpent.ToString("N2")</div>
+                <div class="kpi-sub">All time spend</div>
             </div>
-            <div class="col-md-3">
-                <div class="stat-card bg-earned">
-                    <i class="fas fa-arrow-circle-up stat-icon"></i>
-                    <div class="stat-label">Total Earned</div>
-                    <div class="stat-value">@Model.TotalEarned.ToString("C")</div>
-                </div>
+            <div class="kpi">
+                <div class="kpi-accent ac-green"></div>
+                <i class="fas fa-arrow-up kpi-ico"></i>
+                <div class="kpi-lbl">Total Revenue</div>
+                <div class="kpi-val c-green">@Model.TotalEarned.ToString("N2")</div>
+                <div class="kpi-sub">All time sales</div>
             </div>
-            <div class="col-md-3">
-                <div class="stat-card bg-profit">
-                    <i class="fas fa-chart-bar stat-icon"></i>
-                    <div class="stat-label">Net Profit</div>
-                    <div class="stat-value">@((Model.TotalEarned - Model.TotalSpent).ToString("C"))</div>
+            <div class="kpi">
+                <div class="kpi-accent ac-indigo"></div>
+                <i class="fas fa-chart-line kpi-ico"></i>
+                <div class="kpi-lbl">Net Profit</div>
+                <div class="kpi-val @(profit >= 0 ? "c-teal" : "c-red")">
+                    @(profit >= 0 ? "+" : "")@profit.ToString("N2")
                 </div>
+                <div class="kpi-sub">Revenue − Purchases</div>
             </div>
         </div>
 
-        <!-- Stats row 2: inventory -->
-        <div class="row">
-            <div class="col-md-4">
-                <div class="stat-card bg-sellers">
-                    <i class="fas fa-user-tie stat-icon"></i>
-                    <div class="stat-label">Sellers</div>
-                    <div class="stat-value">@Model.TotalSellers</div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-card bg-products">
-                    <i class="fas fa-box stat-icon"></i>
-                    <div class="stat-label">Products</div>
-                    <div class="stat-value">@Model.TotalProducts</div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="stat-card bg-stores">
-                    <i class="fas fa-store-alt stat-icon"></i>
-                    <div class="stat-label">Stores</div>
-                    <div class="stat-value">@Model.TotalStores</div>
-                </div>
-            </div>
-        </div>
+        <!-- CONTENT -->
+        <div class="content-grid">
 
-        <div class="row">
-            <!-- Last 5 transactions -->
-            <div class="col-md-8">
-                <div class="section-card">
-                    <div class="section-title">
-                        <i class="fas fa-history text-primary"></i> Last Transactions
+            <div>
+                <!-- QUICK ACTIONS -->
+                <div class="card mb-3" style="margin-bottom:14px!important;">
+                    <div class="card-hd">
+                        <h3>Quick Actions</h3>
                     </div>
+                    <div class="card-body">
+                        <div class="action-grid">
 
-                    @if (Model.LastTransactions != null && Model.LastTransactions.Any())
-                    {
-                        <table class="table table-hover mb-0">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Product</th>
-                                    <th>Store</th>
-                                    <th>Type</th>
-                                    <th class="text-right">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var t in Model.LastTransactions)
-                                {
-                                    <tr>
-                                        <td>@t.SoldDate.ToString("dd MMM yyyy")</td>
-                                        <td>@t.ProductName</td>
-                                        <td>@(t.StoreName ?? "—")</td>
-                                        <td>
-                                            <span class="action-type @(t.typeofAction == "Add" ? "badge-add" : "badge-sale")">
-                                                @t.typeofAction
-                                            </span>
-                                        </td>
-                                        <td class="text-right font-weight-bold">
-                                            @(t.typeofAction == "Add"
-                                                ? "-" + t.Total.ToString("C")
-                                                : "+" + t.Total.ToString("C"))
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        <div class="no-transactions">
-                            <i class="fas fa-inbox fa-2x mb-2 d-block"></i>
-                            No transactions yet
+                            <a class="action-tile" asp-controller="Seller" asp-action="Index">
+                                <div class="tile-icon"><i class="fas fa-cart-plus"></i></div>
+                                <div>
+                                    <div class="tile-label">New Purchase</div>
+                                    <div class="tile-desc">Buy products from a seller</div>
+                                </div>
+                            </a>
+
+                            <a class="action-tile" asp-controller="Store" asp-action="Index">
+                                <div class="tile-icon"><i class="fas fa-tag"></i></div>
+                                <div>
+                                    <div class="tile-label">Record Sale</div>
+                                    <div class="tile-desc">Sell products from a store</div>
+                                </div>
+                            </a>
+
+                            <a class="action-tile" asp-controller="User" asp-action="Index" asp-route-id="@Model.UserId">
+                                <div class="tile-icon"><i class="fas fa-plus-circle"></i></div>
+                                <div>
+                                    <div class="tile-label">Add Funds</div>
+                                    <div class="tile-desc">Top up your account balance</div>
+                                </div>
+                            </a>
+
+                            <a class="action-tile" asp-controller="Seller" asp-action="Add">
+                                <div class="tile-icon"><i class="fas fa-user-plus"></i></div>
+                                <div>
+                                    <div class="tile-label">Add Seller</div>
+                                    <div class="tile-desc">Register a new supplier</div>
+                                </div>
+                            </a>
+
+                            <a class="action-tile" asp-controller="Statistics" asp-action="Index">
+                                <div class="tile-icon"><i class="fas fa-chart-bar"></i></div>
+                                <div>
+                                    <div class="tile-label">View Reports</div>
+                                    <div class="tile-desc">Sales & profit analytics</div>
+                                </div>
+                            </a>
+
+                            <a class="action-tile" href="/Export/Transactions?userId=@Model.UserId">
+                                <div class="tile-icon"><i class="fas fa-file-excel"></i></div>
+                                <div>
+                                    <div class="tile-label">Export Data</div>
+                                    <div class="tile-desc">Download Excel report</div>
+                                </div>
+                            </a>
+
                         </div>
-                    }
+                    </div>
+                </div>
 
-                    <div class="mt-3">
-                        <a asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId"
-                           class="btn btn-sm btn-outline-primary">
-                            View full history →
+                <!-- RECENT ACTIVITY -->
+                <div class="card">
+                    <div class="card-hd">
+                        <h3>Recent Activity</h3>
+                        <a class="hd-link" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId">
+                            See all transactions →
                         </a>
                     </div>
+                    <div class="card-body" style="padding:0 20px;">
+                        @if (Model.LastTransactions != null && Model.LastTransactions.Any())
+                        {
+                            @foreach (var t in Model.LastTransactions)
+                            {
+                                <div class="activity-item">
+                                    <div class="act-dot @(t.typeofAction == "Add" ? "buy" : t.typeofAction == "Sale" ? "sale" : "dep")"></div>
+                                    <div class="act-info">
+                                        <div class="act-name">@t.ProductName</div>
+                                        <div class="act-date">@t.SoldDate.ToString("dd MMM yyyy") @(!string.IsNullOrEmpty(t.StoreName) ? $"· {t.StoreName}" : "")</div>
+                                    </div>
+                                    <div class="act-amt @(t.typeofAction == "Add" ? "neg" : t.typeofAction == "Sale" ? "pos" : "dep")">
+                                        @(t.typeofAction == "Add" ? "−" : "+")@t.Total.ToString("N2")
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <div style="text-align:center;padding:24px;color:#d1d5db;font-size:0.85rem;">
+                                <i class="fas fa-inbox" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
+                                No transactions yet
+                            </div>
+                        }
+                    </div>
                 </div>
             </div>
 
-            <!-- Quick actions -->
-            <div class="col-md-4">
-                <div class="section-card">
-                    <div class="section-title">
-                        <i class="fas fa-bolt text-warning"></i> Quick Actions
-                    </div>
+            <!-- RIGHT PANEL -->
+            <div class="right-stack">
 
-                    <a asp-controller="Seller" asp-action="Index" class="btn btn-light w-100 quick-btn">
-                        <i class="fas fa-user-tie text-primary"></i> Manage Sellers
-                    </a>
-                    <a asp-controller="Store" asp-action="Index" class="btn btn-light w-100 quick-btn">
-                        <i class="fas fa-store text-success"></i> Manage Stores
-                    </a>
-                    <a asp-controller="User" asp-action="Index" asp-route-id="@Model.UserId"
-                       class="btn btn-light w-100 quick-btn">
-                        <i class="fas fa-wallet text-purple" style="color:#764ba2"></i> My Account
-                    </a>
-                    <a asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId"
-                       class="btn btn-light w-100 quick-btn">
-                        <i class="fas fa-list text-info"></i> All Transactions
-                    </a>
-                    <a asp-controller="Statistics" asp-action="Index"
-                       class="btn btn-light w-100 quick-btn">
-                        <i class="fas fa-chart-bar" style="color:#f5576c"></i> Statistics
-                    </a>
-                    <a href="/Export/Transactions?userId=@Model.UserId"
-                       class="btn btn-light w-100 quick-btn">
-                        <i class="fas fa-file-excel" style="color:#2e7d32"></i> Export Transactions
-                    </a>
+                <!-- FINANCIAL HEALTH -->
+                <div class="card">
+                    <div class="card-hd"><h3>Financial Health</h3></div>
+                    <div class="card-body">
+
+                        <div class="health-row">
+                            <span class="health-label">Purchases</span>
+                            <span class="health-val" style="color:#ef4444;">@Model.TotalSpent.ToString("N2")</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill red" style="width:@spentPct.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)%;"></div>
+                        </div>
+
+                        <div class="health-row" style="margin-top:12px;">
+                            <span class="health-label">Revenue</span>
+                            <span class="health-val" style="color:#16a34a;">@Model.TotalEarned.ToString("N2")</span>
+                        </div>
+                        <div class="bar-track">
+                            <div class="bar-fill green" style="width:@earnedPct.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)%;"></div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="fin-stat">
+                            <span class="fs-label">Total Deposited</span>
+                            <span class="fs-val">@Model.TotalDeposited.ToString("N2")</span>
+                        </div>
+                        <div class="fin-stat">
+                            <span class="fs-label">Net Profit</span>
+                            <span class="fs-val" style="color:@(profit >= 0 ? "#16a34a" : "#ef4444")">
+                                @(profit >= 0 ? "+" : "")@profit.ToString("N2")
+                            </span>
+                        </div>
+                    </div>
                 </div>
+
+                <!-- THIS MONTH -->
+                <div class="card">
+                    <div class="card-hd"><h3>@monthName</h3></div>
+                    <div class="card-body">
+                        <div class="month-row">
+                            <div class="month-block spend-block">
+                                <div class="mb-lbl">Spent</div>
+                                <div class="mb-val red">@Model.MonthSpent.ToString("N2")</div>
+                            </div>
+                            <div class="month-block earn-block">
+                                <div class="mb-lbl">Earned</div>
+                                <div class="mb-val green">@Model.MonthEarned.ToString("N2")</div>
+                            </div>
+                        </div>
+                        @{
+                            var mp = Model.MonthEarned - Model.MonthSpent;
+                        }
+                        <div style="text-align:center;margin-top:14px;font-size:0.75rem;color:#9ca3af;">
+                            Month profit:
+                            <strong style="color:@(mp >= 0 ? "#16a34a" : "#ef4444")">
+                                @(mp >= 0 ? "+" : "")@mp.ToString("N2")
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- INVENTORY -->
+                <div class="card">
+                    <div class="card-hd"><h3>Inventory</h3></div>
+                    <div class="card-body">
+                        <div class="inv-row">
+                            <div class="inv-block">
+                                <div class="inv-num">@Model.TotalSellers</div>
+                                <div class="inv-lbl">Sellers</div>
+                            </div>
+                            <div class="inv-block">
+                                <div class="inv-num">@Model.TotalProducts</div>
+                                <div class="inv-lbl">Products</div>
+                            </div>
+                            <div class="inv-block">
+                                <div class="inv-num">@Model.TotalStores</div>
+                                <div class="inv-lbl">Stores</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
+    </main>
+</div>
 
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

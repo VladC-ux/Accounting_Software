@@ -1,10 +1,12 @@
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service_Interfaces;
 using Accounting_Software.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Accounting_Software.Controllers
 {
+    [Authorize]
     public class DashboardController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -33,13 +35,16 @@ namespace Accounting_Software.Controllers
         public IActionResult Index()
         {
             if (_userRepository.UserCount() == 0)
-                return RedirectToAction("AddUser", "User");
+                return RedirectToAction("Register", "Auth");
 
             var users = _userRepository.GetAll();
             var user = users.First();
 
             var userViewModel = _userService.GetBalance(user.Id);
             var transactions = _transactionHistoryService.GetHistoryByUserId(user.Id);
+
+            var now = DateTime.Now;
+            var monthStart = new DateTime(now.Year, now.Month, 1);
 
             var dashboard = new DashboardViewModel
             {
@@ -54,6 +59,15 @@ namespace Accounting_Software.Controllers
                     .Sum(t => t.Total),
                 TotalEarned = transactions
                     .Where(t => t.typeofAction == "Sale")
+                    .Sum(t => t.Total),
+                TotalDeposited = transactions
+                    .Where(t => t.typeofAction == "Deposit")
+                    .Sum(t => t.Price),
+                MonthSpent = transactions
+                    .Where(t => t.typeofAction == "Add" && t.SoldDate >= monthStart)
+                    .Sum(t => t.Total),
+                MonthEarned = transactions
+                    .Where(t => t.typeofAction == "Sale" && t.SoldDate >= monthStart)
                     .Sum(t => t.Total),
                 LastTransactions = transactions.Take(5).ToList()
             };
