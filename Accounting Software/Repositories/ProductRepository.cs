@@ -30,7 +30,7 @@ namespace Accounting_Software.Repositories
         }
         public List<Product> GetAll()
         {
-            return _context.Products.ToList();
+            return _context.Products.Include(p => p.Seller).ToList();
         }
 
         public Product GetById(int productId)

@@ -61,6 +61,7 @@ namespace Accounting_Software.Service
                 StoreName = storeProduct.StoreName,
                 Unitofmass = storeProduct.unitOfmass,
             };
+            product.Count -= storeProduct.Count;
             _storeProductRepository.Add(st);
             _uow.SaveChanges();
         }

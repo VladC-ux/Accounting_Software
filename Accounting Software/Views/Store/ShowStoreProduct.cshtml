@@ -1,8 +1,10 @@
 @model List<Accounting_Software.ViewModel.StoreProductViewModel>
 @{
     Layout = null;
-    var storeName = Model?.FirstOrDefault()?.StoreName;
-    var storeId = Model?.FirstOrDefault()?.StoreId ?? 0;
+    var storeName = (Model?.FirstOrDefault()?.StoreName) ?? (ViewBag.StoreName as string);
+    var storeId = (Model?.FirstOrDefault()?.StoreId) ?? (ViewBag.StoreId is int sid ? sid : 0);
+    var allProducts = ViewBag.AllProducts as List<Accounting_Software.ViewModel.ProductViewModel>
+                      ?? new List<Accounting_Software.ViewModel.ProductViewModel>();
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -70,6 +72,25 @@
         .btn-primary:hover{background:#1d4ed8;color:#fff;text-decoration:none;}
         .btn-ghost{background:#fff;color:#374151;border:1px solid #e5e7eb;}
         .btn-ghost:hover{background:#f9fafb;color:#111827;text-decoration:none;}
+
+        .modal-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;align-items:flex-start;justify-content:center;z-index:1000;overflow-y:auto;padding:40px 16px;}
+        .modal-backdrop.open{display:flex;}
+        .modal-card{background:#fff;border-radius:14px;width:100%;max-width:560px;box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:hidden;}
+        .modal-hd{padding:18px 22px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;}
+        .modal-hd h2{font-size:1.05rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
+        .modal-close{background:none;border:none;color:#9ca3af;font-size:1.1rem;cursor:pointer;padding:4px 8px;border-radius:6px;}
+        .modal-close:hover{background:#f3f4f6;color:#111827;}
+        .modal-body{padding:22px;}
+        .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid #f3f4f6;}
+
+        .fg{margin-bottom:14px;}
+        .fg label{display:block;font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:5px;}
+        .fg input, .fg select, .fg textarea{width:100%;padding:9px 11px;border:1px solid #d1d5db;border-radius:7px;font-size:0.86rem;font-family:inherit;background:#fff;}
+        .fg input:focus, .fg select:focus, .fg textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+        .fg textarea{resize:vertical;min-height:60px;}
+        .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+        @@media(max-width:480px){.fg-row{grid-template-columns:1fr;}}
+        .hint{font-size:0.74rem;color:#9ca3af;margin-top:4px;}
     </style>
 </head>
 <body>
@@ -97,9 +118,14 @@
             <h1><i class="fas fa-box-open" style="color:#2563eb;"></i> @(storeName ?? "Store") Products</h1>
             <div class="sub">@(Model?.Count ?? 0) item@((Model?.Count ?? 0) == 1 ? "" : "s") in stock</div>
         </div>
-        <a class="btn btn-primary" asp-controller="Seller" asp-action="Index">
-            <i class="fas fa-plus"></i> Add Products
-        </a>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button type="button" class="btn btn-primary" onclick="openQuickAdd()">
+                <i class="fas fa-bolt"></i> Quick Add
+            </button>
+            <a class="btn btn-ghost" asp-action="PickProductForStore" asp-route-storeId="@storeId">
+                <i class="fas fa-th-large"></i> Browse Products
+            </a>
+        </div>
     </div>
 
     @if (TempData["ErrorMessage"] != null)
@@ -190,5 +216,107 @@
     </div>
 
 </div>
+
+<div id="quickAddModal" class="modal-backdrop" onclick="if(event.target===this)closeQuickAdd()">
+    <div class="modal-card">
+        <div class="modal-hd">
+            <h2><i class="fas fa-bolt" style="color:#2563eb;"></i> Quick Add to @(storeName ?? "Store")</h2>
+            <button type="button" class="modal-close" onclick="closeQuickAdd()"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+            @if (!allProducts.Any())
+            {
+                <div style="padding:18px;background:#fef3c7;color:#92400e;border-radius:8px;font-size:0.85rem;">
+                    <i class="fas fa-exclamation-triangle"></i> No products available. Add products to a seller first.
+                </div>
+            }
+            else
+            {
+                <form asp-action="AddProductToStore" method="post">
+                    <input type="hidden" name="StoreId" value="@storeId" />
+                    <input type="hidden" name="StoreName" value="@storeName" />
+                    <input type="hidden" name="ProductName" id="qa_ProductName" />
+
+                    <div class="fg">
+                        <label for="qa_ProductId">Product</label>
+                        <select name="ProductId" id="qa_ProductId" required onchange="fillFromProduct()">
+                            <option value="">— Select a product —</option>
+                            @foreach (var p in allProducts)
+                            {
+                                <option value="@p.Id"
+                                        data-name="@p.Name"
+                                        data-price="@p.Price"
+                                        data-mass="@p.Mass"
+                                        data-unit="@((int)p.unitOfmass)"
+                                        data-stock="@p.Count"
+                                        data-desc="@p.Description"
+                                        data-seller="@p.SellerName">
+                                    @p.Name @(string.IsNullOrEmpty(p.SellerName) ? "" : " — " + p.SellerName) (stock: @p.Count)
+                                </option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="fg-row">
+                        <div class="fg">
+                            <label for="qa_Price">Price</label>
+                            <input type="number" step="0.01" min="0.01" name="Price" id="qa_Price" required />
+                        </div>
+                        <div class="fg">
+                            <label for="qa_Count">Quantity</label>
+                            <input type="number" min="1" name="Count" id="qa_Count" required />
+                            <div class="hint" id="qa_StockHint"></div>
+                        </div>
+                        <div class="fg">
+                            <label for="qa_Mass">Mass</label>
+                            <input type="number" min="0" name="Mass" id="qa_Mass" />
+                        </div>
+                        <div class="fg">
+                            <label for="qa_Unit">Unit</label>
+                            <select name="unitOfmass" id="qa_Unit">
+                                @foreach (var unit in Enum.GetValues(typeof(Accounting_Software.Enums.Unit_of_mass)))
+                                {
+                                    <option value="@((int)unit)">@unit</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="fg">
+                        <label for="qa_Description">Description</label>
+                        <textarea name="Description" id="qa_Description" placeholder="Optional notes..."></textarea>
+                    </div>
+
+                    <div class="modal-actions">
+                        <button type="button" class="btn btn-ghost" onclick="closeQuickAdd()">Cancel</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Add to Store</button>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    function openQuickAdd(){document.getElementById('quickAddModal').classList.add('open');}
+    function closeQuickAdd(){document.getElementById('quickAddModal').classList.remove('open');}
+    function fillFromProduct(){
+        var sel=document.getElementById('qa_ProductId');
+        var opt=sel.options[sel.selectedIndex];
+        if(!opt||!opt.value){return;}
+        document.getElementById('qa_ProductName').value=opt.dataset.name||'';
+        document.getElementById('qa_Price').value=opt.dataset.price||'';
+        document.getElementById('qa_Mass').value=opt.dataset.mass||'';
+        var unit=opt.dataset.unit;
+        if(unit){document.getElementById('qa_Unit').value=unit;}
+        document.getElementById('qa_Description').value=opt.dataset.desc||'';
+        var stock=opt.dataset.stock||'0';
+        var c=document.getElementById('qa_Count');
+        c.max=stock;
+        if(!c.value||parseInt(c.value)>parseInt(stock)){c.value=stock>0?1:0;}
+        document.getElementById('qa_StockHint').textContent='Available stock: '+stock;
+    }
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')closeQuickAdd();});
+</script>
 </body>
 </html>

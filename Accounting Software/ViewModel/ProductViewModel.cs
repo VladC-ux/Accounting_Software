@@ -19,6 +19,7 @@ namespace Accounting_Software.ViewModel
         }
         public decimal TotalPrice { get; set; }
         public int SellerId { get; set; }
+        public string? SellerName { get; set; }
        public int? WareHouseId { get; set;}
        public int ProductId { get; set; }
 

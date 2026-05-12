@@ -147,9 +147,20 @@ namespace Accounting_Software.Controllers
         {
             try
             {
+                if (model.ProductId <= 0)
+                    throw new InvalidOperationException("Please select a product.");
+
+                if (string.IsNullOrEmpty(model.ProductName) || string.IsNullOrEmpty(model.StoreName))
+                {
+                    var prod = _productService.GetById(model.ProductId);
+                    var st = _storeService.GetById(model.StoreId);
+                    model.ProductName = prod?.Name ?? model.ProductName;
+                    model.StoreName = st?.StoreName ?? model.StoreName;
+                }
+
                 var storeProduct = new StoreProductViewModel
                 {
-                    Id = model.Id,
+                    Id = 0,
                     StoreId = model.StoreId,
                     ProductId = model.ProductId,
                     StoreName = model.StoreName,
@@ -159,22 +170,45 @@ namespace Accounting_Software.Controllers
                     unitOfmass = model.unitOfmass,
                     Description = model.Description,
                     Mass = model.Mass,
-                    AddDate = model.AddDate
+                    AddDate = DateTime.Now
                 };
                 _storeProductService.Add(storeProduct);
-                return RedirectToAction("Index", "Seller");
+                TempData["SuccessMessage"] = $"\"{storeProduct.ProductName}\" added to {storeProduct.StoreName}.";
+                return RedirectToAction("ShowStoreProduct", new { storeId = model.StoreId });
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction("AddProductToStore", new { storeId = model.StoreId, productId = model.ProductId });
+                return RedirectToAction("ShowStoreProduct", new { storeId = model.StoreId });
             }
+        }
+
+        [HttpGet]
+        public IActionResult PickProductForStore(int storeId)
+        {
+            var store = _storeService.GetById(storeId);
+            if (store == null)
+            {
+                return NotFound("Store not found.");
+            }
+
+            ViewBag.StoreId = store.Id;
+            ViewBag.StoreName = store.StoreName;
+            var products = _productService.GetAll();
+            return View(products);
         }
 
         [HttpGet]
         public IActionResult ShowStoreProduct(int? storeId)
         {
             ViewBag.Users = _userRepository.GetAll();
+            ViewBag.AllProducts = _productService.GetAll();
+            if (storeId.HasValue)
+            {
+                var store = _storeService.GetById(storeId.Value);
+                ViewBag.StoreId = storeId.Value;
+                ViewBag.StoreName = store?.StoreName;
+            }
             var data = _storeProductService.GetProductByStoreId(storeId);
             return View(data);
 

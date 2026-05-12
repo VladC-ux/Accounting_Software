@@ -86,7 +86,10 @@ namespace Accounting_Software.Service
                 Price = product.Price,
                 Description = product.Description,
                 unitOfmass = product.Unitofmass,
-                Mass = product.Mass
+                Mass = product.Mass,
+                Count = product.Count,
+                SellerId = product.SellerId,
+                SellerName = product.Seller?.Name
 
             }).ToList();
             return productViewModels;

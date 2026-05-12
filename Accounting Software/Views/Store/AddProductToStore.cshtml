@@ -76,7 +76,7 @@
 
 <div class="wrap">
 
-    <a class="back-link" asp-controller="Seller" asp-action="Index"><i class="fas fa-arrow-left"></i> Back to Sellers</a>
+    <a class="back-link" asp-action="ShowStoreProduct" asp-route-storeId="@Model.StoreId"><i class="fas fa-arrow-left"></i> Back to @Model.StoreName</a>
 
     @if (TempData["ErrorMessage"] != null)
     {
@@ -140,7 +140,7 @@
                 </div>
 
                 <div class="actions">
-                    <a class="btn btn-ghost" asp-controller="Seller" asp-action="Index">Cancel</a>
+                    <a class="btn btn-ghost" asp-action="ShowStoreProduct" asp-route-storeId="@Model.StoreId">Cancel</a>
                     <button class="btn btn-primary" type="submit">
                         <i class="fas fa-check"></i> Add to Store
                     </button>
