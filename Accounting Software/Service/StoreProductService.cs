@@ -231,7 +231,7 @@ namespace Accounting_Software.Service
             };
         }
 
-        public void GetBalanceSale(int storeid,int userid)
+        public int GetBalanceSale(int storeid,int userid)
         {
             var data = _storeProductRepository.GetById(storeid);
             if (data == null)
@@ -260,6 +260,8 @@ namespace Accounting_Software.Service
             _uow.SaveChanges();
 
             _ = _telegramNotifier.NotifySaleAsync(userid, data.ProductName, data.Price, data.StoreName);
+
+            return transactionHistory.Id;
         }
     }
 }

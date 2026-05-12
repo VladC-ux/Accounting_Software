@@ -19,9 +19,11 @@ namespace Accounting_Software.Controllers
         private readonly IStoreProductRepository _storeProductRepository;
         private readonly ISellerService _sellerService;
         private readonly IUserRepository _userRepository;
+        private readonly ITransactionHistoryRepository _transactionHistoryRepository;
+        private readonly IReceiptPdfService _receiptPdfService;
 
 
-        public StoreController(IStoreService storeService, IStoreProductService storeproduct, IStoreProductRepository storeProductRepository, IProductService productService, ISellerService sellerService,IUserRepository userRepository)
+        public StoreController(IStoreService storeService, IStoreProductService storeproduct, IStoreProductRepository storeProductRepository, IProductService productService, ISellerService sellerService,IUserRepository userRepository, ITransactionHistoryRepository transactionHistoryRepository, IReceiptPdfService receiptPdfService)
         {
             _storeService = storeService;
             _storeProductService = storeproduct;
@@ -29,6 +31,8 @@ namespace Accounting_Software.Controllers
             _productService = productService;
             _sellerService = sellerService;
             _userRepository = userRepository;
+            _transactionHistoryRepository = transactionHistoryRepository;
+            _receiptPdfService = receiptPdfService;
         }
 
         public IActionResult Index()
@@ -42,14 +46,27 @@ namespace Accounting_Software.Controllers
         {
             try
             {
-                _storeProductService.GetBalanceSale(model.Id,userid);
+                var receiptId = _storeProductService.GetBalanceSale(model.Id,userid);
                 TempData["SuccessMessage"] = "Sale completed successfully.";
+                TempData["LastReceiptId"] = receiptId;
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
             }
             return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId });
+        }
+
+        [HttpGet]
+        public IActionResult Receipt(int id)
+        {
+            var tx = _transactionHistoryRepository.GetById(id);
+            if (tx == null)
+                return NotFound("Receipt not found.");
+
+            var buyer = _userRepository.GetUserById(tx.UserId);
+            var pdf = _receiptPdfService.GenerateSaleReceipt(tx, buyer?.Name ?? buyer?.Email);
+            return File(pdf, "application/pdf", $"receipt-{tx.Id:D6}.pdf");
         }
 
         [HttpPost]

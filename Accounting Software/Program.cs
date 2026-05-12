@@ -6,6 +6,7 @@ using Accounting_Software.Service_Interfaces;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using QuestPDF.Infrastructure;
 using Telegram.Bot;
 
 namespace Accounting_Software
@@ -14,6 +15,8 @@ namespace Accounting_Software
     {
         public static void Main(string[] args)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddDbContext<DBContextAccounting>(opt => opt.UseSqlServer(builder.Configuration.GetConnectionString("AccountingDatabase")));
@@ -42,6 +45,7 @@ namespace Accounting_Software
             builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
             builder.Services.AddScoped<IUnitofWork, Accounting_Software.UnitOfWork.UnitOfWork>();
             builder.Services.AddScoped<IEmailService, EmailService>();
+            builder.Services.AddScoped<IReceiptPdfService, ReceiptPdfService>();
 
             // ── Telegram bot ──────────────────────────────────────────────
             var botToken = builder.Configuration["Telegram:BotToken"];

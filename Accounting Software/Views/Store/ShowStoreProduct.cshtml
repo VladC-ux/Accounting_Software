@@ -134,7 +134,16 @@
     }
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert-box alert-ok"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+        var receiptId = TempData["LastReceiptId"] as int?;
+        <div class="alert-box alert-ok" style="justify-content:space-between;">
+            <span><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</span>
+            @if (receiptId.HasValue)
+            {
+                <a class="btn-icon btn-sale" asp-action="Receipt" asp-route-id="@receiptId.Value" target="_blank">
+                    <i class="fas fa-file-pdf"></i> Download Receipt
+                </a>
+            }
+        </div>
     }
 
     <div class="card">
