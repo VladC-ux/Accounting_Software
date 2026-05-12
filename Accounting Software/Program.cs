@@ -6,6 +6,7 @@ using Accounting_Software.Service_Interfaces;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Telegram.Bot;
 
 namespace Accounting_Software
 {
@@ -41,6 +42,15 @@ namespace Accounting_Software
             builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
             builder.Services.AddScoped<IUnitofWork, Accounting_Software.UnitOfWork.UnitOfWork>();
             builder.Services.AddScoped<IEmailService, EmailService>();
+
+            // ── Telegram bot ──────────────────────────────────────────────
+            var botToken = builder.Configuration["Telegram:BotToken"];
+            if (!string.IsNullOrWhiteSpace(botToken) && botToken != "YOUR_BOT_TOKEN_HERE")
+            {
+                builder.Services.AddSingleton<ITelegramBotClient>(_ => new TelegramBotClient(botToken));
+                builder.Services.AddHostedService<TelegramBotHostedService>();
+            }
+            builder.Services.AddSingleton<ITelegramNotifier, TelegramNotifier>();
 
             var app = builder.Build();
 

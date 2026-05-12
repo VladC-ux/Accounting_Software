@@ -184,6 +184,7 @@
             <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
             <a class="tn" asp-controller="Store" asp-action="Index">Stores</a>
             <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
+            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
         </nav>
     </div>
     <div class="topbar-right">
@@ -229,6 +230,12 @@
             </a>
             <a class="sb-link" href="/Export/Transactions?userId=@Model.UserId">
                 <i class="fas fa-file-export"></i> Export
+            </a>
+        </div>
+        <div class="sb-section">
+            <div class="sb-label">Integrations</div>
+            <a class="sb-link" asp-controller="Telegram" asp-action="Index">
+                <i class="fab fa-telegram"></i> Telegram
             </a>
         </div>
     </aside>

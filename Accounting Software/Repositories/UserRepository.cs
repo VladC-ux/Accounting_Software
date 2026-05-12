@@ -67,5 +67,15 @@ namespace Accounting_Software.Repositories
             _context.Users.Update(user);
             _uow.SaveChanges();
         }
+
+        public User? GetByTelegramChatId(long chatId)
+        {
+            return _context.Users.FirstOrDefault(u => u.TelegramChatId == chatId);
+        }
+
+        public User? GetByTelegramLinkCode(string code)
+        {
+            return _context.Users.FirstOrDefault(u => u.TelegramLinkCode == code);
+        }
     }
 }

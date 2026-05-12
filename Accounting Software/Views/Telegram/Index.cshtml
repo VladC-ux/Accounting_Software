@@ -1,0 +1,270 @@
+@model Accounting_Software.ViewModel.TelegramSettingsViewModel
+@{
+    Layout = null;
+    var botLink = !string.IsNullOrEmpty(Model.BotUsername)
+        ? $"https://t.me/{Model.BotUsername.TrimStart('@')}"
+        : null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telegram — Accounting Software</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;min-height:100vh;}
+        .topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;}
+        .brand{font-size:0.92rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
+        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
+        .top-nav{display:flex;gap:2px;margin-left:32px;}
+        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;}
+        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
+        .tn.active{color:#2563eb;font-weight:600;}
+        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;}
+        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
+
+        .wrap{max-width:880px;margin:32px auto;padding:0 24px;}
+        .pg-title{margin-bottom:24px;}
+        .pg-title h1{font-size:1.4rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:10px;}
+        .pg-title .sub{font-size:0.82rem;color:#9ca3af;margin-top:4px;}
+        .tg-icon{color:#0088cc;font-size:1.5rem;}
+
+        .alert-box{padding:12px 16px;border-radius:10px;margin-bottom:18px;font-size:0.85rem;font-weight:500;}
+        .alert-ok{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
+        .alert-err{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
+        .alert-warn{background:#fef3c7;color:#92400e;border:1px solid #fcd34d;}
+
+        .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;margin-bottom:18px;overflow:hidden;}
+        .card-hd{padding:16px 22px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;}
+        .card-hd h3{font-size:0.9rem;font-weight:700;color:#111827;margin:0;}
+        .card-body{padding:22px;}
+
+        .status-row{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+        .status-dot{width:12px;height:12px;border-radius:50%;}
+        .status-dot.ok{background:#16a34a;box-shadow:0 0 0 4px rgba(22,163,74,.12);}
+        .status-dot.off{background:#9ca3af;}
+        .status-lbl{font-size:0.92rem;font-weight:600;}
+        .status-lbl.ok{color:#065f46;}
+        .status-lbl.off{color:#6b7280;}
+        .status-sub{font-size:0.78rem;color:#9ca3af;margin-left:auto;}
+
+        .code-box{background:#f8fafc;border:2px dashed #cbd5e1;border-radius:10px;padding:18px;text-align:center;margin:14px 0;}
+        .code-val{font-family:'Courier New',monospace;font-size:1.6rem;font-weight:700;color:#2563eb;letter-spacing:3px;}
+        .code-hint{font-size:0.78rem;color:#6b7280;margin-top:6px;}
+
+        .steps{counter-reset:s;list-style:none;padding:0;margin:0;}
+        .steps li{counter-increment:s;display:flex;gap:12px;padding:10px 0;font-size:0.88rem;color:#374151;}
+        .steps li::before{content:counter(s);background:#2563eb;color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem;flex-shrink:0;}
+        .steps code{background:#eff6ff;color:#1d4ed8;padding:2px 8px;border-radius:5px;font-size:0.85rem;}
+
+        .btn{padding:9px 18px;border-radius:8px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
+        .btn-primary{background:#2563eb;color:#fff;}
+        .btn-primary:hover{background:#1d4ed8;color:#fff;text-decoration:none;}
+        .btn-tg{background:#0088cc;color:#fff;}
+        .btn-tg:hover{background:#006699;color:#fff;text-decoration:none;}
+        .btn-danger{background:#fff;color:#dc2626;border:1px solid #fca5a5;}
+        .btn-danger:hover{background:#fef2f2;}
+        .btn-ghost{background:#fff;color:#374151;border:1px solid #e5e7eb;}
+        .btn-ghost:hover{background:#f9fafb;}
+
+        .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f3f4f6;}
+        .toggle-row:last-child{border-bottom:none;}
+        .toggle-info{flex:1;}
+        .toggle-info h4{font-size:0.88rem;font-weight:600;color:#111827;margin:0;}
+        .toggle-info p{font-size:0.76rem;color:#9ca3af;margin:2px 0 0;}
+        .switch{position:relative;width:42px;height:22px;}
+        .switch input{opacity:0;width:0;height:0;}
+        .slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:22px;transition:.2s;}
+        .slider::before{content:"";position:absolute;height:18px;width:18px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s;}
+        .switch input:checked + .slider{background:#2563eb;}
+        .switch input:checked + .slider::before{transform:translateX(20px);}
+
+        .action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+        .back-link{color:#6b7280;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px;}
+        .back-link:hover{color:#2563eb;text-decoration:none;}
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <div style="display:flex;align-items:center;">
+        <div class="brand"><span class="brand-dot"></span> Accounting Software</div>
+        <nav class="top-nav">
+            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
+            <a class="tn" asp-controller="Store" asp-action="Index">Stores</a>
+            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
+            <a class="tn active" asp-controller="Telegram" asp-action="Index">Telegram</a>
+        </nav>
+    </div>
+    <a class="btn-logout" asp-controller="Auth" asp-action="Logout">
+        <i class="fas fa-sign-out-alt"></i> Sign out
+    </a>
+</header>
+
+<div class="wrap">
+
+    <a class="back-link" asp-controller="Dashboard" asp-action="Index">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+
+    <div class="pg-title" style="margin-top:14px;">
+        <h1><i class="fab fa-telegram tg-icon"></i> Telegram Bot</h1>
+        <div class="sub">Get real-time notifications and reports</div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-box alert-ok"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["Error"]</div>
+    }
+    @if (!Model.BotConfigured)
+    {
+        <div class="alert-box alert-warn">
+            <i class="fas fa-exclamation-triangle"></i>
+            Bot is not configured. Set <code>Telegram:BotToken</code> in <code>appsettings.json</code> and restart the application.
+        </div>
+    }
+
+    <!-- STATUS -->
+    <div class="card">
+        <div class="card-hd">
+            <h3>Connection Status</h3>
+            @if (botLink != null)
+            {
+                <a class="btn btn-tg" href="@botLink" target="_blank" rel="noopener">
+                    <i class="fab fa-telegram"></i> Open Bot
+                </a>
+            }
+        </div>
+        <div class="card-body">
+            <div class="status-row">
+                <div class="status-dot @(Model.IsLinked ? "ok" : "off")"></div>
+                <div>
+                    <div class="status-lbl @(Model.IsLinked ? "ok" : "off")">
+                        @(Model.IsLinked ? "Account linked" : "Not linked")
+                    </div>
+                    @if (Model.IsLinked && !string.IsNullOrEmpty(Model.TelegramUsername))
+                    {
+                        <div style="font-size:0.78rem;color:#6b7280;margin-top:2px;">@@@Model.TelegramUsername</div>
+                    }
+                </div>
+            </div>
+
+            @if (!Model.IsLinked)
+            {
+                <div style="background:#eff6ff;border-radius:10px;padding:16px;margin-bottom:14px;">
+                    <h4 style="font-size:0.88rem;margin:0 0 10px;color:#1e40af;">How to link:</h4>
+                    <ol class="steps">
+                        <li>Open the bot in Telegram@(botLink != null ? "" : " (set bot's @username in appsettings)")</li>
+                        <li>Send <code>/start</code></li>
+                        <li>Generate a code below and send it to the bot: <code>/link CODE</code></li>
+                    </ol>
+                </div>
+
+                @if (!string.IsNullOrEmpty(Model.LinkCode))
+                {
+                    <div class="code-box">
+                        <div class="code-val">@Model.LinkCode</div>
+                        <div class="code-hint">Send to the bot: <code>/link @Model.LinkCode</code></div>
+                    </div>
+                }
+
+                <form asp-action="GenerateCode" method="post" style="display:inline;">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-key"></i>
+                        @(string.IsNullOrEmpty(Model.LinkCode) ? "Generate code" : "Generate new code")
+                    </button>
+                </form>
+            }
+            else
+            {
+                <div class="action-row">
+                    <form asp-action="SendTest" method="post" style="display:inline;">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-paper-plane"></i> Send test
+                        </button>
+                    </form>
+                    <form asp-action="Unlink" method="post" style="display:inline;"
+                          onsubmit="return confirm('Unlink account from Telegram?');">
+                        <button class="btn btn-danger" type="submit">
+                            <i class="fas fa-unlink"></i> Unlink
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- PREFERENCES -->
+    @if (Model.IsLinked)
+    {
+        <div class="card">
+            <div class="card-hd"><h3>Notifications</h3></div>
+            <div class="card-body">
+                <form asp-action="SavePreferences" method="post">
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <h4>🟢 New sales</h4>
+                            <p>Instantly after a sale is recorded</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="notifySales" value="true" @(Model.NotifySales ? "checked" : "")>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <h4>⚠️ Low stock</h4>
+                            <p>When a product is running low in a store</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="notifyLowStock" value="true" @(Model.NotifyLowStock ? "checked" : "")>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="toggle-row">
+                        <div class="toggle-info">
+                            <h4>📊 Daily report</h4>
+                            <p>End-of-day summary every evening</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" name="dailyReport" value="true" @(Model.DailyReport ? "checked" : "")>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="margin-top:18px;">
+                        <button class="btn btn-primary" type="submit">
+                            <i class="fas fa-save"></i> Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- COMMANDS -->
+        <div class="card">
+            <div class="card-hd"><h3>Bot commands</h3></div>
+            <div class="card-body">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:0.85rem;">
+                    <div><code style="background:#eff6ff;color:#1d4ed8;padding:3px 8px;border-radius:5px;">/today</code> — today's report</div>
+                    <div><code style="background:#eff6ff;color:#1d4ed8;padding:3px 8px;border-radius:5px;">/week</code> — last 7 days</div>
+                    <div><code style="background:#eff6ff;color:#1d4ed8;padding:3px 8px;border-radius:5px;">/top</code> — top 5 products</div>
+                    <div><code style="background:#eff6ff;color:#1d4ed8;padding:3px 8px;border-radius:5px;">/low</code> — low stock</div>
+                    <div><code style="background:#eff6ff;color:#1d4ed8;padding:3px 8px;border-radius:5px;">/help</code> — all commands</div>
+                    <div><code style="background:#eff6ff;color:#1d4ed8;padding:3px 8px;border-radius:5px;">/unlink</code> — unlink account</div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+</body>
+</html>

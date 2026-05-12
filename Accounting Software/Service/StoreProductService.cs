@@ -23,7 +23,8 @@ namespace Accounting_Software.Service
         private readonly ISellerRepository _sellerRepository;
         private readonly IUserRepository _userRepository;
         private readonly ITransactionHistoryRepository _transrepository;
-        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepository, ISellerRepository sellerRepository, IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository)
+        private readonly ITelegramNotifier _telegramNotifier;
+        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepository, ISellerRepository sellerRepository, IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository, ITelegramNotifier telegramNotifier)
         {
             _storeProductRepository = storeproduct;
             _uow = uow;
@@ -32,6 +33,7 @@ namespace Accounting_Software.Service
             _sellerRepository = sellerRepository;
             _userRepository = userRepository;
             _transrepository = transactionHistoryRepository;
+            _telegramNotifier = telegramNotifier;
         }
         public void Add(StoreProductViewModel storeProduct)
         {
@@ -255,6 +257,8 @@ namespace Accounting_Software.Service
             };
             _transrepository.Add(transactionHistory);
             _uow.SaveChanges();
+
+            _ = _telegramNotifier.NotifySaleAsync(userid, data.ProductName, data.Price, data.StoreName);
         }
     }
 }

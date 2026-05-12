@@ -1,75 +1,158 @@
-﻿@model Accounting_Software.ViewModel.StoreProductViewModel
+@model Accounting_Software.ViewModel.StoreProductViewModel
+@{ Layout = null; }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Product to Store — Accounting Software</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;min-height:100vh;}
+        .topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;}
+        .brand{font-size:0.92rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
+        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
+        .top-nav{display:flex;gap:2px;margin-left:32px;}
+        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;}
+        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
+        .tn.active{color:#2563eb;font-weight:600;}
+        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;}
+        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
 
-@{
-    ViewBag.Title = "Add Product to Store";
-}
+        .wrap{max-width:680px;margin:32px auto;padding:0 24px;}
+        .back-link{color:#6b7280;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:14px;}
+        .back-link:hover{color:#2563eb;text-decoration:none;}
 
-<h2>Add Product to Store</h2>
+        .alert-box{padding:12px 16px;border-radius:10px;margin-bottom:18px;font-size:0.85rem;font-weight:500;display:flex;align-items:center;gap:8px;}
+        .alert-err{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
 
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger">
-        ⚠ @TempData["ErrorMessage"]
+        .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;}
+        .card-hd{padding:20px 26px;border-bottom:1px solid #f3f4f6;}
+        .card-hd h1{font-size:1.15rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:10px;}
+        .card-hd .sub{font-size:0.8rem;color:#9ca3af;margin-top:3px;}
+        .card-body{padding:26px;}
+
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+        @@media(max-width:560px){.grid-2{grid-template-columns:1fr;}}
+
+        .form-group{margin-bottom:16px;}
+        .form-group label{display:block;font-size:0.82rem;font-weight:600;color:#374151;margin-bottom:6px;}
+        .form-group input, .form-group select, .form-group textarea{width:100%;padding:10px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:0.88rem;font-family:inherit;transition:all .15s;background:#fff;}
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1);}
+        .form-group input[readonly]{background:#f9fafb;color:#6b7280;cursor:not-allowed;}
+        .form-group textarea{resize:vertical;min-height:80px;}
+        .form-error{color:#dc2626;font-size:0.78rem;margin-top:5px;display:block;}
+
+        .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;padding-top:20px;border-top:1px solid #f3f4f6;}
+        .btn{padding:10px 20px;border-radius:8px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
+        .btn-primary{background:#2563eb;color:#fff;}
+        .btn-primary:hover{background:#1d4ed8;color:#fff;text-decoration:none;}
+        .btn-ghost{background:#fff;color:#374151;border:1px solid #e5e7eb;}
+        .btn-ghost:hover{background:#f9fafb;color:#111827;text-decoration:none;}
+
+        .ctx-banner{background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:14px 16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+        .ctx-banner i{color:#2563eb;font-size:1.1rem;}
+        .ctx-banner div{font-size:0.83rem;color:#1e40af;}
+        .ctx-banner strong{font-weight:700;}
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <div style="display:flex;align-items:center;">
+        <div class="brand"><span class="brand-dot"></span> Accounting Software</div>
+        <nav class="top-nav">
+            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
+            <a class="tn active" asp-controller="Store" asp-action="Index">Stores</a>
+            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
+            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
+        </nav>
     </div>
-}
+    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
+</header>
 
-<form asp-action="AddProductToStore" method="post">
-    <div class="form-group">
-        <label asp-for="StoreName" class="control-label"></label>
-        <input asp-for="StoreName" class="form-control" readonly />
-    </div>
+<div class="wrap">
 
-    <div class="form-group">
-        <label asp-for="ProductName" class="control-label"></label>
-        <input asp-for="ProductName" class="form-control" readonly />
-    </div>
+    <a class="back-link" asp-controller="Seller" asp-action="Index"><i class="fas fa-arrow-left"></i> Back to Sellers</a>
 
-    <div class="form-group">
-        <label asp-for="Price" class="control-label"></label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Count" class="control-label"></label>
-        <input asp-for="Count" class="form-control" />
-        <span asp-validation-for="Count" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Mass" class="control-label"></label>
-        <input asp-for="Mass" class="form-control" />
-        <span asp-validation-for="Mass" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="unitOfmass" class="control-label"></label>
-        <select asp-for="unitOfmass" class="form-control">
-            <option value="0">Select Unit</option>
-            @foreach (var unit in Enum.GetValues(typeof(Accounting_Software.Enums.Unit_of_mass)))
-            {
-                <option value="@unit">@unit</option>
-            }
-        </select>
-        <span asp-validation-for="unitOfmass" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-
-    <div>
-        <input type="hidden" asp-for="StoreId" />
-        <input type="hidden" asp-for="ProductId" />
-        <button type="submit" class="btn btn-primary">Save</button>
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </div>
-</form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
     }
-}
+
+    <div class="card">
+        <div class="card-hd">
+            <h1><i class="fas fa-arrow-right-arrow-left" style="color:#2563eb;"></i> Add Product to Store</h1>
+            <div class="sub">Move a product from inventory into a store</div>
+        </div>
+        <div class="card-body">
+
+            <div class="ctx-banner">
+                <i class="fas fa-info-circle"></i>
+                <div><strong>@Model.ProductName</strong> → <strong>@Model.StoreName</strong></div>
+            </div>
+
+            <form asp-action="AddProductToStore" method="post">
+                <input type="hidden" asp-for="StoreId" />
+                <input type="hidden" asp-for="ProductId" />
+                <input type="hidden" asp-for="StoreName" />
+                <input type="hidden" asp-for="ProductName" />
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label asp-for="Price">Price</label>
+                        <input asp-for="Price" type="number" step="0.01" min="0.01" />
+                        <span asp-validation-for="Price" class="form-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Count">Quantity</label>
+                        <input asp-for="Count" type="number" min="1" />
+                        <span asp-validation-for="Count" class="form-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="Mass">Mass</label>
+                        <input asp-for="Mass" type="number" min="0" />
+                        <span asp-validation-for="Mass" class="form-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="unitOfmass">Unit</label>
+                        <select asp-for="unitOfmass">
+                            <option value="0">Select Unit</option>
+                            @foreach (var unit in Enum.GetValues(typeof(Accounting_Software.Enums.Unit_of_mass)))
+                            {
+                                <option value="@unit">@unit</option>
+                            }
+                        </select>
+                        <span asp-validation-for="unitOfmass" class="form-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Description">Description</label>
+                    <textarea asp-for="Description" placeholder="Optional notes about this product..."></textarea>
+                    <span asp-validation-for="Description" class="form-error"></span>
+                </div>
+
+                <div class="actions">
+                    <a class="btn btn-ghost" asp-controller="Seller" asp-action="Index">Cancel</a>
+                    <button class="btn btn-primary" type="submit">
+                        <i class="fas fa-check"></i> Add to Store
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>

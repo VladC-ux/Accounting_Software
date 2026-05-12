@@ -11,5 +11,7 @@ namespace Accounting_Software.Repository_Interfaces
         List<User> GetAll();
         User? GetByEmail(string email);
         void Update(User user);
+        User? GetByTelegramChatId(long chatId);
+        User? GetByTelegramLinkCode(string code);
     }
 }
