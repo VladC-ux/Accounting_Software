@@ -1,347 +1,272 @@
+@using System.Globalization
 @model Accounting_Software.ViewModel.TransactionFilterViewModel
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
+    var inv = CultureInfo.InvariantCulture;
+    var enCulture = new CultureInfo("en-US");
+
+    string FmtMoney(decimal v) => v.ToString("N2", inv);
+    var netForPeriod = Model.TotalEarned - Model.TotalSpent;
+    var hasFilters = Model.DateFrom.HasValue || Model.DateTo.HasValue
+        || (!string.IsNullOrEmpty(Model.ActionType) && Model.ActionType != "All");
+
+    var exportUrl = "/Export/Transactions?userId=" + Model.UserId
+        + "&dateFrom=" + (Model.DateFrom.HasValue ? Model.DateFrom.Value.ToString("yyyy-MM-dd") : "")
+        + "&dateTo=" + (Model.DateTo.HasValue ? Model.DateTo.Value.ToString("yyyy-MM-dd") : "")
+        + "&actionType=" + (Model.ActionType ?? "");
+
+    ViewBag.ActivePage = "transactions";
+    ViewBag.PageTitle = "Transactions";
+    ViewBag.PageHeading = "Transaction History";
+    ViewBag.PageSubtitle = "Full ledger of all account activity";
+    ViewBag.HeaderActions =
+        "<a class='btn btn-primary' href='" + exportUrl + "'><i class='fas fa-file-excel'></i> Export to Excel</a>";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Transaction History</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-    <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Roboto', sans-serif;
-        }
+@section Styles {
+<style>
+    .filter-card{
+        background:var(--card);border-radius:var(--r-lg);padding:22px 24px;
+        box-shadow:var(--shadow-sm);margin-bottom:22px;
+    }
+    .filter-hd{
+        display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+    }
+    .filter-hd h3{font-size:1rem;font-weight:700;display:flex;align-items:center;gap:8px;}
+    .filter-hd h3 i{color:var(--green);}
 
-        .topbar {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            padding: 16px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-        }
+    .filter-grid{
+        display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;
+    }
+    .field-label{
+        font-size:.72rem;color:var(--muted);text-transform:uppercase;
+        letter-spacing:.05em;font-weight:700;margin-bottom:6px;display:block;
+    }
+    .field-input,.field-select{
+        width:100%;padding:10px 14px;border:1px solid var(--border-soft);border-radius:11px;
+        font-family:inherit;font-size:.86rem;color:var(--text);
+        background:var(--bg);transition:all .15s;outline:none;
+    }
+    .field-input:focus,.field-select:focus{
+        border-color:var(--green);background:#fff;
+        box-shadow:0 0 0 4px rgba(45,106,79,.08);
+    }
+    .filter-actions{display:flex;gap:8px;}
+    .btn-apply{
+        background:var(--green);color:#fff;border:none;border-radius:11px;
+        padding:10px 18px;font-weight:700;font-size:.82rem;cursor:pointer;
+        font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .15s;
+    }
+    .btn-apply:hover{background:var(--green-dark);transform:translateY(-1px);}
+    .btn-reset{
+        background:var(--card);color:var(--muted);border:1px solid var(--border-soft);
+        border-radius:11px;padding:10px 16px;font-weight:600;font-size:.82rem;
+        font-family:inherit;display:inline-flex;align-items:center;gap:6px;transition:all .15s;
+    }
+    .btn-reset:hover{background:var(--bg);color:var(--text);}
 
-        .topbar .brand {
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
+    .active-filters{
+        margin-top:14px;padding-top:14px;border-top:1px dashed var(--border-soft);
+        display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    }
+    .active-filters .lbl{font-size:.74rem;color:var(--muted);font-weight:600;margin-right:4px;}
+    .filter-chip{
+        display:inline-flex;align-items:center;gap:6px;padding:4px 10px;
+        background:var(--green-tint);color:var(--green);border-radius:99px;
+        font-size:.74rem;font-weight:700;
+    }
 
-        .topbar a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
+    .summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px;}
+    .stat{
+        background:var(--card);border-radius:var(--r-lg);padding:20px 22px;
+        box-shadow:var(--shadow-sm);
+    }
+    .stat-ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:1rem;margin-bottom:14px;}
+    .stat-ico.blue{background:var(--blue-soft);color:var(--blue);}
+    .stat-ico.red{background:var(--red-soft);color:var(--red);}
+    .stat-ico.green{background:var(--green-tint);color:var(--green);}
+    .stat-ico.orange{background:var(--orange-soft);color:var(--orange);}
+    .stat-lbl{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
+    .stat-val{font-size:1.45rem;font-weight:800;letter-spacing:-.02em;margin-top:6px;}
+    .stat-val.c-red{color:var(--red);}
+    .stat-val.c-green{color:var(--green);}
 
-        .topbar a:hover { color: #fff; }
+    .tx-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+    .tx-table th{
+        text-align:left;padding:12px 16px;font-size:.7rem;color:var(--muted);
+        text-transform:uppercase;letter-spacing:.05em;font-weight:700;
+        border-bottom:1px solid var(--border-soft);
+    }
+    .tx-table td{padding:14px 16px;border-bottom:1px solid var(--border-soft);vertical-align:middle;}
+    .tx-table tr:last-child td{border-bottom:none;}
+    .tx-table tr:hover td{background:var(--green-soft);}
+    .muted{color:var(--muted);}
+    .badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;font-size:.72rem;font-weight:700;}
+    .badge.buy{background:var(--red-soft);color:var(--red);}
+    .badge.sale{background:var(--green-tint);color:var(--green);}
+    .tx-amt{font-weight:700;font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap;}
+    .tx-amt.neg{color:var(--red);}
+    .tx-amt.pos{color:var(--green);}
 
-        .page-body { padding: 0 30px 30px; }
+    @@media(max-width:1100px){
+        .summary-row{grid-template-columns:repeat(2,1fr);}
+        .filter-grid{grid-template-columns:1fr 1fr;}
+        .filter-actions{grid-column:1 / -1;justify-content:flex-end;}
+    }
+    @@media(max-width:600px){
+        .summary-row{grid-template-columns:1fr;}
+        .filter-grid{grid-template-columns:1fr;}
+    }
+</style>
+}
 
-        .filter-card {
-            background: white;
-            border-radius: 14px;
-            padding: 22px 26px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            margin-bottom: 24px;
-        }
-
-        .filter-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-
-        .btn-filter {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 8px 22px;
-            font-weight: 500;
-            transition: opacity 0.2s;
-        }
-
-        .btn-filter:hover { opacity: 0.9; color: white; }
-
-        .btn-reset {
-            border-radius: 8px;
-            padding: 8px 18px;
-            font-weight: 500;
-        }
-
-        /* Summary cards */
-        .summary-row {
-            display: flex;
-            gap: 16px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-
-        .summary-card {
-            flex: 1;
-            min-width: 180px;
-            border-radius: 12px;
-            padding: 18px 22px;
-            color: white;
-            box-shadow: 0 3px 12px rgba(0,0,0,0.1);
-        }
-
-        .summary-card .s-label {
-            font-size: 0.8rem;
-            opacity: 0.85;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .summary-card .s-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-top: 4px;
-        }
-
-        .bg-count   { background: linear-gradient(135deg, #a18cd1, #fbc2eb); }
-        .bg-spent   { background: linear-gradient(135deg, #f093fb, #f5576c); }
-        .bg-earned  { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .bg-profit  { background: linear-gradient(135deg, #43e97b, #38f9d7); }
-
-        /* Table */
-        .table-card {
-            background: white;
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-        }
-
-        .table-card-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 18px;
-        }
-
-        .table th {
-            background-color: #f8f9fa;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: #6c757d;
-            border-top: none;
-            font-weight: 600;
-        }
-
-        .table td { vertical-align: middle; font-size: 0.9rem; }
-
-        .badge-add  { background: #e3f2fd; color: #1565c0; }
-        .badge-sale { background: #e8f5e9; color: #2e7d32; }
-
-        .action-type {
-            padding: 3px 12px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-        }
-
-        .amount-negative { color: #e53935; font-weight: 600; }
-        .amount-positive { color: #2e7d32; font-weight: 600; }
-
-        .no-data {
-            text-align: center;
-            padding: 50px 0;
-            color: #aaa;
-        }
-
-        .active-filter-badge {
-            display: inline-block;
-            background: #e8eaf6;
-            color: #3949ab;
-            border-radius: 20px;
-            padding: 3px 12px;
-            font-size: 0.8rem;
-            margin: 4px 3px;
-            font-weight: 500;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="topbar">
-        <div class="brand"><i class="fas fa-history mr-2"></i>Transaction History</div>
-        <div>
-            <a asp-controller="Dashboard" asp-action="Index"><i class="fas fa-chart-line mr-1"></i>Dashboard</a>
-            <a asp-controller="Seller" asp-action="Index"><i class="fas fa-users mr-1"></i>Sellers</a>
-            <a asp-controller="Store" asp-action="Index"><i class="fas fa-store mr-1"></i>Stores</a>
-        </div>
+<div class="filter-card">
+    <div class="filter-hd">
+        <h3><i class="fas fa-filter"></i> Filter Transactions</h3>
     </div>
 
-    <div class="page-body">
-
-        <!-- Filter form -->
-        <div class="filter-card">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div class="filter-title mb-0"><i class="fas fa-filter text-primary"></i> Filter Transactions</div>
-                <a href="/Export/Transactions?userId=@Model.UserId&dateFrom=@(Model.DateFrom.HasValue ? Model.DateFrom.Value.ToString("yyyy-MM-dd") : "")&dateTo=@(Model.DateTo.HasValue ? Model.DateTo.Value.ToString("yyyy-MM-dd") : "")&actionType=@(Model.ActionType ?? "")"
-                   class="btn btn-success btn-sm">
-                    <i class="fas fa-file-excel mr-1"></i> Export to Excel
+    <form method="get" asp-action="ProductsTransaction" asp-controller="User">
+        <input type="hidden" name="id" value="@Model.UserId" />
+        <div class="filter-grid">
+            <div>
+                <label class="field-label">From Date</label>
+                <input type="date" name="dateFrom" class="field-input"
+                       value="@(Model.DateFrom.HasValue ? Model.DateFrom.Value.ToString("yyyy-MM-dd") : "")" />
+            </div>
+            <div>
+                <label class="field-label">To Date</label>
+                <input type="date" name="dateTo" class="field-input"
+                       value="@(Model.DateTo.HasValue ? Model.DateTo.Value.ToString("yyyy-MM-dd") : "")" />
+            </div>
+            <div>
+                <label class="field-label">Type</label>
+                <select name="actionType" class="field-select">
+                    <option value="All"  selected="@(string.IsNullOrEmpty(Model.ActionType) || Model.ActionType == "All")">All</option>
+                    <option value="Add"  selected="@(Model.ActionType == "Add")">Purchase</option>
+                    <option value="Sale" selected="@(Model.ActionType == "Sale")">Sale</option>
+                </select>
+            </div>
+            <div class="filter-actions">
+                <button type="submit" class="btn-apply"><i class="fas fa-search"></i> Apply</button>
+                <a class="btn-reset" asp-action="ProductsTransaction" asp-controller="User" asp-route-id="@Model.UserId">
+                    <i class="fas fa-times"></i> Reset
                 </a>
             </div>
-            <form method="get" asp-action="ProductsTransaction" asp-controller="User">
-                <input type="hidden" name="id" value="@Model.UserId" />
-                <div class="form-row align-items-end">
-                    <div class="col-md-3 form-group mb-0">
-                        <label class="small text-muted font-weight-bold">From Date</label>
-                        <input type="date" name="dateFrom" class="form-control"
-                               value="@(Model.DateFrom.HasValue ? Model.DateFrom.Value.ToString("yyyy-MM-dd") : "")" />
-                    </div>
-                    <div class="col-md-3 form-group mb-0">
-                        <label class="small text-muted font-weight-bold">To Date</label>
-                        <input type="date" name="dateTo" class="form-control"
-                               value="@(Model.DateTo.HasValue ? Model.DateTo.Value.ToString("yyyy-MM-dd") : "")" />
-                    </div>
-                    <div class="col-md-3 form-group mb-0">
-                        <label class="small text-muted font-weight-bold">Type</label>
-                        <select name="actionType" class="form-control">
-                            <option value="All" selected="@(string.IsNullOrEmpty(Model.ActionType) || Model.ActionType == "All")">All</option>
-                            <option value="Add"  selected="@(Model.ActionType == "Add")">Purchase (Add)</option>
-                            <option value="Sale" selected="@(Model.ActionType == "Sale")">Sale</option>
-                        </select>
-                    </div>
-                    <div class="col-md-3 form-group mb-0 d-flex gap-2">
-                        <button type="submit" class="btn btn-filter mr-2">
-                            <i class="fas fa-search mr-1"></i> Apply
-                        </button>
-                        <a asp-action="ProductsTransaction" asp-controller="User"
-                           asp-route-id="@Model.UserId" class="btn btn-outline-secondary btn-reset">
-                            <i class="fas fa-times mr-1"></i> Reset
-                        </a>
-                    </div>
-                </div>
-            </form>
+        </div>
+    </form>
 
-            @if (Model.DateFrom.HasValue || Model.DateTo.HasValue || (!string.IsNullOrEmpty(Model.ActionType) && Model.ActionType != "All"))
+    @if (hasFilters)
+    {
+        <div class="active-filters">
+            <span class="lbl">Active filters:</span>
+            @if (Model.DateFrom.HasValue)
             {
-                <div class="mt-3">
-                    <small class="text-muted mr-1">Active filters:</small>
-                    @if (Model.DateFrom.HasValue)
-                    {
-                        <span class="active-filter-badge">From: @Model.DateFrom.Value.ToString("dd MMM yyyy")</span>
-                    }
-                    @if (Model.DateTo.HasValue)
-                    {
-                        <span class="active-filter-badge">To: @Model.DateTo.Value.ToString("dd MMM yyyy")</span>
-                    }
-                    @if (!string.IsNullOrEmpty(Model.ActionType) && Model.ActionType != "All")
-                    {
-                        <span class="active-filter-badge">Type: @Model.ActionType</span>
-                    }
-                </div>
+                <span class="filter-chip"><i class="far fa-calendar"></i> From @Model.DateFrom.Value.ToString("dd MMM yyyy", enCulture)</span>
+            }
+            @if (Model.DateTo.HasValue)
+            {
+                <span class="filter-chip"><i class="far fa-calendar"></i> To @Model.DateTo.Value.ToString("dd MMM yyyy", enCulture)</span>
+            }
+            @if (!string.IsNullOrEmpty(Model.ActionType) && Model.ActionType != "All")
+            {
+                <span class="filter-chip"><i class="fas fa-tag"></i> Type: @Model.ActionType</span>
             }
         </div>
+    }
+</div>
 
-        <!-- Summary cards -->
-        <div class="summary-row">
-            <div class="summary-card bg-count">
-                <div class="s-label">Total Records</div>
-                <div class="s-value">@Model.Transactions.Count</div>
-            </div>
-            <div class="summary-card bg-spent">
-                <div class="s-label">Spent (Purchases)</div>
-                <div class="s-value">@Model.TotalSpent.ToString("C")</div>
-            </div>
-            <div class="summary-card bg-earned">
-                <div class="s-label">Earned (Sales)</div>
-                <div class="s-value">@Model.TotalEarned.ToString("C")</div>
-            </div>
-            <div class="summary-card bg-profit">
-                <div class="s-label">Net for Period</div>
-                <div class="s-value">@((Model.TotalEarned - Model.TotalSpent).ToString("C"))</div>
-            </div>
-        </div>
+<div class="summary-row">
+    <div class="stat">
+        <div class="stat-ico blue"><i class="fas fa-list"></i></div>
+        <div class="stat-lbl">Total Records</div>
+        <div class="stat-val">@Model.Transactions.Count</div>
+    </div>
+    <div class="stat">
+        <div class="stat-ico red"><i class="fas fa-arrow-down"></i></div>
+        <div class="stat-lbl">Spent (Purchases)</div>
+        <div class="stat-val c-red">@FmtMoney(Model.TotalSpent)</div>
+    </div>
+    <div class="stat">
+        <div class="stat-ico green"><i class="fas fa-arrow-up"></i></div>
+        <div class="stat-lbl">Earned (Sales)</div>
+        <div class="stat-val c-green">@FmtMoney(Model.TotalEarned)</div>
+    </div>
+    <div class="stat">
+        <div class="stat-ico orange"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-lbl">Net for Period</div>
+        <div class="stat-val @(netForPeriod >= 0 ? "c-green" : "c-red")">@FmtMoney(netForPeriod)</div>
+    </div>
+</div>
 
-        <!-- Table -->
-        <div class="table-card">
-            <div class="table-card-title">
-                <i class="fas fa-list mr-2"></i>
+<div class="card" style="padding:0;">
+    <div class="card-hd" style="padding:22px 24px 14px;margin-bottom:0;">
+        <div>
+            <h3>
                 @if (Model.Transactions.Any())
                 {
-                    <span>@Model.Transactions.Count transaction(s) found</span>
+                    <span>@Model.Transactions.Count transaction@(Model.Transactions.Count == 1 ? "" : "s") found</span>
                 }
                 else
                 {
                     <span>Transactions</span>
                 }
-            </div>
-
-            @if (Model.Transactions.Any())
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover mb-0">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Type</th>
-                                <th>Product</th>
-                                <th>Store</th>
-                                <th>Count</th>
-                                <th>Mass</th>
-                                <th>Unit</th>
-                                <th>Description</th>
-                                <th class="text-right">Amount</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var t in Model.Transactions)
-                            {
-                                <tr>
-                                    <td>@t.SoldDate.ToString("dd MMM yyyy HH:mm")</td>
-                                    <td>
-                                        <span class="action-type @(t.typeofAction == "Add" ? "badge-add" : "badge-sale")">
-                                            @t.typeofAction
-                                        </span>
-                                    </td>
-                                    <td>@t.ProductName</td>
-                                    <td>@(t.StoreName ?? "—")</td>
-                                    <td>@t.Count</td>
-                                    <td>@t.Mass</td>
-                                    <td>@t.unitOfmass</td>
-                                    <td>@(t.Description ?? "—")</td>
-                                    <td class="text-right @(t.typeofAction == "Add" ? "amount-negative" : "amount-positive")">
-                                        @(t.typeofAction == "Add" ? "-" : "+")@t.Total.ToString("C")
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-            else
-            {
-                <div class="no-data">
-                    <i class="fas fa-search fa-2x mb-2 d-block"></i>
-                    No transactions found for selected filters
-                </div>
-            }
+            </h3>
+            <div class="hd-sub">Sorted by most recent</div>
         </div>
-
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    @if (Model.Transactions.Any())
+    {
+        <div style="overflow-x:auto;">
+            <table class="tx-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Product</th>
+                        <th>Store</th>
+                        <th style="text-align:right;">Count</th>
+                        <th style="text-align:right;">Mass</th>
+                        <th>Unit</th>
+                        <th>Description</th>
+                        <th style="text-align:right;">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.Transactions)
+                    {
+                        <tr>
+                            <td class="muted">@t.SoldDate.ToString("dd MMM yyyy HH:mm", enCulture)</td>
+                            <td>
+                                @if (t.typeofAction == "Add")
+                                {
+                                    <span class="badge buy"><i class="fas fa-shopping-cart"></i> Purchase</span>
+                                }
+                                else
+                                {
+                                    <span class="badge sale"><i class="fas fa-tag"></i> Sale</span>
+                                }
+                            </td>
+                            <td><strong>@t.ProductName</strong></td>
+                            <td class="muted">@(t.StoreName ?? "—")</td>
+                            <td style="text-align:right;">@t.Count</td>
+                            <td style="text-align:right;">@t.Mass</td>
+                            <td class="muted">@t.unitOfmass</td>
+                            <td class="muted">@(string.IsNullOrEmpty(t.Description) ? "—" : t.Description)</td>
+                            <td class="tx-amt @(t.typeofAction == "Add" ? "neg" : "pos")">
+                                @(t.typeofAction == "Add" ? "−" : "+")@FmtMoney(t.Total)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div style="padding:48px;text-align:center;color:var(--muted);">
+            <i class="fas fa-search" style="font-size:1.8rem;color:var(--border);display:block;margin-bottom:10px;"></i>
+            <div>No transactions found for selected filters</div>
+        </div>
+    }
+</div>

@@ -1,127 +1,127 @@
 @model IEnumerable<Accounting_Software.Data.Entities.Store>
-@{ Layout = null; }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Stores — Accounting Software</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;min-height:100vh;}
-        .topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;}
-        .brand{font-size:0.92rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
-        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
-        .top-nav{display:flex;gap:2px;margin-left:32px;}
-        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;}
-        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
-        .tn.active{color:#2563eb;font-weight:600;}
-        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
+@{
+    Layout = "_FintegraLayout";
+    var storeCount = Model?.Count() ?? 0;
 
-        .wrap{max-width:1100px;margin:32px auto;padding:0 24px;}
-        .pg-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
-        .pg-title h1{font-size:1.35rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:10px;}
-        .pg-title .sub{font-size:0.82rem;color:#9ca3af;margin-top:3px;}
+    ViewBag.ActivePage = "stores";
+    ViewBag.PageTitle = "Stores";
+    ViewBag.PageHeading = "Stores";
+    ViewBag.PageSubtitle = storeCount + " location" + (storeCount == 1 ? "" : "s") + " · Manage your retail points";
+    ViewBag.HeaderActions =
+        "<div class='search-pill'>"
+        + "<i class='fas fa-search'></i>"
+        + "<input type='text' id='storeSearch' placeholder='Search stores...' />"
+        + "</div>"
+        + "<a class='btn btn-primary' href='/Store/Add'><i class='fas fa-plus'></i> New Store</a>";
+}
 
-        .btn{padding:9px 18px;border-radius:8px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
-        .btn-primary{background:#2563eb;color:#fff;}
-        .btn-primary:hover{background:#1d4ed8;color:#fff;text-decoration:none;}
-        .btn-ghost{background:#fff;color:#374151;border:1px solid #e5e7eb;}
-        .btn-ghost:hover{background:#f9fafb;color:#111827;text-decoration:none;}
-        .btn-danger{background:#fff;color:#dc2626;border:1px solid #fca5a5;}
-        .btn-danger:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
+@section Styles {
+<style>
+    .search-pill{
+        display:inline-flex;align-items:center;gap:8px;
+        padding:9px 14px;background:var(--card);border:1px solid var(--border-soft);
+        border-radius:12px;box-shadow:var(--shadow-xs);min-width:240px;
+    }
+    .search-pill i{color:var(--muted);font-size:.85rem;}
+    .search-pill input{border:none;outline:none;background:transparent;flex:1;font-family:inherit;font-size:.85rem;color:var(--text);}
+    .search-pill input::placeholder{color:var(--muted-soft);}
 
-        .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
-        .store-card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:20px;transition:all .15s;display:flex;flex-direction:column;gap:14px;}
-        .store-card:hover{border-color:#bfdbfe;box-shadow:0 4px 12px rgba(37,99,235,.08);transform:translateY(-2px);}
-        .store-head{display:flex;align-items:center;gap:12px;}
-        .store-icon{width:42px;height:42px;border-radius:10px;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
-        .store-name{font-size:1rem;font-weight:700;color:#111827;text-decoration:none;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-        .store-name:hover{color:#2563eb;text-decoration:none;}
-        .store-actions{display:flex;gap:8px;}
-        .store-actions a, .store-actions button{flex:1;padding:7px 0;font-size:0.78rem;border-radius:7px;text-align:center;text-decoration:none;font-weight:600;}
-        .ico-btn{background:#f3f4f6;color:#374151;border:none;cursor:pointer;}
-        .ico-btn:hover{background:#e5e7eb;color:#111827;text-decoration:none;}
-        .ico-btn.danger:hover{background:#fef2f2;color:#dc2626;}
+    .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;}
+    .store-card{
+        background:var(--card);border-radius:var(--r-lg);padding:22px;
+        box-shadow:var(--shadow-sm);
+        display:flex;flex-direction:column;gap:16px;
+        transition:transform .18s, box-shadow .18s;position:relative;overflow:hidden;
+    }
+    .store-card::before{
+        content:'';position:absolute;top:0;left:0;right:0;height:3px;
+        background:linear-gradient(90deg,var(--green),var(--orange));opacity:0;transition:opacity .18s;
+    }
+    .store-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+    .store-card:hover::before{opacity:1;}
 
-        .empty{background:#fff;border:2px dashed #e5e7eb;border-radius:12px;padding:48px;text-align:center;color:#9ca3af;}
-        .empty i{font-size:2rem;display:block;margin-bottom:10px;color:#cbd5e1;}
-        .empty p{font-size:0.95rem;margin-bottom:18px;}
-    </style>
-</head>
-<body>
+    .store-head{display:flex;align-items:center;gap:14px;}
+    .store-icon{
+        width:48px;height:48px;border-radius:14px;
+        background:var(--green-tint);color:var(--green);
+        display:grid;place-items:center;font-size:1.15rem;flex-shrink:0;
+    }
+    .store-card:hover .store-icon{background:var(--green);color:#fff;}
+    .store-info{min-width:0;flex:1;}
+    .store-name{
+        font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.01em;
+        display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+    .store-name:hover{color:var(--green);}
+    .store-meta{font-size:.74rem;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:6px;}
+    .store-meta .dot{width:6px;height:6px;background:var(--green-light);border-radius:50%;}
 
-<header class="topbar">
-    <div style="display:flex;align-items:center;">
-        <div class="brand"><span class="brand-dot"></span> Accounting Software</div>
-        <nav class="top-nav">
-            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn active" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
-    </div>
-    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</header>
+    .store-actions{display:flex;gap:6px;padding-top:14px;border-top:1px dashed var(--border-soft);}
+    .store-actions a{
+        flex:1;padding:8px 10px;border-radius:10px;
+        font-size:.76rem;font-weight:600;text-align:center;
+        display:inline-flex;align-items:center;justify-content:center;gap:5px;
+        transition:all .15s;
+    }
+    .a-products{background:var(--green-tint);color:var(--green);}
+    .a-products:hover{background:var(--green);color:#fff;}
+    .a-edit{background:var(--orange-soft);color:var(--orange);flex:0 0 auto;min-width:38px;}
+    .a-edit:hover{background:var(--orange);color:#fff;}
+    .a-del{background:var(--card);color:var(--red);border:1px solid var(--red-soft);flex:0 0 auto;min-width:38px;}
+    .a-del:hover{background:var(--red-soft);}
+</style>
+}
 
-<div class="wrap">
-
-    <div class="pg-head">
-        <div class="pg-title">
-            <h1><i class="fas fa-store" style="color:#2563eb;"></i> Stores</h1>
-            <div class="sub">@(Model?.Count() ?? 0) location@((Model?.Count() ?? 0) == 1 ? "" : "s")</div>
-        </div>
-        <a class="btn btn-primary" asp-action="Add">
-            <i class="fas fa-plus"></i> New Store
-        </a>
-    </div>
-
-    @if (Model != null && Model.Any())
-    {
-        <div class="store-grid">
-            @foreach (var store in Model)
-            {
-                <div class="store-card">
-                    <div class="store-head">
-                        <div class="store-icon"><i class="fas fa-store"></i></div>
+@if (Model != null && Model.Any())
+{
+    <div class="store-grid">
+        @foreach (var store in Model)
+        {
+            <div class="store-card" data-name="@store.StoreName.ToLower()">
+                <div class="store-head">
+                    <div class="store-icon"><i class="fas fa-store"></i></div>
+                    <div class="store-info">
                         <a class="store-name" asp-action="ShowStoreProduct" asp-route-storeId="@store.Id">@store.StoreName</a>
-                    </div>
-                    <div class="store-actions">
-                        <a class="ico-btn" asp-action="ShowStoreProduct" asp-route-storeId="@store.Id" title="Products">
-                            <i class="fas fa-box"></i> Products
-                        </a>
-                        <a class="ico-btn" asp-action="Edit" asp-route-id="@store.Id" title="Edit">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <a class="ico-btn danger" asp-action="Delete" asp-route-id="@store.Id" title="Delete"
-                           onclick="return confirm('Delete this store?');">
-                            <i class="fas fa-trash"></i>
-                        </a>
+                        <div class="store-meta"><span class="dot"></span> Active · ID #@store.Id</div>
                     </div>
                 </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="empty">
-            <i class="fas fa-store-slash"></i>
-            <p>No stores yet</p>
-            <a class="btn btn-primary" asp-action="Add"><i class="fas fa-plus"></i> Create your first store</a>
-        </div>
-    }
-
-    <div style="margin-top:24px;">
-        <a class="btn btn-ghost" asp-controller="Dashboard" asp-action="Index">
-            <i class="fas fa-arrow-left"></i> Back to Dashboard
-        </a>
+                <div class="store-actions">
+                    <a class="a-products" asp-action="ShowStoreProduct" asp-route-storeId="@store.Id">
+                        <i class="fas fa-box"></i> Products
+                    </a>
+                    <a class="a-edit" asp-action="Edit" asp-route-id="@store.Id" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a class="a-del" asp-action="Delete" asp-route-id="@store.Id" title="Delete"
+                       onclick="return confirm('Delete this store?');">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </div>
+            </div>
+        }
     </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-ico"><i class="fas fa-store-slash"></i></div>
+        <h4>No stores yet</h4>
+        <p>Create your first store to start managing inventory.</p>
+        <a class="btn btn-primary" asp-action="Add"><i class="fas fa-plus"></i> Create your first store</a>
+    </div>
+}
 
-</div>
-</body>
-</html>
+@section Scripts {
+<script>
+    var input = document.getElementById('storeSearch');
+    if (input) {
+        input.addEventListener('input', function () {
+            var q = this.value.toLowerCase().trim();
+            document.querySelectorAll('.store-card').forEach(function (card) {
+                var name = card.getAttribute('data-name') || '';
+                card.style.display = name.indexOf(q) >= 0 ? '' : 'none';
+            });
+        });
+    }
+</script>
+}

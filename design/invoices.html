@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Счета — БухПро</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-mark">Б</div>
+      БухПро
+    </div>
+
+    <nav class="side-nav">
+      <a href="dashboard.html" class="side-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="2"/><rect x="14" y="3" width="7" height="5" rx="2"/><rect x="14" y="12" width="7" height="9" rx="2"/><rect x="3" y="16" width="7" height="5" rx="2"/></svg>
+        Дашборд
+      </a>
+      <a href="invoices.html" class="side-link active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3v4a1 1 0 001 1h4"/><path d="M5 8a2 2 0 012-2h7l5 5v9a2 2 0 01-2 2H7a2 2 0 01-2-2V8z"/><path d="M9 13h6M9 17h4"/></svg>
+        Счета
+      </a>
+      <a href="#" class="side-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13A4 4 0 0119 7"/></svg>
+        Клиенты
+      </a>
+      <a href="#" class="side-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        Налоги
+      </a>
+      <a href="#" class="side-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 3 5-7"/></svg>
+        Аналитика
+      </a>
+      <a href="#" class="side-link">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+        Банки
+      </a>
+    </nav>
+
+    <div class="side-foot">
+      <strong>Совет</strong>
+      <span class="muted">Подключите Tinkoff, чтобы счета автоматически отмечались как оплаченные.</span>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN ===== -->
+  <div>
+
+    <!-- topbar -->
+    <header class="topbar">
+      <div class="search">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+        <input placeholder="Поиск по счетам и клиентам…">
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+          <span class="ping"></span>
+        </button>
+        <div class="row">
+          <div class="avatar">ВА</div>
+          <div>
+            <div style="font-size:13px; font-weight:700;">Влад А.</div>
+            <div class="muted small">ИП Аверкин</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main">
+
+      <div class="page-head">
+        <div>
+          <h1>Счета</h1>
+          <p>Создавайте, отправляйте клиентам и следите за оплатой</p>
+        </div>
+        <div class="row">
+          <button class="btn btn-secondary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Экспорт
+          </button>
+          <button class="btn btn-primary btn-sm">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            Создать счёт
+          </button>
+        </div>
+      </div>
+
+      <!-- mini stats -->
+      <section class="mini-grid">
+        <div class="kpi">
+          <div class="kpi-label">Всего счетов</div>
+          <div class="kpi-value">42</div>
+          <div class="kpi-delta muted">за апрель</div>
+          <div class="kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 3v4a1 1 0 001 1h4"/><path d="M5 8a2 2 0 012-2h7l5 5v9a2 2 0 01-2 2H7a2 2 0 01-2-2V8z"/></svg></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Оплачено</div>
+          <div class="kpi-value" style="color:#2D6A4F;">387 200 ₽</div>
+          <div class="kpi-delta up">28 счетов</div>
+          <div class="kpi-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12l5 5L20 7"/></svg></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Ожидает оплаты</div>
+          <div class="kpi-value" style="color:#B25E1A;">124 800 ₽</div>
+          <div class="kpi-delta muted">11 счетов</div>
+          <div class="kpi-icon orange"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        </div>
+        <div class="kpi">
+          <div class="kpi-label">Просрочено</div>
+          <div class="kpi-value" style="color:#E76F51;">42 600 ₽</div>
+          <div class="kpi-delta down">3 счёта</div>
+          <div class="kpi-icon red"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg></div>
+        </div>
+      </section>
+
+      <div class="split">
+
+        <!-- LEFT: Invoices list -->
+        <div>
+          <div class="filters">
+            <div class="chip active">Все · 42</div>
+            <div class="chip">Оплачено · 28</div>
+            <div class="chip">Ожидает · 11</div>
+            <div class="chip">Просрочено · 3</div>
+            <span class="spacer"></span>
+            <button class="btn btn-ghost btn-sm">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+              Фильтры
+            </button>
+          </div>
+
+          <div class="table-card">
+            <table>
+              <thead>
+                <tr>
+                  <th>№</th>
+                  <th>Клиент</th>
+                  <th>Дата</th>
+                  <th style="text-align:right;">Сумма</th>
+                  <th>Статус</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>№ 124</strong></td>
+                  <td><div class="client"><div class="avatar" style="background:#E1ECFB; color:#4A90E2;">ОО</div>ООО «Меркурий»</div></td>
+                  <td class="muted">12 апр</td>
+                  <td style="text-align:right;"><span class="num">84 000 ₽</span></td>
+                  <td><span class="badge badge-green"><span class="dot"></span>Оплачен</span></td>
+                </tr>
+                <tr>
+                  <td><strong>№ 123</strong></td>
+                  <td><div class="client"><div class="avatar" style="background:#E8F3EE; color:#2D6A4F;">АИ</div>Алёна Иванова</div></td>
+                  <td class="muted">11 апр</td>
+                  <td style="text-align:right;"><span class="num">15 000 ₽</span></td>
+                  <td><span class="badge badge-green"><span class="dot"></span>Оплачен</span></td>
+                </tr>
+                <tr>
+                  <td><strong>№ 122</strong></td>
+                  <td><div class="client"><div class="avatar" style="background:#FFE5C4; color:#B25E1A;">ОМ</div>ООО «Магнат»</div></td>
+                  <td class="muted">9 апр</td>
+                  <td style="text-align:right;"><span class="num">62 400 ₽</span></td>
+                  <td><span class="badge badge-orange"><span class="dot"></span>Ожидает · 3 дня</span></td>
+                </tr>
+                <tr>
+                  <td><strong>№ 121</strong></td>
+                  <td><div class="client"><div class="avatar" style="background:#E8F3EE; color:#2D6A4F;">ИП</div>ИП Кузнецов Д.</div></td>
+                  <td class="muted">6 апр</td>
+                  <td style="text-align:right;"><span class="num">38 200 ₽</span></td>
+                  <td><span class="badge badge-green"><span class="dot"></span>Оплачен</span></td>
+                </tr>
+                <tr>
+                  <td><strong>№ 120</strong></td>
+                  <td><div class="client"><div class="avatar" style="background:#FCE6E0; color:#E76F51;">ТТ</div>ООО «Технотрейд»</div></td>
+                  <td class="muted">2 апр</td>
+                  <td style="text-align:right;"><span class="num">42 600 ₽</span></td>
+                  <td><span class="badge badge-red"><span class="dot"></span>Просрочен · 8 дней</span></td>
+                </tr>
+                <tr>
+                  <td><strong>№ 119</strong></td>
+                  <td><div class="client"><div class="avatar" style="background:#E1ECFB; color:#4A90E2;">СБ</div>Студия «Бриг»</div></td>
+                  <td class="muted">28 мар</td>
+                  <td style="text-align:right;"><span class="num">22 800 ₽</span></td>
+                  <td><span class="badge badge-orange"><span class="dot"></span>Ожидает · 14 дн.</span></td>
+                </tr>
+                <tr>
+                  <td><strong>№ 118</strong></td>
+                  <td><div class="client"><div class="avatar" style="background:#E8F3EE; color:#2D6A4F;">МД</div>М. Дроздова</div></td>
+                  <td class="muted">25 мар</td>
+                  <td style="text-align:right;"><span class="num">9 500 ₽</span></td>
+                  <td><span class="badge badge-green"><span class="dot"></span>Оплачен</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- RIGHT: Invoice creation form -->
+        <div class="card" style="position:sticky; top: 80px; align-self:flex-start;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
+            <div>
+              <h3 style="font-size:16px; font-weight:800;">Новый счёт <span class="muted" style="font-weight:500">№ 125</span></h3>
+              <p class="muted small">Заполните и отправьте клиенту</p>
+            </div>
+            <span class="badge badge-grey"><span class="dot"></span>Черновик</span>
+          </div>
+
+          <div class="form-group">
+            <label>Клиент</label>
+            <select>
+              <option>ООО «Меркурий»</option>
+              <option>Алёна Иванова</option>
+              <option>+ Добавить нового</option>
+            </select>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Дата</label>
+              <input type="date" value="2026-04-13">
+            </div>
+            <div class="form-group">
+              <label>Срок оплаты</label>
+              <input type="date" value="2026-04-20">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Позиции</label>
+            <div style="border:1px solid var(--border-soft); border-radius:var(--r); padding:8px 12px;">
+
+              <div class="line-item" style="font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; padding-bottom:6px; border-bottom:1px solid var(--border-soft);">
+                <span>Наименование</span><span>Кол-во</span><span>Цена</span><span style="text-align:right;">Сумма</span><span></span>
+              </div>
+
+              <div class="line-item">
+                <input value="Разработка лендинга">
+                <input value="1" style="text-align:center;">
+                <input value="60 000">
+                <span style="text-align:right; font-weight:700;">60 000 ₽</span>
+                <button class="icon-btn" style="width:28px; height:28px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E76F51" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M6 6v14a2 2 0 002 2h8a2 2 0 002-2V6"/></svg>
+                </button>
+              </div>
+              <div class="line-item">
+                <input value="Дизайн-аудит">
+                <input value="1" style="text-align:center;">
+                <input value="24 000">
+                <span style="text-align:right; font-weight:700;">24 000 ₽</span>
+                <button class="icon-btn" style="width:28px; height:28px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#E76F51" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2M6 6v14a2 2 0 002 2h8a2 2 0 002-2V6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <button class="btn btn-ghost btn-sm" style="padding-left:0; margin-top:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              Добавить позицию
+            </button>
+          </div>
+
+          <div class="totals">
+            <div class="totals-row"><span>Сумма</span><span>84 000 ₽</span></div>
+            <div class="totals-row"><span>НДС (без НДС)</span><span>0 ₽</span></div>
+            <div class="totals-row grand"><span>Итого к оплате</span><span style="color:#2D6A4F;">84 000 ₽</span></div>
+          </div>
+
+          <div style="display:flex; gap:10px; margin-top:20px;">
+            <button class="btn btn-secondary btn-sm" style="flex:1;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 3v4a1 1 0 001 1h4"/><path d="M5 8a2 2 0 012-2h7l5 5v9a2 2 0 01-2 2H7a2 2 0 01-2-2V8z"/></svg>
+              Скачать PDF
+            </button>
+            <button class="btn btn-primary btn-sm" style="flex:1;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+              Отправить клиенту
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+</div>
+
+</body>
+</html>

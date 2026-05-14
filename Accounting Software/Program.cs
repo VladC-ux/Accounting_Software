@@ -6,7 +6,10 @@ using Accounting_Software.Service_Interfaces;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Localization;
 using QuestPDF.Infrastructure;
+using System.Globalization;
 using Telegram.Bot;
 
 namespace Accounting_Software
@@ -16,6 +19,10 @@ namespace Accounting_Software
         public static void Main(string[] args)
         {
             QuestPDF.Settings.License = LicenseType.Community;
+
+            var enUs = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = enUs;
+            CultureInfo.DefaultThreadCurrentUICulture = enUs;
 
             var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +52,9 @@ namespace Accounting_Software
             builder.Services.AddScoped<ITransactionHistoryRepository, TransactionHistoryRepository>();
             builder.Services.AddScoped<IUnitofWork, Accounting_Software.UnitOfWork.UnitOfWork>();
             builder.Services.AddScoped<IEmailService, EmailService>();
-            builder.Services.AddScoped<IReceiptPdfService, ReceiptPdfService>();
+            builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
+            builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+            builder.Services.AddScoped<IInvoicePdfService, InvoicePdfService>();
 
             // ── Telegram bot ──────────────────────────────────────────────
             var botToken = builder.Configuration["Telegram:BotToken"];
@@ -66,6 +75,13 @@ namespace Accounting_Software
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(enUs),
+                SupportedCultures = new[] { enUs },
+                SupportedUICultures = new[] { enUs }
+            });
 
             app.UseRouting();
 

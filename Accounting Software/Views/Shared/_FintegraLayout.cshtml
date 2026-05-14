@@ -1,0 +1,276 @@
+@using System.Globalization
+@using System.Security.Claims
+@{
+    var enCulture = new CultureInfo("en-US");
+    var userIdStr = User?.FindFirstValue(ClaimTypes.NameIdentifier);
+    int.TryParse(userIdStr, out int userId);
+    var userName = User?.FindFirstValue(ClaimTypes.Name) ?? "User";
+    var initial = userName.Length > 0 ? userName.Substring(0, 1).ToUpper() : "U";
+
+    string active = (ViewBag.ActivePage as string) ?? "";
+    string pageTitle = (ViewBag.PageTitle as string) ?? "Accounting Software";
+    string pageHeading = (ViewBag.PageHeading as string) ?? pageTitle;
+    string pageSubtitle = (ViewBag.PageSubtitle as string) ?? "";
+    bool showHeader = ViewBag.HideHeader == null || !(bool)ViewBag.HideHeader;
+
+    string Cls(string key) => active == key ? "sb-link active" : "sb-link";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>@pageTitle — Accounting Software</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <style>
+        :root{
+            --green:#2D6A4F; --green-dark:#1F4D37; --green-light:#52B788; --green-tint:#E8F0E5;
+            --green-soft:#F1F6EE;
+            --orange:#E89A3C; --orange-soft:#FBE9CF;
+            --red:#D9534F; --red-soft:#FBE5E1;
+            --blue:#4A90E2; --blue-soft:#E1ECFB;
+            --bg:#F7F4EC;
+            --card:#FFFFFF;
+            --text:#1A2B23; --muted:#6B7280; --muted-soft:#9CA3AF;
+            --border:#E5E7EB; --border-soft:#F1EFE8;
+            --shadow-xs:0 1px 2px rgba(31,41,55,.04);
+            --shadow-sm:0 2px 6px rgba(31,41,55,.04),0 1px 2px rgba(31,41,55,.03);
+            --shadow-md:0 10px 28px rgba(31,41,55,.06),0 2px 6px rgba(31,41,55,.04);
+            --r-sm:10px; --r:14px; --r-lg:20px; --r-xl:26px;
+        }
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        html,body{height:100%;}
+        body{
+            font-family:'Manrope',system-ui,sans-serif;background:var(--bg);color:var(--text);
+            -webkit-font-smoothing:antialiased;display:flex;min-height:100vh;
+        }
+        a{color:inherit;text-decoration:none;}
+
+        /* ── SIDEBAR ── */
+        .sidebar{
+            width:240px;background:var(--card);border-radius:0 var(--r-xl) var(--r-xl) 0;
+            margin:18px 0;padding:22px 16px 18px;
+            display:flex;flex-direction:column;flex-shrink:0;
+            box-shadow:var(--shadow-sm);
+        }
+        .brand{display:flex;align-items:center;gap:10px;padding:4px 10px 22px;}
+        .brand-mark{
+            width:32px;height:32px;border-radius:9px;
+            background:linear-gradient(135deg,#2D6A4F,#52B788);
+            display:grid;place-items:center;color:#fff;font-weight:800;font-size:.85rem;
+            box-shadow:0 4px 10px rgba(45,106,79,.25);
+        }
+        .brand-name{font-size:1.02rem;font-weight:800;letter-spacing:-.02em;}
+        .sb-nav{display:flex;flex-direction:column;gap:2px;}
+        .sb-link{
+            display:flex;align-items:center;gap:12px;padding:10px 14px;
+            font-size:.88rem;font-weight:500;color:var(--muted);
+            border-radius:12px;transition:all .12s;
+        }
+        .sb-link i{width:18px;text-align:center;font-size:.95rem;}
+        .sb-link:hover{background:var(--green-soft);color:var(--text);}
+        .sb-link.active{background:var(--green-tint);color:var(--green);font-weight:700;}
+        .sb-spacer{flex:1;}
+        .sb-foot{
+            margin-top:20px;padding:14px;background:var(--green-soft);
+            border-radius:14px;display:flex;align-items:center;gap:12px;
+        }
+        .sb-foot-ico{
+            width:36px;height:36px;border-radius:10px;background:#fff;
+            display:grid;place-items:center;color:var(--green);font-size:1rem;flex-shrink:0;
+            box-shadow:var(--shadow-xs);
+        }
+        .sb-foot-text{flex:1;min-width:0;}
+        .sb-foot-lbl{font-size:.7rem;color:var(--muted);font-weight:500;}
+        .sb-foot-val{font-size:.82rem;font-weight:700;color:var(--text);margin-top:2px;}
+
+        /* ── MAIN ── */
+        .main{flex:1;padding:28px 32px 32px;overflow-x:hidden;min-width:0;}
+
+        /* ── HEADER ── */
+        .pg-head{
+            display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap;
+        }
+        .pg-title h1{font-size:1.55rem;font-weight:800;letter-spacing:-.025em;}
+        .pg-title .sub{font-size:.83rem;color:var(--muted);margin-top:4px;}
+        .pg-actions{display:flex;align-items:center;gap:12px;}
+        .pill{
+            display:inline-flex;align-items:center;gap:8px;
+            padding:9px 14px;background:var(--card);border:1px solid var(--border-soft);
+            border-radius:12px;font-size:.82rem;color:var(--text);font-weight:600;
+            box-shadow:var(--shadow-xs);cursor:pointer;
+        }
+        .pill i.chev{color:var(--muted);font-size:.75rem;margin-left:2px;}
+        .icon-btn{
+            width:42px;height:42px;border-radius:12px;background:var(--card);
+            border:1px solid var(--border-soft);display:grid;place-items:center;
+            color:var(--muted);position:relative;box-shadow:var(--shadow-xs);
+        }
+        .icon-btn .dot{
+            position:absolute;top:9px;right:11px;width:7px;height:7px;border-radius:50%;
+            background:var(--orange);border:2px solid var(--card);
+        }
+        .user-avatar{
+            width:42px;height:42px;border-radius:50%;
+            background:linear-gradient(135deg,#2D6A4F,#52B788);color:#fff;
+            display:grid;place-items:center;font-weight:700;font-size:.88rem;
+            box-shadow:var(--shadow-xs);
+        }
+        .logout{
+            font-size:.8rem;color:var(--muted);padding:9px 12px;border-radius:12px;
+            border:1px solid var(--border-soft);background:var(--card);box-shadow:var(--shadow-xs);
+        }
+        .logout:hover{color:var(--red);border-color:var(--red);background:var(--red-soft);}
+
+        /* ── CARDS ── */
+        .card{
+            background:var(--card);border-radius:var(--r-lg);
+            box-shadow:var(--shadow-sm);padding:22px 24px;
+        }
+        .card-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:14px;flex-wrap:wrap;}
+        .card-hd h3{font-size:1rem;font-weight:700;letter-spacing:-.01em;}
+        .card-hd .hd-sub{font-size:.78rem;color:var(--muted);margin-top:2px;}
+        .card-hd .hd-link{font-size:.82rem;color:var(--green);font-weight:600;display:inline-flex;align-items:center;gap:6px;}
+        .card-hd .hd-link i{font-size:.7rem;}
+
+        /* ── BUTTONS ── */
+        .btn{
+            padding:9px 16px;border-radius:12px;font-size:.85rem;font-weight:600;
+            border:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+            transition:all .15s;
+        }
+        .btn-primary{background:var(--green);color:#fff;box-shadow:0 4px 10px rgba(45,106,79,.25);}
+        .btn-primary:hover{background:var(--green-dark);color:#fff;transform:translateY(-1px);box-shadow:0 6px 14px rgba(45,106,79,.32);}
+        .btn-ghost{background:var(--card);color:var(--text);border:1px solid var(--border-soft);box-shadow:var(--shadow-xs);}
+        .btn-ghost:hover{background:var(--green-soft);color:var(--green);}
+        .btn-danger{background:var(--card);color:var(--red);border:1px solid var(--red-soft);}
+        .btn-danger:hover{background:var(--red-soft);color:var(--red);}
+        .btn-icon-sm{padding:7px 10px;border-radius:10px;font-size:.76rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;transition:all .15s;}
+
+        /* ── EMPTY STATE ── */
+        .empty-state{
+            background:var(--card);border-radius:var(--r-lg);padding:54px 24px;text-align:center;
+            box-shadow:var(--shadow-sm);
+        }
+        .empty-state .empty-ico{
+            width:64px;height:64px;border-radius:50%;background:var(--green-soft);
+            display:grid;place-items:center;color:var(--green);font-size:1.5rem;margin:0 auto 14px;
+        }
+        .empty-state h4{font-size:1.02rem;font-weight:700;margin-bottom:6px;}
+        .empty-state p{font-size:.86rem;color:var(--muted);margin-bottom:18px;}
+
+        /* ── TABLES ── */
+        .data-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+        .data-table th{
+            text-align:left;padding:10px 14px;font-size:.72rem;text-transform:uppercase;
+            letter-spacing:.05em;color:var(--muted);font-weight:700;border-bottom:1px solid var(--border-soft);
+        }
+        .data-table td{padding:14px;border-bottom:1px solid var(--border-soft);}
+        .data-table tr:last-child td{border-bottom:none;}
+        .data-table tr:hover td{background:var(--green-soft);}
+
+        @@media(max-width:1200px){.main{padding:24px;}}
+        @@media(max-width:780px){
+            body{flex-direction:column;}
+            .sidebar{width:100%;border-radius:0;margin:0;flex-direction:row;overflow-x:auto;padding:12px;align-items:center;}
+            .sb-spacer,.sb-foot{display:none;}
+            .brand{padding:0 12px;}
+            .sb-nav{flex-direction:row;gap:4px;}
+            .sb-link{padding:8px 12px;font-size:.8rem;white-space:nowrap;}
+            .main{padding:18px;}
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+
+<aside class="sidebar">
+    <div class="brand">
+        <span class="brand-mark"><i class="fas fa-chart-line"></i></span>
+        <span class="brand-name">Accounting</span>
+    </div>
+
+    <nav class="sb-nav">
+        <a class="@Cls("dashboard")" asp-controller="Dashboard" asp-action="Index">
+            <i class="fas fa-th-large"></i> Dashboard
+        </a>
+        <a class="@Cls("income")" asp-controller="User" asp-action="Index" asp-route-id="@userId">
+            <i class="fas fa-arrow-down"></i> Income
+        </a>
+        <a class="@Cls("sellers")" asp-controller="Seller" asp-action="Index">
+            <i class="fas fa-user-tie"></i> Sellers
+        </a>
+        <a class="@Cls("invoices")" asp-controller="Invoice" asp-action="Index">
+            <i class="far fa-file-lines"></i> Invoices
+        </a>
+        <a class="@Cls("stores")" asp-controller="Store" asp-action="Index">
+            <i class="fas fa-store"></i> Stores
+        </a>
+        <a class="@Cls("reports")" asp-controller="Statistics" asp-action="Index">
+            <i class="fas fa-chart-column"></i> Reports
+        </a>
+        <a class="@Cls("transactions")" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@userId">
+            <i class="fas fa-receipt"></i> Transactions
+        </a>
+        <a class="@Cls("telegram")" asp-controller="Telegram" asp-action="Index">
+            <i class="fab fa-telegram"></i> Telegram
+        </a>
+    </nav>
+
+    <div class="sb-spacer"></div>
+
+    @if (ViewBag.SidebarFoot != null)
+    {
+        @Html.Raw(ViewBag.SidebarFoot)
+    }
+    else
+    {
+        <div class="sb-foot">
+            <div class="sb-foot-ico"><i class="fas fa-leaf"></i></div>
+            <div class="sb-foot-text">
+                <div class="sb-foot-lbl">Account</div>
+                <div class="sb-foot-val">@userName</div>
+            </div>
+        </div>
+    }
+</aside>
+
+<main class="main">
+    @if (showHeader)
+    {
+        <div class="pg-head">
+            <div class="pg-title">
+                <h1>@pageHeading</h1>
+                @if (!string.IsNullOrEmpty(pageSubtitle))
+                {
+                    <div class="sub">@pageSubtitle</div>
+                }
+            </div>
+            <div class="pg-actions">
+                @if (ViewBag.HeaderActions != null)
+                {
+                    @Html.Raw(ViewBag.HeaderActions)
+                }
+                else
+                {
+                    <div class="pill">
+                        <i class="far fa-calendar"></i>
+                        @DateTime.Now.ToString("MMMM yyyy", enCulture)
+                    </div>
+                    <div class="icon-btn"><i class="far fa-bell"></i><span class="dot"></span></div>
+                    <div class="user-avatar">@initial</div>
+                    <a class="logout" asp-controller="Auth" asp-action="Logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                }
+            </div>
+        </div>
+    }
+
+    @RenderBody()
+</main>
+
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

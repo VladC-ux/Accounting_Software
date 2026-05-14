@@ -1,191 +1,150 @@
 @using Accounting_Software.ViewModel
 @model List<SellerViewModel>
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
     var sellers = (ViewBag.Sellers as IEnumerable<dynamic>) ?? Enumerable.Empty<dynamic>();
     var sellerCount = sellers.Count();
+
+    ViewBag.ActivePage = "sellers";
+    ViewBag.PageTitle = "Sellers";
+    ViewBag.PageHeading = "Sellers";
+    ViewBag.PageSubtitle = sellerCount + " supplier" + (sellerCount == 1 ? "" : "s") + " · Manage your network";
+    ViewBag.HeaderActions =
+        "<div class='search-pill'>"
+        + "<i class='fas fa-search'></i>"
+        + "<input type='text' id='sellerSearch' placeholder='Search sellers...' />"
+        + "</div>"
+        + "<a class='btn btn-ghost' href='/Export/Products'><i class='fas fa-file-excel'></i> Export</a>"
+        + "<a class='btn btn-primary' href='/Seller/Add'><i class='fas fa-plus'></i> Add Seller</a>";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sellers — Accounting Software</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f5f6fb;color:#1c2434;min-height:100vh;}
+@section Styles {
+<style>
+    .search-pill{
+        display:inline-flex;align-items:center;gap:8px;
+        padding:9px 14px;background:var(--card);border:1px solid var(--border-soft);
+        border-radius:12px;box-shadow:var(--shadow-xs);min-width:240px;
+    }
+    .search-pill i{color:var(--muted);font-size:.85rem;}
+    .search-pill input{
+        border:none;outline:none;background:transparent;flex:1;
+        font-family:inherit;font-size:.85rem;color:var(--text);
+    }
+    .search-pill input::placeholder{color:var(--muted-soft);}
 
-        .topbar{height:60px;background:#fff;border-bottom:1px solid #eaecf3;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 rgba(15,23,42,0.02);}
-        .brand{font-size:0.95rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:10px;letter-spacing:-.01em;}
-        .brand-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;box-shadow:0 4px 10px rgba(99,102,241,.35);}
-        .top-nav{display:flex;gap:2px;margin-left:32px;}
-        .tn{color:#64748b;font-size:0.82rem;font-weight:500;padding:6px 12px;border-radius:7px;text-decoration:none;transition:all .15s;}
-        .tn:hover{background:#f1f5f9;color:#0f172a;text-decoration:none;}
-        .tn.active{color:#4f46e5;font-weight:600;background:#eef2ff;}
-        .btn-logout{font-size:0.78rem;color:#94a3b8;text-decoration:none;padding:6px 12px;border-radius:7px;display:inline-flex;align-items:center;gap:6px;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
+    .sellers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;}
+    .seller-card{
+        background:var(--card);border-radius:var(--r-lg);padding:0;
+        box-shadow:var(--shadow-sm);overflow:hidden;
+        transition:transform .18s, box-shadow .18s;
+        display:flex;flex-direction:column;position:relative;
+    }
+    .seller-card::before{
+        content:'';position:absolute;top:0;left:0;right:0;height:3px;
+        background:linear-gradient(90deg,var(--green),var(--green-light),var(--orange));
+        opacity:0;transition:opacity .18s;
+    }
+    .seller-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);}
+    .seller-card:hover::before{opacity:1;}
 
-        .wrap{max-width:1320px;margin:28px auto;padding:0 24px;}
+    .seller-body{padding:20px;display:flex;flex-direction:column;flex:1;}
+    .seller-row{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+    .seller-avatar{
+        width:48px;height:48px;border-radius:14px;display:grid;place-items:center;
+        color:#fff;font-weight:700;font-size:1.1rem;flex-shrink:0;
+        box-shadow:0 4px 10px rgba(45,106,79,.22);
+    }
+    .seller-name{
+        font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.01em;
+        display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    }
+    .seller-name:hover{color:var(--green);}
+    .seller-meta{
+        font-size:.74rem;color:var(--muted);margin-top:3px;
+        display:flex;align-items:center;gap:6px;
+    }
+    .seller-meta .dot{width:6px;height:6px;background:var(--green-light);border-radius:50%;}
 
-        .banner{background:linear-gradient(135deg,#eef2ff 0%,#f0f9ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:24px 28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;margin-bottom:22px;position:relative;overflow:hidden;}
-        .banner::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(99,102,241,.18),transparent 70%);border-radius:50%;}
-        .banner-l{display:flex;align-items:center;gap:18px;position:relative;z-index:1;}
-        .banner-icon{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;box-shadow:0 8px 20px rgba(99,102,241,.35);flex-shrink:0;}
-        .banner-l h1{font-size:1.5rem;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:3px;display:flex;align-items:center;gap:10px;}
-        .count-chip{background:#fff;color:#4f46e5;padding:3px 10px;border-radius:99px;font-size:0.74rem;font-weight:700;box-shadow:0 1px 3px rgba(99,102,241,.18);}
-        .banner-l .sub{font-size:0.86rem;color:#64748b;}
-        .banner-r{display:flex;gap:8px;flex-wrap:wrap;position:relative;z-index:1;}
+    .card-actions{
+        display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:14px;
+        border-top:1px dashed var(--border-soft);
+    }
+    .btn-view{background:var(--green-tint);color:var(--green);}
+    .btn-view:hover{background:var(--green-light);color:#fff;}
+    .btn-add{background:var(--green);color:#fff;box-shadow:0 3px 8px rgba(45,106,79,.22);}
+    .btn-add:hover{background:var(--green-dark);color:#fff;}
+    .btn-edit{background:var(--orange-soft);color:var(--orange);}
+    .btn-edit:hover{background:var(--orange);color:#fff;}
+    .btn-del{background:var(--card);color:var(--red);border:1px solid var(--red-soft);}
+    .btn-del:hover{background:var(--red-soft);}
 
-        .btn{padding:10px 18px;border-radius:9px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .18s;}
-        .btn-primary{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;box-shadow:0 4px 12px rgba(99,102,241,.35);}
-        .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(99,102,241,.45);color:#fff;text-decoration:none;}
-        .btn-ghost{background:#fff;color:#334155;border:1px solid #e2e8f0;}
-        .btn-ghost:hover{background:#f8fafc;color:#0f172a;border-color:#cbd5e1;text-decoration:none;}
+    .av-0{background:linear-gradient(135deg,#2D6A4F,#52B788);}
+    .av-1{background:linear-gradient(135deg,#E89A3C,#F4C77B);}
+    .av-2{background:linear-gradient(135deg,#4A90E2,#6FB0EE);}
+    .av-3{background:linear-gradient(135deg,#9F7AEA,#B795F3);}
+    .av-4{background:linear-gradient(135deg,#D9534F,#EA7E7A);}
+    .av-5{background:linear-gradient(135deg,#1F4D37,#3D8961);}
+</style>
+}
 
-        .toolbar{display:flex;gap:12px;margin-bottom:18px;flex-wrap:wrap;align-items:center;}
-        .search{flex:1;min-width:260px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:9px 14px;display:flex;align-items:center;gap:10px;transition:all .15s;}
-        .search:focus-within{border-color:#6366f1;box-shadow:0 0 0 4px rgba(99,102,241,.08);}
-        .search i{color:#94a3b8;font-size:0.9rem;}
-        .search input{border:none;outline:none;flex:1;font-family:inherit;font-size:0.88rem;color:#1c2434;background:transparent;}
-        .search input::placeholder{color:#94a3b8;}
-
-        .sellers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;}
-        .seller-card{background:#fff;border:1px solid #eaecf3;border-radius:14px;padding:0;display:flex;flex-direction:column;transition:transform .2s, box-shadow .2s, border-color .2s;overflow:hidden;position:relative;}
-        .seller-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#6366f1,#3b82f6,#06b6d4);opacity:0;transition:opacity .2s;}
-        .seller-card:hover{transform:translateY(-3px);border-color:#c7d2fe;box-shadow:0 12px 30px rgba(15,23,42,.08);}
-        .seller-card:hover::before{opacity:1;}
-
-        .seller-body{padding:20px;display:flex;flex-direction:column;flex:1;}
-        .seller-row{display:flex;align-items:center;gap:13px;margin-bottom:14px;}
-        .seller-avatar{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.05rem;flex-shrink:0;box-shadow:0 4px 10px rgba(99,102,241,.28);}
-        .seller-name{font-size:1rem;font-weight:700;color:#0f172a;text-decoration:none;letter-spacing:-.01em;}
-        .seller-name:hover{color:#4f46e5;text-decoration:none;}
-        .seller-meta{font-size:0.74rem;color:#94a3b8;margin-top:3px;display:flex;align-items:center;gap:5px;}
-        .seller-meta .dot{width:5px;height:5px;background:#10b981;border-radius:50%;}
-
-        .card-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:auto;padding-top:14px;border-top:1px dashed #eaecf3;}
-        .btn-icon{padding:7px 12px;border-radius:8px;font-size:0.76rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;border:none;cursor:pointer;transition:all .15s;}
-        .btn-view{background:#eef2ff;color:#4f46e5;}
-        .btn-view:hover{background:#e0e7ff;color:#4338ca;text-decoration:none;}
-        .btn-add{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 3px 8px rgba(16,185,129,.3);}
-        .btn-add:hover{transform:translateY(-1px);box-shadow:0 6px 14px rgba(16,185,129,.4);color:#fff;text-decoration:none;}
-        .btn-edit{background:#fef3c7;color:#92400e;}
-        .btn-edit:hover{background:#fde68a;color:#78350f;text-decoration:none;}
-        .btn-del{background:#fff;color:#dc2626;border:1px solid #fecaca;}
-        .btn-del:hover{background:#fef2f2;color:#b91c1c;border-color:#fca5a5;text-decoration:none;}
-
-        .empty{background:#fff;border:1px dashed #cbd5e1;border-radius:14px;padding:64px 20px;text-align:center;color:#94a3b8;}
-        .empty .empty-icon{width:72px;height:72px;margin:0 auto 16px;border-radius:50%;background:linear-gradient(135deg,#eef2ff,#dbeafe);display:flex;align-items:center;justify-content:center;color:#6366f1;font-size:1.8rem;}
-        .empty h4{font-size:1.05rem;color:#475569;font-weight:700;margin-bottom:6px;}
-        .empty p{font-size:0.88rem;margin-bottom:18px;}
-
-        /* avatar color cycling */
-        .av-0{background:linear-gradient(135deg,#6366f1,#3b82f6);}
-        .av-1{background:linear-gradient(135deg,#10b981,#059669);}
-        .av-2{background:linear-gradient(135deg,#f59e0b,#d97706);}
-        .av-3{background:linear-gradient(135deg,#ec4899,#db2777);}
-        .av-4{background:linear-gradient(135deg,#06b6d4,#0891b2);}
-        .av-5{background:linear-gradient(135deg,#8b5cf6,#7c3aed);}
-    </style>
-</head>
-<body>
-
-<header class="topbar">
-    <div style="display:flex;align-items:center;">
-        <div class="brand"><span class="brand-mark"><i class="fas fa-chart-line"></i></span> Accounting Software</div>
-        <nav class="top-nav">
-            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn active" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
-    </div>
-    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</header>
-
-<div class="wrap">
-
-    <div class="banner">
-        <div class="banner-l">
-            <div class="banner-icon"><i class="fas fa-user-tie"></i></div>
-            <div>
-                <h1>Sellers <span class="count-chip">@sellerCount total</span></h1>
-                <div class="sub">Manage your sellers, their products and performance</div>
-            </div>
-        </div>
-        <div class="banner-r">
-            <a class="btn btn-ghost" href="/Export/Products"><i class="fas fa-file-excel"></i> Export</a>
-            <a class="btn btn-primary" asp-action="Add" asp-controller="Seller"><i class="fas fa-plus"></i> Add Seller</a>
-        </div>
-    </div>
-
-    <div class="toolbar">
-        <div class="search">
-            <i class="fas fa-search"></i>
-            <input type="text" id="sellerSearch" placeholder="Search sellers by name..." />
-        </div>
-    </div>
-
-    @if (sellerCount > 0)
-    {
-        <div class="sellers-grid" id="sellersGrid">
-            @{ var idx = 0; }
-            @foreach (var item in sellers)
-            {
-                var avClass = "av-" + (idx % 6);
-                idx++;
-                <div class="seller-card" data-name="@item.Name.ToString().ToLower()">
-                    <div class="seller-body">
-                        <div class="seller-row">
-                            <div class="seller-avatar @avClass">@item.Name.ToString().Substring(0, 1).ToUpper()</div>
-                            <div style="min-width:0;">
-                                <a class="seller-name" href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">@item.Name</a>
-                                <div class="seller-meta"><span class="dot"></span> Active · ID #@item.Id</div>
-                            </div>
-                        </div>
-                        <div class="card-actions">
-                            <a class="btn-icon btn-view" href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">
-                                <i class="fas fa-eye"></i> View
-                            </a>
-                            <a class="btn-icon btn-add" asp-action="Add" asp-controller="Product" asp-route-SellerId="@item.Id">
-                                <i class="fas fa-plus"></i> Add Product
-                            </a>
-                            <a class="btn-icon btn-edit" asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a class="btn-icon btn-del" asp-action="Delete" asp-controller="Seller" asp-route-id="@item.Id"
-                               onclick="return confirm('Delete seller @item.Name?')">
-                                <i class="fas fa-trash"></i>
-                            </a>
+@if (sellerCount > 0)
+{
+    <div class="sellers-grid" id="sellersGrid">
+        @{ var idx = 0; }
+        @foreach (var item in sellers)
+        {
+            var avClass = "av-" + (idx % 6);
+            idx++;
+            <div class="seller-card" data-name="@item.Name.ToString().ToLower()">
+                <div class="seller-body">
+                    <div class="seller-row">
+                        <div class="seller-avatar @avClass">@item.Name.ToString().Substring(0, 1).ToUpper()</div>
+                        <div style="min-width:0;flex:1;">
+                            <a class="seller-name" href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">@item.Name</a>
+                            <div class="seller-meta"><span class="dot"></span> Active · ID #@item.Id</div>
                         </div>
                     </div>
+                    <div class="card-actions">
+                        <a class="btn-icon-sm btn-view" href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a class="btn-icon-sm btn-add" asp-action="Add" asp-controller="Product" asp-route-SellerId="@item.Id">
+                            <i class="fas fa-plus"></i> Product
+                        </a>
+                        <a class="btn-icon-sm btn-edit" asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="btn-icon-sm btn-del" asp-action="Delete" asp-controller="Seller" asp-route-id="@item.Id"
+                           onclick="return confirm('Delete seller @item.Name?')">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
                 </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="empty">
-            <div class="empty-icon"><i class="fas fa-user-slash"></i></div>
-            <h4>No sellers yet</h4>
-            <p>Add your first seller to start tracking products.</p>
-            <a class="btn btn-primary" asp-action="Add" asp-controller="Seller"><i class="fas fa-plus"></i> Add Seller</a>
-        </div>
-    }
-</div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-ico"><i class="fas fa-user-slash"></i></div>
+        <h4>No sellers yet</h4>
+        <p>Add your first seller to start tracking products.</p>
+        <a class="btn btn-primary" asp-action="Add" asp-controller="Seller"><i class="fas fa-plus"></i> Add Seller</a>
+    </div>
+}
 
+@section Scripts {
 <script>
-    document.getElementById('sellerSearch').addEventListener('input', function () {
-        const q = this.value.toLowerCase().trim();
-        document.querySelectorAll('.seller-card').forEach(function (card) {
-            const name = card.getAttribute('data-name') || '';
-            card.style.display = name.includes(q) ? '' : 'none';
+    var input = document.getElementById('sellerSearch');
+    if (input) {
+        input.addEventListener('input', function () {
+            var q = this.value.toLowerCase().trim();
+            document.querySelectorAll('.seller-card').forEach(function (card) {
+                var name = card.getAttribute('data-name') || '';
+                card.style.display = name.indexOf(q) >= 0 ? '' : 'none';
+            });
         });
-    });
+    }
 </script>
-</body>
-</html>
+}

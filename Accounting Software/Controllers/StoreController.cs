@@ -1,4 +1,4 @@
-﻿using Accounting_Software.Data.Entities;
+using Accounting_Software.Data.Entities;
 using Accounting_Software.Repository_Interfaces;
 using Accounting_Software.Service;
 using Accounting_Software.Service_Interfaces;
@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Metadata;
+using System.Security.Claims;
 
 namespace Accounting_Software.Controllers
 {
@@ -18,55 +19,64 @@ namespace Accounting_Software.Controllers
         private readonly IProductService _productService;
         private readonly IStoreProductRepository _storeProductRepository;
         private readonly ISellerService _sellerService;
-        private readonly IUserRepository _userRepository;
-        private readonly ITransactionHistoryRepository _transactionHistoryRepository;
-        private readonly IReceiptPdfService _receiptPdfService;
+        private readonly IInvoiceService _invoiceService;
 
 
-        public StoreController(IStoreService storeService, IStoreProductService storeproduct, IStoreProductRepository storeProductRepository, IProductService productService, ISellerService sellerService,IUserRepository userRepository, ITransactionHistoryRepository transactionHistoryRepository, IReceiptPdfService receiptPdfService)
+        public StoreController(IStoreService storeService, IStoreProductService storeproduct, IStoreProductRepository storeProductRepository, IProductService productService, ISellerService sellerService, IInvoiceService invoiceService)
         {
             _storeService = storeService;
             _storeProductService = storeproduct;
             _storeProductRepository = storeProductRepository;
             _productService = productService;
             _sellerService = sellerService;
-            _userRepository = userRepository;
-            _transactionHistoryRepository = transactionHistoryRepository;
-            _receiptPdfService = receiptPdfService;
+            _invoiceService = invoiceService;
         }
 
         public IActionResult Index()
         {
-           
+
             var stores = _storeService.GetAll();
             return View(stores);
         }
 
-        public IActionResult Sale(StoreProductViewModel model,int userid)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Sell(int storeProductId, int quantity)
         {
+            var sp = _storeProductRepository.GetById(storeProductId);
+            if (sp == null)
+            {
+                TempData["ErrorMessage"] = "Product not found in store.";
+                return RedirectToAction("Index");
+            }
+
+            if (quantity <= 0)
+            {
+                TempData["ErrorMessage"] = "Quantity must be greater than zero.";
+                return RedirectToAction("ShowStoreProduct", new { storeId = sp.StoreId });
+            }
+
             try
             {
-                var receiptId = _storeProductService.GetBalanceSale(model.Id,userid);
-                TempData["SuccessMessage"] = "Sale completed successfully.";
-                TempData["LastReceiptId"] = receiptId;
+                var userId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var model = new InvoiceCreateViewModel
+                {
+                    StoreId = sp.StoreId,
+                    TaxRate = 0m,
+                    Items = new List<InvoiceCreateItemViewModel>
+                    {
+                        new InvoiceCreateItemViewModel { StoreProductId = sp.Id, Count = quantity }
+                    }
+                };
+                var invoice = _invoiceService.Create(model, userId);
+                TempData["SuccessMessage"] = $"Sold {quantity} {sp.Unitofmass} of {sp.ProductName}. Invoice {invoice.Number} created.";
+                TempData["LastInvoiceId"] = invoice.Id;
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
             }
-            return RedirectToAction("ShowStoreProduct", new { Storeid = model.StoreId });
-        }
-
-        [HttpGet]
-        public IActionResult Receipt(int id)
-        {
-            var tx = _transactionHistoryRepository.GetById(id);
-            if (tx == null)
-                return NotFound("Receipt not found.");
-
-            var buyer = _userRepository.GetUserById(tx.UserId);
-            var pdf = _receiptPdfService.GenerateSaleReceipt(tx, buyer?.Name ?? buyer?.Email);
-            return File(pdf, "application/pdf", $"receipt-{tx.Id:D6}.pdf");
+            return RedirectToAction("ShowStoreProduct", new { storeId = sp.StoreId });
         }
 
         [HttpPost]
@@ -113,7 +123,7 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult ShowShops(int id)
         {
-          
+
             ViewBag.ProductId = id;
             var stores = _storeService.GetAll();
             var storeProducts = _storeProductRepository.GetAll();
@@ -218,7 +228,6 @@ namespace Accounting_Software.Controllers
         [HttpGet]
         public IActionResult ShowStoreProduct(int? storeId)
         {
-            ViewBag.Users = _userRepository.GetAll();
             ViewBag.AllProducts = _productService.GetAll();
             if (storeId.HasValue)
             {
@@ -242,7 +251,7 @@ namespace Accounting_Software.Controllers
         public IActionResult EditAllStore(int id)
         {
             var data = _storeProductService.GetById(id);
-            return View(data);  
+            return View(data);
         }
 
         [HttpPost]

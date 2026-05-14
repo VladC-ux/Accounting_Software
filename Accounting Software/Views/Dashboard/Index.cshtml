@@ -1,477 +1,416 @@
+@using System.Globalization
 @model Accounting_Software.ViewModel.DashboardViewModel
 @{
-    Layout = null;
-    var profit      = Model.TotalEarned - Model.TotalSpent;
+    Layout = "_FintegraLayout";
+    var inv = CultureInfo.InvariantCulture;
+    var enCulture = new CultureInfo("en-US");
+
+    var profit = Model.TotalEarned - Model.TotalSpent;
     var monthProfit = Model.MonthEarned - Model.MonthSpent;
-    var maxBar      = Math.Max(Model.TotalSpent, Model.TotalEarned);
-    var spentPct    = maxBar > 0 ? (double)Model.TotalSpent  / (double)maxBar * 100 : 0;
-    var earnedPct   = maxBar > 0 ? (double)Model.TotalEarned / (double)maxBar * 100 : 0;
-    var monthName   = DateTime.Now.ToString("MMMM yyyy");
+    var prevMonthProfit = Model.PrevMonthEarned - Model.PrevMonthSpent;
+
+    double PctChange(decimal current, decimal prev)
+    {
+        if (prev == 0) return current == 0 ? 0 : 100;
+        return (double)((current - prev) / Math.Abs(prev)) * 100;
+    }
+
+    var pctProfit  = PctChange(monthProfit, prevMonthProfit);
+    var pctIncome  = PctChange(Model.MonthEarned, Model.PrevMonthEarned);
+    var pctExpense = PctChange(Model.MonthSpent, Model.PrevMonthSpent);
+    var pctBalance = PctChange(Model.Balance, Model.PrevMonthBalance);
+
+    string Fmt(double v) => v.ToString("F2", inv);
+    string FmtMoney(decimal v) => v.ToString("N2", inv);
+
+    string Sparkline(List<decimal> data, string color, int w = 160, int h = 44)
+    {
+        if (data == null || data.Count == 0) return "";
+        var min = (double)data.Min();
+        var max = (double)data.Max();
+        var range = max - min;
+        if (range == 0) range = 1;
+        var step = data.Count > 1 ? (double)w / (data.Count - 1) : 0;
+        var pts = new System.Text.StringBuilder();
+        var area = new System.Text.StringBuilder();
+        for (int i = 0; i < data.Count; i++)
+        {
+            var x = i * step;
+            var y = h - 4 - ((double)data[i] - min) / range * (h - 8);
+            if (i > 0) { pts.Append(' '); area.Append(' '); }
+            pts.Append(x.ToString("F1", inv)).Append(',').Append(y.ToString("F1", inv));
+            area.Append(x.ToString("F1", inv)).Append(',').Append(y.ToString("F1", inv));
+        }
+        var lastX = (data.Count - 1) * step;
+        var fillId = "fill-" + Guid.NewGuid().ToString("N").Substring(0, 6);
+        var areaPath = $"M0,{(h).ToString("F1", inv)} L{area} L{lastX.ToString("F1", inv)},{(h).ToString("F1", inv)} Z";
+        return $@"<svg class=""spark"" viewBox=""0 0 {w} {h}"" preserveAspectRatio=""none"" xmlns=""http://www.w3.org/2000/svg"">
+                    <defs>
+                      <linearGradient id=""{fillId}"" x1=""0"" x2=""0"" y1=""0"" y2=""1"">
+                        <stop offset=""0%"" stop-color=""{color}"" stop-opacity=""0.25""/>
+                        <stop offset=""100%"" stop-color=""{color}"" stop-opacity=""0""/>
+                      </linearGradient>
+                    </defs>
+                    <path d=""{areaPath}"" fill=""url(#{fillId})""/>
+                    <polyline points=""{pts}"" fill=""none"" stroke=""{color}"" stroke-width=""2"" stroke-linecap=""round"" stroke-linejoin=""round""/>
+                  </svg>";
+    }
+
+    decimal flowMax = 0;
+    foreach (var p in Model.Flow) { flowMax = Math.Max(flowMax, Math.Max(p.Income, p.Expense)); }
+    if (flowMax == 0) flowMax = 1;
+
+    var breakdownTotal = Model.Breakdown.Sum(b => b.Amount);
+
+    var donutSegments = new List<(double Seg, double Offset, string Color)>();
+    {
+        double offset = 25;
+        foreach (var s in Model.Breakdown)
+        {
+            donutSegments.Add((s.Percent, offset, s.Color));
+            offset -= s.Percent;
+            if (offset < 0) offset += 100;
+        }
+    }
+
+    ViewBag.ActivePage = "dashboard";
+    ViewBag.PageTitle = "Dashboard";
+    ViewBag.PageHeading = "Overview";
+    ViewBag.PageSubtitle = DateTime.Now.ToString("dddd, d MMMM yyyy", enCulture) + " · " + Model.UserName;
+    var monthLabel = monthProfit >= 0 ? "Monthly profit" : "Monthly loss";
+    var monthValue = (monthProfit >= 0 ? "+" : "") + FmtMoney(monthProfit);
+    ViewBag.SidebarFoot = "<div class='sb-foot'>"
+        + "<div class='sb-foot-ico'><i class='far fa-calendar'></i></div>"
+        + "<div class='sb-foot-text'>"
+        + "<div class='sb-foot-lbl'>" + monthLabel + "</div>"
+        + "<div class='sb-foot-val'>" + monthValue + "</div>"
+        + "</div>"
+        + "</div>";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Dashboard — Accounting Software</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        html,body{height:100%;}
-        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;display:flex;flex-direction:column;}
 
-        /* ── TOP BAR ── */
-        .topbar{
-            height:56px;background:#ffffff;border-bottom:1px solid #e5e7eb;
-            display:flex;align-items:center;justify-content:space-between;
-            padding:0 28px;position:sticky;top:0;z-index:200;
-        }
-        .topbar-left{display:flex;align-items:center;gap:32px;}
-        .brand{font-size:0.92rem;font-weight:700;color:#111827;letter-spacing:0.2px;display:flex;align-items:center;gap:8px;}
-        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
-        .top-nav{display:flex;align-items:center;gap:2px;}
-        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;transition:all .15s;}
-        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
-        .tn.active{color:#2563eb;font-weight:600;}
-        .topbar-right{display:flex;align-items:center;gap:12px;}
-        .user-chip{display:flex;align-items:center;gap:8px;font-size:0.82rem;color:#374151;font-weight:500;}
-        .user-avatar{width:30px;height:30px;border-radius:8px;background:#2563eb;color:#fff;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;}
-        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;transition:all .15s;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
+@section Styles {
+<style>
+    /* ── KPI ROW ── */
+    .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px;}
+    .kpi{
+        background:var(--card);border-radius:var(--r-lg);padding:20px 20px 14px;
+        box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+    }
+    .kpi-lbl{font-size:.78rem;color:var(--muted);font-weight:500;margin-bottom:8px;}
+    .kpi-val{font-size:1.55rem;font-weight:800;letter-spacing:-.02em;color:var(--text);}
+    .kpi-delta{
+        display:inline-flex;align-items:center;gap:6px;
+        font-size:.78rem;font-weight:600;margin-top:8px;
+    }
+    .kpi-delta.up{color:var(--green);}
+    .kpi-delta.down{color:var(--red);}
+    .kpi-delta .vs{color:var(--muted);font-weight:500;margin-left:4px;}
+    .kpi .spark{display:block;width:100%;height:40px;margin-top:6px;}
 
-        /* ── LAYOUT ── */
-        .layout{display:flex;flex:1;overflow:hidden;}
+    /* ── CONTENT GRID ── */
+    .content-row{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;margin-bottom:22px;}
 
-        /* ── SIDEBAR ── */
-        .sidebar{
-            width:200px;background:#ffffff;border-right:1px solid #e5e7eb;
-            padding:20px 0;flex-shrink:0;overflow-y:auto;
-        }
-        .sb-section{margin-bottom:20px;}
-        .sb-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#9ca3af;padding:0 16px 6px;}
-        .sb-link{
-            display:flex;align-items:center;gap:9px;padding:8px 16px;
-            font-size:0.8rem;font-weight:500;color:#6b7280;text-decoration:none;
-            border-left:2px solid transparent;transition:all .12s;
-        }
-        .sb-link:hover{background:#f9fafb;color:#111827;text-decoration:none;}
-        .sb-link.active{background:#eff6ff;color:#2563eb;border-left-color:#2563eb;font-weight:600;}
-        .sb-link i{width:14px;text-align:center;font-size:0.82rem;}
+    /* ── CASH FLOW ── */
+    .flow-legend{display:flex;align-items:center;gap:18px;margin-bottom:14px;}
+    .lg{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;color:var(--muted);font-weight:600;}
+    .lg .chip{width:10px;height:10px;border-radius:3px;}
+    .lg .chip.in{background:var(--green);}
+    .lg .chip.out{background:var(--orange);}
 
-        /* ── MAIN ── */
-        .main{flex:1;padding:28px 32px;overflow-y:auto;}
+    .flow-chart{display:flex;align-items:flex-end;gap:14px;height:200px;padding:14px 0 4px;border-top:1px dashed var(--border-soft);position:relative;}
+    .flow-yaxis{position:absolute;left:0;top:0;bottom:24px;display:flex;flex-direction:column-reverse;justify-content:space-between;font-size:.66rem;color:var(--muted-soft);pointer-events:none;}
+    .flow-bars{flex:1;display:flex;align-items:flex-end;justify-content:space-around;gap:6px;height:100%;padding-left:32px;}
+    .bar-group{flex:1;display:flex;flex-direction:column;align-items:center;height:100%;}
+    .bar-pair{flex:1;display:flex;align-items:flex-end;gap:5px;width:100%;justify-content:center;}
+    .bar{width:14px;border-radius:5px 5px 0 0;transition:height .4s;min-height:2px;}
+    .bar.in{background:linear-gradient(180deg,#52B788 0%,#2D6A4F 100%);}
+    .bar.out{background:linear-gradient(180deg,#F4C77B 0%,#E89A3C 100%);}
+    .bar-label{font-size:.7rem;color:var(--muted);margin-top:8px;font-weight:500;}
 
-        /* ── PAGE TITLE ── */
-        .pg-title{margin-bottom:24px;}
-        .pg-title h1{font-size:1.25rem;font-weight:700;color:#111827;margin-bottom:2px;}
-        .pg-title .sub{font-size:0.78rem;color:#9ca3af;}
+    /* ── DONUT ── */
+    .donut-wrap{display:flex;align-items:center;gap:18px;}
+    .donut-svg-wrap{position:relative;width:160px;height:160px;flex-shrink:0;}
+    .donut-center{position:absolute;inset:0;display:grid;place-items:center;text-align:center;}
+    .donut-center .v{font-size:1.05rem;font-weight:800;letter-spacing:-.02em;line-height:1.1;}
+    .donut-center .l{font-size:.7rem;color:var(--muted);margin-top:2px;}
+    .donut-legend{flex:1;display:flex;flex-direction:column;gap:9px;}
+    .lg-row{display:flex;align-items:center;gap:9px;font-size:.8rem;}
+    .lg-row .chip{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+    .lg-row .nm{flex:1;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+    .lg-row .pc{font-weight:700;color:var(--text);font-variant-numeric:tabular-nums;}
 
-        /* ── KPI ROW ── */
-        .kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px;}
-        .kpi{
-            background:#fff;border:1px solid #e5e7eb;border-radius:10px;
-            padding:18px 20px;position:relative;overflow:hidden;
-        }
-        .kpi-accent{position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:10px 0 0 10px;}
-        .ac-blue{background:#2563eb;}
-        .ac-red{background:#ef4444;}
-        .ac-green{background:#16a34a;}
-        .ac-indigo{background:@(profit>=0?"#0891b2":"#ef4444");}
-        .kpi-lbl{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#9ca3af;margin-bottom:8px;}
-        .kpi-val{font-size:1.6rem;font-weight:700;line-height:1;color:#111827;}
-        .kpi-val.c-blue{color:#2563eb;}
-        .kpi-val.c-red{color:#ef4444;}
-        .kpi-val.c-green{color:#16a34a;}
-        .kpi-val.c-teal{color:#0891b2;}
-        .kpi-sub{font-size:0.7rem;color:#9ca3af;margin-top:5px;}
-        .kpi-ico{position:absolute;right:16px;top:16px;font-size:1rem;color:#f3f4f6;}
+    /* ── ACTIONS + ACTIVITY ── */
+    .lower-row{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;}
+    .action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+    .action-tile{border:1px solid var(--border-soft);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px;background:#fff;transition:all .15s;}
+    .action-tile:hover{border-color:var(--green);background:var(--green-soft);transform:translateY(-2px);box-shadow:var(--shadow-md);}
+    .tile-icon{width:38px;height:38px;border-radius:11px;background:var(--green-tint);display:grid;place-items:center;color:var(--green);font-size:.95rem;transition:all .15s;}
+    .action-tile:hover .tile-icon{background:var(--green);color:#fff;}
+    .tile-label{font-size:.86rem;font-weight:700;color:var(--text);}
+    .tile-desc{font-size:.74rem;color:var(--muted);line-height:1.4;}
 
-        /* ── CONTENT GRID ── */
-        .content-grid{display:grid;grid-template-columns:1fr 320px;gap:20px;}
+    .activity-item{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--border-soft);}
+    .activity-item:last-child{border-bottom:none;}
+    .act-icon{width:36px;height:36px;border-radius:11px;flex-shrink:0;display:grid;place-items:center;font-size:.85rem;}
+    .act-icon.buy{background:var(--red-soft);color:var(--red);}
+    .act-icon.sale{background:var(--green-tint);color:var(--green);}
+    .act-icon.dep{background:var(--orange-soft);color:var(--orange);}
+    .act-info{flex:1;min-width:0;}
+    .act-name{font-size:.84rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .act-date{font-size:.72rem;color:var(--muted);margin-top:2px;}
+    .act-amt{font-size:.86rem;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap;}
+    .act-amt.neg{color:var(--red);}
+    .act-amt.pos{color:var(--green);}
+    .act-amt.dep{color:var(--orange);}
 
-        /* ── CARD ── */
-        .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;margin-bottom:0;}
-        .card-hd{padding:14px 20px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;}
-        .card-hd h3{font-size:0.84rem;font-weight:700;color:#111827;margin:0;}
-        .card-hd .hd-link{font-size:0.75rem;color:#2563eb;text-decoration:none;}
-        .card-hd .hd-link:hover{text-decoration:underline;}
-        .card-body{padding:20px;}
+    .small-empty{text-align:center;padding:28px 14px;color:var(--muted);}
+    .small-empty i{font-size:1.6rem;margin-bottom:8px;color:var(--border);}
+    .small-empty div{font-size:.84rem;}
 
-        /* ── ACTION TILES ── */
-        .action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-        .action-tile{
-            border:1px solid #e5e7eb;border-radius:10px;padding:18px 16px;
-            text-decoration:none;color:#374151;transition:all .15s;
-            display:flex;flex-direction:column;gap:10px;
-            background:#fff;
-        }
-        .action-tile:hover{border-color:#2563eb;background:#eff6ff;text-decoration:none;color:#1d4ed8;transform:translateY(-1px);box-shadow:0 4px 12px rgba(37,99,235,.1);}
-        .tile-icon{width:38px;height:38px;border-radius:8px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#6b7280;transition:all .15s;}
-        .action-tile:hover .tile-icon{background:#dbeafe;color:#2563eb;}
-        .tile-label{font-size:0.8rem;font-weight:600;}
-        .tile-desc{font-size:0.72rem;color:#9ca3af;line-height:1.4;}
-        .action-tile:hover .tile-desc{color:#93c5fd;}
+    @@media(max-width:1200px){
+        .content-row,.lower-row{grid-template-columns:1fr;}
+        .kpi-row{grid-template-columns:repeat(2,1fr);}
+    }
+    @@media(max-width:780px){
+        .kpi-row{grid-template-columns:1fr;}
+        .action-grid{grid-template-columns:1fr 1fr;}
+        .donut-wrap{flex-direction:column;align-items:flex-start;}
+    }
+</style>
+}
 
-        /* ── ACTIVITY FEED ── */
-        .activity-item{
-            display:flex;align-items:center;gap:12px;
-            padding:10px 0;border-bottom:1px solid #f3f4f6;
-        }
-        .activity-item:last-child{border-bottom:none;}
-        .act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-        .act-dot.buy{background:#ef4444;}
-        .act-dot.sale{background:#16a34a;}
-        .act-dot.dep{background:#2563eb;}
-        .act-info{flex:1;min-width:0;}
-        .act-name{font-size:0.8rem;font-weight:500;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-        .act-date{font-size:0.7rem;color:#9ca3af;margin-top:1px;}
-        .act-amt{font-size:0.82rem;font-weight:600;white-space:nowrap;}
-        .act-amt.neg{color:#ef4444;}
-        .act-amt.pos{color:#16a34a;}
-        .act-amt.dep{color:#2563eb;}
-
-        /* ── RIGHT PANEL ── */
-        .right-stack{display:flex;flex-direction:column;gap:14px;}
-
-        /* ── FINANCIAL HEALTH ── */
-        .health-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
-        .health-label{font-size:0.75rem;color:#6b7280;font-weight:500;}
-        .health-val{font-size:0.82rem;font-weight:700;}
-        .bar-track{height:6px;background:#f3f4f6;border-radius:99px;overflow:hidden;margin-bottom:4px;}
-        .bar-fill{height:100%;border-radius:99px;transition:width .6s;}
-        .bar-fill.red{background:#ef4444;}
-        .bar-fill.green{background:#16a34a;}
-        .divider{height:1px;background:#f3f4f6;margin:14px 0;}
-        .fin-stat{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-        .fin-stat:last-child{margin-bottom:0;}
-        .fin-stat .fs-label{font-size:0.75rem;color:#6b7280;}
-        .fin-stat .fs-val{font-size:0.82rem;font-weight:700;color:#111827;}
-
-        /* ── MONTH CARD ── */
-        .month-row{display:flex;justify-content:space-between;gap:10px;}
-        .month-block{flex:1;text-align:center;padding:12px 8px;border-radius:8px;}
-        .month-block.spend-block{background:#fef2f2;}
-        .month-block.earn-block{background:#f0fdf4;}
-        .mb-lbl{font-size:0.66rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#9ca3af;margin-bottom:4px;}
-        .mb-val{font-size:1.1rem;font-weight:700;}
-        .mb-val.red{color:#dc2626;}
-        .mb-val.green{color:#16a34a;}
-
-        /* ── INVENTORY ── */
-        .inv-row{display:flex;justify-content:space-between;text-align:center;padding:4px 0;}
-        .inv-block{}
-        .inv-num{font-size:1.4rem;font-weight:700;color:#111827;}
-        .inv-lbl{font-size:0.68rem;color:#9ca3af;text-transform:uppercase;letter-spacing:.4px;font-weight:600;}
-
-        @@media(max-width:1100px){.content-grid{grid-template-columns:1fr;}}
-        @@media(max-width:900px){.sidebar{display:none;}.kpi-row{grid-template-columns:1fr 1fr;}}
-        @@media(max-width:600px){.kpi-row{grid-template-columns:1fr;}.action-grid{grid-template-columns:1fr 1fr;}.main{padding:16px;}}
-    </style>
-</head>
-<body>
-
-<!-- TOP BAR -->
-<header class="topbar">
-    <div class="topbar-left">
-        <div class="brand">
-            <span class="brand-dot"></span>
-            Accounting Software
+<div class="kpi-row">
+    <div class="kpi">
+        <div class="kpi-lbl">Net Profit</div>
+        <div class="kpi-val">@FmtMoney(profit)</div>
+        <div class="kpi-delta @(pctProfit >= 0 ? "up" : "down")">
+            <i class="fas fa-arrow-@(pctProfit >= 0 ? "up" : "down")"></i>
+            @Math.Abs(pctProfit).ToString("F1", inv)%
+            <span class="vs">vs last month</span>
         </div>
-        <nav class="top-nav">
-            <a class="tn active" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
+        @Html.Raw(Sparkline(Model.SparkProfit, "#2D6A4F"))
     </div>
-    <div class="topbar-right">
-        <div class="user-chip">
-            <div class="user-avatar">@(Model.UserName.Substring(0,1).ToUpper())</div>
-            @Model.UserName
+
+    <div class="kpi">
+        <div class="kpi-lbl">Income</div>
+        <div class="kpi-val">@FmtMoney(Model.TotalEarned)</div>
+        <div class="kpi-delta @(pctIncome >= 0 ? "up" : "down")">
+            <i class="fas fa-arrow-@(pctIncome >= 0 ? "up" : "down")"></i>
+            @Math.Abs(pctIncome).ToString("F1", inv)%
+            <span class="vs">vs last month</span>
         </div>
-        <a class="btn-logout" asp-controller="Auth" asp-action="Logout">
-            <i class="fas fa-sign-out-alt"></i> Sign out
-        </a>
+        @Html.Raw(Sparkline(Model.SparkIncome, "#52B788"))
     </div>
-</header>
 
-<div class="layout">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar">
-        <div class="sb-section">
-            <div class="sb-label">Main</div>
-            <a class="sb-link active" asp-controller="Dashboard" asp-action="Index">
-                <i class="fas fa-th-large"></i> Overview
-            </a>
-            <a class="sb-link" asp-controller="Statistics" asp-action="Index">
-                <i class="fas fa-chart-line"></i> Reports
-            </a>
-            <a class="sb-link" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId">
-                <i class="fas fa-receipt"></i> Transactions
-            </a>
+    <div class="kpi">
+        <div class="kpi-lbl">Expenses</div>
+        <div class="kpi-val">@FmtMoney(Model.TotalSpent)</div>
+        <div class="kpi-delta @(pctExpense <= 0 ? "up" : "down")">
+            <i class="fas fa-arrow-@(pctExpense <= 0 ? "down" : "up")"></i>
+            @Math.Abs(pctExpense).ToString("F1", inv)%
+            <span class="vs">vs last month</span>
         </div>
-        <div class="sb-section">
-            <div class="sb-label">Business</div>
-            <a class="sb-link" asp-controller="Seller" asp-action="Index">
-                <i class="fas fa-user-tie"></i> Sellers
-            </a>
-            <a class="sb-link" asp-controller="Store" asp-action="Index">
-                <i class="fas fa-store"></i> Stores
-            </a>
+        @Html.Raw(Sparkline(Model.SparkExpense, "#E89A3C"))
+    </div>
+
+    <div class="kpi">
+        <div class="kpi-lbl">Cash Balance</div>
+        <div class="kpi-val">@FmtMoney(Model.Balance)</div>
+        <div class="kpi-delta @(pctBalance >= 0 ? "up" : "down")">
+            <i class="fas fa-arrow-@(pctBalance >= 0 ? "up" : "down")"></i>
+            @Math.Abs(pctBalance).ToString("F1", inv)%
+            <span class="vs">vs last month</span>
         </div>
-        <div class="sb-section">
-            <div class="sb-label">Finance</div>
-            <a class="sb-link" asp-controller="User" asp-action="Index" asp-route-id="@Model.UserId">
-                <i class="fas fa-wallet"></i> Account
-            </a>
-            <a class="sb-link" href="/Export/Transactions?userId=@Model.UserId">
-                <i class="fas fa-file-export"></i> Export
-            </a>
-        </div>
-        <div class="sb-section">
-            <div class="sb-label">Integrations</div>
-            <a class="sb-link" asp-controller="Telegram" asp-action="Index">
-                <i class="fab fa-telegram"></i> Telegram
-            </a>
-        </div>
-    </aside>
-
-    <!-- MAIN -->
-    <main class="main">
-
-        <div class="pg-title">
-            <h1>Financial Overview</h1>
-            <div class="sub">@DateTime.Now.ToString("dddd, d MMMM yyyy") &nbsp;·&nbsp; @Model.UserName</div>
-        </div>
-
-        <!-- KPI -->
-        <div class="kpi-row">
-            <div class="kpi">
-                <div class="kpi-accent ac-blue"></div>
-                <i class="fas fa-wallet kpi-ico"></i>
-                <div class="kpi-lbl">Cash Balance</div>
-                <div class="kpi-val c-blue">@Model.Balance.ToString("N2")</div>
-                <div class="kpi-sub">Available funds</div>
-            </div>
-            <div class="kpi">
-                <div class="kpi-accent ac-red"></div>
-                <i class="fas fa-arrow-down kpi-ico"></i>
-                <div class="kpi-lbl">Total Purchases</div>
-                <div class="kpi-val c-red">@Model.TotalSpent.ToString("N2")</div>
-                <div class="kpi-sub">All time spend</div>
-            </div>
-            <div class="kpi">
-                <div class="kpi-accent ac-green"></div>
-                <i class="fas fa-arrow-up kpi-ico"></i>
-                <div class="kpi-lbl">Total Revenue</div>
-                <div class="kpi-val c-green">@Model.TotalEarned.ToString("N2")</div>
-                <div class="kpi-sub">All time sales</div>
-            </div>
-            <div class="kpi">
-                <div class="kpi-accent ac-indigo"></div>
-                <i class="fas fa-chart-line kpi-ico"></i>
-                <div class="kpi-lbl">Net Profit</div>
-                <div class="kpi-val @(profit >= 0 ? "c-teal" : "c-red")">
-                    @(profit >= 0 ? "+" : "")@profit.ToString("N2")
-                </div>
-                <div class="kpi-sub">Revenue − Purchases</div>
-            </div>
-        </div>
-
-        <!-- CONTENT -->
-        <div class="content-grid">
-
-            <div>
-                <!-- QUICK ACTIONS -->
-                <div class="card mb-3" style="margin-bottom:14px!important;">
-                    <div class="card-hd">
-                        <h3>Quick Actions</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="action-grid">
-
-                            <a class="action-tile" asp-controller="Seller" asp-action="Index">
-                                <div class="tile-icon"><i class="fas fa-cart-plus"></i></div>
-                                <div>
-                                    <div class="tile-label">New Purchase</div>
-                                    <div class="tile-desc">Buy products from a seller</div>
-                                </div>
-                            </a>
-
-                            <a class="action-tile" asp-controller="Store" asp-action="Index">
-                                <div class="tile-icon"><i class="fas fa-tag"></i></div>
-                                <div>
-                                    <div class="tile-label">Record Sale</div>
-                                    <div class="tile-desc">Sell products from a store</div>
-                                </div>
-                            </a>
-
-                            <a class="action-tile" asp-controller="User" asp-action="Index" asp-route-id="@Model.UserId">
-                                <div class="tile-icon"><i class="fas fa-plus-circle"></i></div>
-                                <div>
-                                    <div class="tile-label">Add Funds</div>
-                                    <div class="tile-desc">Top up your account balance</div>
-                                </div>
-                            </a>
-
-                            <a class="action-tile" asp-controller="Seller" asp-action="Add">
-                                <div class="tile-icon"><i class="fas fa-user-plus"></i></div>
-                                <div>
-                                    <div class="tile-label">Add Seller</div>
-                                    <div class="tile-desc">Register a new supplier</div>
-                                </div>
-                            </a>
-
-                            <a class="action-tile" asp-controller="Statistics" asp-action="Index">
-                                <div class="tile-icon"><i class="fas fa-chart-bar"></i></div>
-                                <div>
-                                    <div class="tile-label">View Reports</div>
-                                    <div class="tile-desc">Sales & profit analytics</div>
-                                </div>
-                            </a>
-
-                            <a class="action-tile" href="/Export/Transactions?userId=@Model.UserId">
-                                <div class="tile-icon"><i class="fas fa-file-excel"></i></div>
-                                <div>
-                                    <div class="tile-label">Export Data</div>
-                                    <div class="tile-desc">Download Excel report</div>
-                                </div>
-                            </a>
-
-                        </div>
-                    </div>
-                </div>
-
-                <!-- RECENT ACTIVITY -->
-                <div class="card">
-                    <div class="card-hd">
-                        <h3>Recent Activity</h3>
-                        <a class="hd-link" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId">
-                            See all transactions →
-                        </a>
-                    </div>
-                    <div class="card-body" style="padding:0 20px;">
-                        @if (Model.LastTransactions != null && Model.LastTransactions.Any())
-                        {
-                            @foreach (var t in Model.LastTransactions)
-                            {
-                                <div class="activity-item">
-                                    <div class="act-dot @(t.typeofAction == "Add" ? "buy" : t.typeofAction == "Sale" ? "sale" : "dep")"></div>
-                                    <div class="act-info">
-                                        <div class="act-name">@t.ProductName</div>
-                                        <div class="act-date">@t.SoldDate.ToString("dd MMM yyyy") @(!string.IsNullOrEmpty(t.StoreName) ? $"· {t.StoreName}" : "")</div>
-                                    </div>
-                                    <div class="act-amt @(t.typeofAction == "Add" ? "neg" : t.typeofAction == "Sale" ? "pos" : "dep")">
-                                        @(t.typeofAction == "Add" ? "−" : "+")@t.Total.ToString("N2")
-                                    </div>
-                                </div>
-                            }
-                        }
-                        else
-                        {
-                            <div style="text-align:center;padding:24px;color:#d1d5db;font-size:0.85rem;">
-                                <i class="fas fa-inbox" style="font-size:1.5rem;display:block;margin-bottom:8px;"></i>
-                                No transactions yet
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-
-            <!-- RIGHT PANEL -->
-            <div class="right-stack">
-
-                <!-- FINANCIAL HEALTH -->
-                <div class="card">
-                    <div class="card-hd"><h3>Financial Health</h3></div>
-                    <div class="card-body">
-
-                        <div class="health-row">
-                            <span class="health-label">Purchases</span>
-                            <span class="health-val" style="color:#ef4444;">@Model.TotalSpent.ToString("N2")</span>
-                        </div>
-                        <div class="bar-track">
-                            <div class="bar-fill red" style="width:@spentPct.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)%;"></div>
-                        </div>
-
-                        <div class="health-row" style="margin-top:12px;">
-                            <span class="health-label">Revenue</span>
-                            <span class="health-val" style="color:#16a34a;">@Model.TotalEarned.ToString("N2")</span>
-                        </div>
-                        <div class="bar-track">
-                            <div class="bar-fill green" style="width:@earnedPct.ToString("F1", System.Globalization.CultureInfo.InvariantCulture)%;"></div>
-                        </div>
-
-                        <div class="divider"></div>
-
-                        <div class="fin-stat">
-                            <span class="fs-label">Total Deposited</span>
-                            <span class="fs-val">@Model.TotalDeposited.ToString("N2")</span>
-                        </div>
-                        <div class="fin-stat">
-                            <span class="fs-label">Net Profit</span>
-                            <span class="fs-val" style="color:@(profit >= 0 ? "#16a34a" : "#ef4444")">
-                                @(profit >= 0 ? "+" : "")@profit.ToString("N2")
-                            </span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- THIS MONTH -->
-                <div class="card">
-                    <div class="card-hd"><h3>@monthName</h3></div>
-                    <div class="card-body">
-                        <div class="month-row">
-                            <div class="month-block spend-block">
-                                <div class="mb-lbl">Spent</div>
-                                <div class="mb-val red">@Model.MonthSpent.ToString("N2")</div>
-                            </div>
-                            <div class="month-block earn-block">
-                                <div class="mb-lbl">Earned</div>
-                                <div class="mb-val green">@Model.MonthEarned.ToString("N2")</div>
-                            </div>
-                        </div>
-                        @{
-                            var mp = Model.MonthEarned - Model.MonthSpent;
-                        }
-                        <div style="text-align:center;margin-top:14px;font-size:0.75rem;color:#9ca3af;">
-                            Month profit:
-                            <strong style="color:@(mp >= 0 ? "#16a34a" : "#ef4444")">
-                                @(mp >= 0 ? "+" : "")@mp.ToString("N2")
-                            </strong>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- INVENTORY -->
-                <div class="card">
-                    <div class="card-hd"><h3>Inventory</h3></div>
-                    <div class="card-body">
-                        <div class="inv-row">
-                            <div class="inv-block">
-                                <div class="inv-num">@Model.TotalSellers</div>
-                                <div class="inv-lbl">Sellers</div>
-                            </div>
-                            <div class="inv-block">
-                                <div class="inv-num">@Model.TotalProducts</div>
-                                <div class="inv-lbl">Products</div>
-                            </div>
-                            <div class="inv-block">
-                                <div class="inv-num">@Model.TotalStores</div>
-                                <div class="inv-lbl">Stores</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </main>
+        @Html.Raw(Sparkline(Model.SparkBalance, "#2D6A4F"))
+    </div>
 </div>
 
-</body>
-</html>
+<div class="content-row">
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3>Cash flow</h3>
+                <div class="hd-sub">Income and expenses over the last 6 months</div>
+            </div>
+            <a class="hd-link" asp-controller="Statistics" asp-action="Index">
+                Last 6 months <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+
+        <div class="flow-legend">
+            <span class="lg"><span class="chip in"></span> Income</span>
+            <span class="lg"><span class="chip out"></span> Expenses</span>
+        </div>
+
+        <div class="flow-chart">
+            <div class="flow-yaxis">
+                <span>0</span>
+                <span>@((flowMax/4).ToString("N0", inv))</span>
+                <span>@((flowMax/2).ToString("N0", inv))</span>
+                <span>@(((flowMax*3)/4).ToString("N0", inv))</span>
+                <span>@(flowMax.ToString("N0", inv))</span>
+            </div>
+            <div class="flow-bars">
+                @foreach (var p in Model.Flow)
+                {
+                    var hIn  = flowMax > 0 ? (double)p.Income  / (double)flowMax * 100 : 0;
+                    var hOut = flowMax > 0 ? (double)p.Expense / (double)flowMax * 100 : 0;
+                    <div class="bar-group">
+                        <div class="bar-pair">
+                            <div class="bar in"  style="height:@Fmt(hIn)%;"  title="Income: @FmtMoney(p.Income)"></div>
+                            <div class="bar out" style="height:@Fmt(hOut)%;" title="Expenses: @FmtMoney(p.Expense)"></div>
+                        </div>
+                        <div class="bar-label">@p.Label</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3>Expense breakdown</h3>
+                <div class="hd-sub">Top 5 purchase categories</div>
+            </div>
+        </div>
+
+        <div class="donut-wrap">
+            <div class="donut-svg-wrap">
+                <svg width="160" height="160" viewBox="0 0 42 42">
+                    <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="#F1EFE8" stroke-width="5"/>
+                    @if (breakdownTotal > 0)
+                    {
+                        foreach (var d in donutSegments)
+                        {
+                            <circle cx="21" cy="21" r="15.915" fill="transparent"
+                                    stroke="@d.Color" stroke-width="5"
+                                    stroke-dasharray="@Fmt(d.Seg) @Fmt(100 - d.Seg)"
+                                    stroke-dashoffset="@Fmt(d.Offset)"
+                                    stroke-linecap="butt"/>
+                        }
+                    }
+                </svg>
+                <div class="donut-center">
+                    <div>
+                        <div class="v">@FmtMoney(breakdownTotal)</div>
+                        <div class="l">Total</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="donut-legend">
+                @if (Model.Breakdown.Any())
+                {
+                    foreach (var s in Model.Breakdown)
+                    {
+                        <div class="lg-row">
+                            <span class="chip" style="background:@s.Color;"></span>
+                            <span class="nm">@s.Name</span>
+                            <span class="pc">@s.Percent.ToString("F0", inv)%</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="small-empty" style="padding:8px 0;">
+                        <i class="far fa-chart-pie"></i>
+                        <div>No expenses yet</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="lower-row">
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3>Quick actions</h3>
+                <div class="hd-sub">Most common operations</div>
+            </div>
+        </div>
+        <div class="action-grid">
+            <a class="action-tile" asp-controller="Seller" asp-action="Index">
+                <div class="tile-icon"><i class="fas fa-cart-plus"></i></div>
+                <div>
+                    <div class="tile-label">New purchase</div>
+                    <div class="tile-desc">Buy products from a seller</div>
+                </div>
+            </a>
+            <a class="action-tile" asp-controller="Store" asp-action="Index">
+                <div class="tile-icon"><i class="fas fa-tag"></i></div>
+                <div>
+                    <div class="tile-label">Record sale</div>
+                    <div class="tile-desc">Sell products from a store</div>
+                </div>
+            </a>
+            <a class="action-tile" asp-controller="Invoice" asp-action="Index">
+                <div class="tile-icon"><i class="far fa-file-lines"></i></div>
+                <div>
+                    <div class="tile-label">New invoice</div>
+                    <div class="tile-desc">Create an invoice for a client</div>
+                </div>
+            </a>
+            <a class="action-tile" asp-controller="User" asp-action="Index" asp-route-id="@Model.UserId">
+                <div class="tile-icon"><i class="fas fa-plus-circle"></i></div>
+                <div>
+                    <div class="tile-label">Add funds</div>
+                    <div class="tile-desc">Top up your account balance</div>
+                </div>
+            </a>
+            <a class="action-tile" asp-controller="Statistics" asp-action="Index">
+                <div class="tile-icon"><i class="fas fa-chart-bar"></i></div>
+                <div>
+                    <div class="tile-label">Reports</div>
+                    <div class="tile-desc">Sales and profit analytics</div>
+                </div>
+            </a>
+            <a class="action-tile" href="/Export/Transactions?userId=@Model.UserId">
+                <div class="tile-icon"><i class="fas fa-file-export"></i></div>
+                <div>
+                    <div class="tile-label">Export</div>
+                    <div class="tile-desc">Download an Excel report</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3>Recent activity</h3>
+                <div class="hd-sub">Latest transactions</div>
+            </div>
+            <a class="hd-link" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId">
+                See all <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+        @if (Model.LastTransactions != null && Model.LastTransactions.Any())
+        {
+            foreach (var t in Model.LastTransactions)
+            {
+                var cls   = t.typeofAction == "Add" ? "buy" : (t.typeofAction == "Sale" ? "sale" : "dep");
+                var amCls = t.typeofAction == "Add" ? "neg" : (t.typeofAction == "Sale" ? "pos" : "dep");
+                var sign  = t.typeofAction == "Add" ? "−" : "+";
+                var icon  = t.typeofAction == "Add" ? "fa-cart-arrow-down" : (t.typeofAction == "Sale" ? "fa-tag" : "fa-piggy-bank");
+                <div class="activity-item">
+                    <div class="act-icon @cls"><i class="fas @icon"></i></div>
+                    <div class="act-info">
+                        <div class="act-name">@t.ProductName</div>
+                        <div class="act-date">@t.SoldDate.ToString("dd MMM yyyy", enCulture)@(!string.IsNullOrEmpty(t.StoreName) ? " · " + t.StoreName : "")</div>
+                    </div>
+                    <div class="act-amt @amCls">@sign@FmtMoney(t.Total)</div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="small-empty">
+                <i class="fas fa-inbox"></i>
+                <div>No transactions yet</div>
+            </div>
+        }
+    </div>
+</div>

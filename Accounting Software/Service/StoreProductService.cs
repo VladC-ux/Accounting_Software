@@ -21,19 +21,13 @@ namespace Accounting_Software.Service
         private readonly IProductRepository _productRepository;
         private readonly IStoreRepository _storeRepository;
         private readonly ISellerRepository _sellerRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly ITransactionHistoryRepository _transrepository;
-        private readonly ITelegramNotifier _telegramNotifier;
-        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepository, ISellerRepository sellerRepository, IUserRepository userRepository,ITransactionHistoryRepository transactionHistoryRepository, ITelegramNotifier telegramNotifier)
+        public StoreProductService(IStoreProductRepository storeproduct, IUnitofWork uow, IProductRepository productrepository, IStoreRepository storeRepository, ISellerRepository sellerRepository)
         {
             _storeProductRepository = storeproduct;
             _uow = uow;
             _productRepository = productrepository;
             _storeRepository = storeRepository;
             _sellerRepository = sellerRepository;
-            _userRepository = userRepository;
-            _transrepository = transactionHistoryRepository;
-            _telegramNotifier = telegramNotifier;
         }
         public void Add(StoreProductViewModel storeProduct)
         {
@@ -231,37 +225,5 @@ namespace Accounting_Software.Service
             };
         }
 
-        public int GetBalanceSale(int storeid,int userid)
-        {
-            var data = _storeProductRepository.GetById(storeid);
-            if (data == null)
-                throw new InvalidOperationException("Product not found in store.");
-
-            var user = _userRepository.GetUserById(userid);
-            if (user == null)
-                throw new InvalidOperationException("User not found.");
-            user.Balance += data.Price;
-            _storeProductRepository.Delete(data);
-
-            TransactionHistory transactionHistory = new TransactionHistory()
-            {
-                ProductName = data.ProductName,
-                Price = data.Price,
-                Description = data.Description,
-                Mass = data.Mass,
-                UserId = userid,
-                unitOfmass = data.Unitofmass,
-                Count = data.Count,
-                SoldDate = DateTime.Now,
-                typeofAction = "Sale",
-                StoreName = data.StoreName
-            };
-            _transrepository.Add(transactionHistory);
-            _uow.SaveChanges();
-
-            _ = _telegramNotifier.NotifySaleAsync(userid, data.ProductName, data.Price, data.StoreName);
-
-            return transactionHistory.Id;
-        }
     }
 }

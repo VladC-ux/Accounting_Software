@@ -5,7 +5,9 @@
       "mcp__ide__getDiagnostics",
       "Bash(dotnet ef:*)",
       "Bash(dotnet-ef migrations:*)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "Bash(dir C:\\\\Users\\\\vlada\\\\source\\\\repos\\\\Accounting_Software\\\\Accounting Software *)",
+      "Bash(curl -s http://localhost:4040/api/tunnels)"
     ]
   }
 }

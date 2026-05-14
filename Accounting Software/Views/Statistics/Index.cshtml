@@ -1,7 +1,9 @@
 @model Accounting_Software.ViewModel.StatisticsViewModel
+@using System.Globalization
 @using System.Text.Json
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
+    var inv = CultureInfo.InvariantCulture;
 
     var monthLabels   = JsonSerializer.Serialize(Model.MonthLabels);
     var monthlySpent  = JsonSerializer.Serialize(Model.MonthlySpent);
@@ -15,363 +17,232 @@
 
     var storeLabels = JsonSerializer.Serialize(Model.RevenueByStore.Select(x => x.Label).ToList());
     var storeValues = JsonSerializer.Serialize(Model.RevenueByStore.Select(x => x.Value).ToList());
+
+    string FmtMoney(decimal v) => v.ToString("N2", inv);
+
+    ViewBag.ActivePage = "reports";
+    ViewBag.PageTitle = "Reports";
+    ViewBag.PageHeading = "Reports";
+    ViewBag.PageSubtitle = "All-time overview based on transaction history";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Statistics</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-    <style>
-        body {
-            background-color: #f0f2f5;
-            font-family: 'Roboto', sans-serif;
-        }
+@section Styles {
+<style>
+    .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:22px;}
+    .stat{
+        background:var(--card);border-radius:var(--r-lg);padding:20px 22px;
+        box-shadow:var(--shadow-sm);position:relative;overflow:hidden;
+    }
+    .stat-ico{
+        width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+        font-size:1rem;margin-bottom:14px;
+    }
+    .stat-ico.red{background:var(--red-soft);color:var(--red);}
+    .stat-ico.green{background:var(--green-tint);color:var(--green);}
+    .stat-ico.orange{background:var(--orange-soft);color:var(--orange);}
+    .stat-ico.blue{background:var(--blue-soft);color:var(--blue);}
+    .stat-lbl{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
+    .stat-val{font-size:1.55rem;font-weight:800;letter-spacing:-.02em;margin-top:6px;}
+    .stat-val.c-red{color:var(--red);}
+    .stat-val.c-green{color:var(--green);}
+    .stat-val.c-orange{color:var(--orange);}
+    .stat-sub{font-size:.74rem;color:var(--muted);margin-top:4px;}
 
-        .topbar {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            color: white;
-            padding: 16px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-        }
+    .chart-row{display:grid;grid-template-columns:1fr;gap:18px;margin-bottom:18px;}
+    .chart-row.two{grid-template-columns:1fr 1fr;}
 
-        .topbar .brand { font-size: 1.3rem; font-weight: 700; }
+    .chart-host{height:300px;position:relative;}
+    .chart-host.tall{height:340px;}
+    .chart-empty{text-align:center;padding:48px 16px;color:var(--muted);}
+    .chart-empty i{font-size:1.8rem;color:var(--border);margin-bottom:10px;display:block;}
 
-        .topbar a {
-            color: rgba(255,255,255,0.8);
-            text-decoration: none;
-            margin-left: 20px;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
+    @@media(max-width:1100px){
+        .stat-row{grid-template-columns:repeat(2,1fr);}
+        .chart-row.two{grid-template-columns:1fr;}
+    }
+    @@media(max-width:600px){
+        .stat-row{grid-template-columns:1fr;}
+    }
+</style>
+}
 
-        .topbar a:hover { color: #fff; }
-
-        .page-body { padding: 0 30px 40px; }
-
-        .page-title {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 6px;
-        }
-
-        .page-sub {
-            color: #6c757d;
-            font-size: 0.92rem;
-            margin-bottom: 28px;
-        }
-
-        /* Stat cards */
-        .stat-card {
-            border-radius: 14px;
-            padding: 22px 24px;
-            color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
-            transition: transform 0.2s;
-        }
-
-        .stat-card:hover { transform: translateY(-3px); }
-
-        .stat-card .icon { font-size: 2rem; opacity: 0.8; float: right; }
-        .stat-card .label { font-size: 0.78rem; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.5px; }
-        .stat-card .value { font-size: 1.8rem; font-weight: 700; margin-top: 5px; }
-
-        .bg-purple  { background: linear-gradient(135deg, #667eea, #764ba2); }
-        .bg-red     { background: linear-gradient(135deg, #f093fb, #f5576c); }
-        .bg-blue    { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-        .bg-green   { background: linear-gradient(135deg, #43e97b, #38f9d7); }
-        .bg-orange  { background: linear-gradient(135deg, #fccb90, #d57eeb); }
-
-        /* Chart cards */
-        .chart-card {
-            background: white;
-            border-radius: 14px;
-            padding: 24px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-            margin-bottom: 24px;
-        }
-
-        .chart-title {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #1a1a2e;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .no-data-msg {
-            text-align: center;
-            color: #bbb;
-            padding: 40px 0;
-            font-size: 0.95rem;
-        }
-
-        canvas { max-height: 280px; }
-    </style>
-</head>
-<body>
-
-    <div class="topbar">
-        <div class="brand"><i class="fas fa-chart-bar mr-2"></i>Statistics</div>
-        <div>
-            <a asp-controller="Dashboard" asp-action="Index"><i class="fas fa-chart-line mr-1"></i>Dashboard</a>
-            <a asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId">
-                <i class="fas fa-history mr-1"></i>History
-            </a>
-            <a asp-controller="Seller" asp-action="Index"><i class="fas fa-users mr-1"></i>Sellers</a>
-            <a asp-controller="Store" asp-action="Index"><i class="fas fa-store mr-1"></i>Stores</a>
-        </div>
+<div class="stat-row">
+    <div class="stat">
+        <div class="stat-ico red"><i class="fas fa-arrow-down"></i></div>
+        <div class="stat-lbl">Total Spent</div>
+        <div class="stat-val c-red">@FmtMoney(Model.TotalSpent)</div>
+        <div class="stat-sub">@Model.TotalPurchases purchases</div>
     </div>
 
-    <div class="page-body">
-
-        <div class="page-title">Statistics</div>
-        <div class="page-sub">All-time overview based on transaction history</div>
-
-        <!-- Summary stat cards -->
-        <div class="row">
-            <div class="col-md-3">
-                <div class="stat-card bg-red">
-                    <i class="fas fa-arrow-down icon"></i>
-                    <div class="label">Total Spent</div>
-                    <div class="value">@Model.TotalSpent.ToString("C")</div>
-                    <small style="opacity:0.8">@Model.TotalPurchases purchases</small>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card bg-blue">
-                    <i class="fas fa-arrow-up icon"></i>
-                    <div class="label">Total Earned</div>
-                    <div class="value">@Model.TotalEarned.ToString("C")</div>
-                    <small style="opacity:0.8">@Model.TotalSales sales</small>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card bg-green">
-                    <i class="fas fa-chart-line icon"></i>
-                    <div class="label">Net Profit</div>
-                    <div class="value">@Model.NetProfit.ToString("C")</div>
-                    <small style="opacity:0.8">Earned − Spent</small>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-card bg-purple">
-                    <i class="fas fa-exchange-alt icon"></i>
-                    <div class="label">Total Transactions</div>
-                    <div class="value">@(Model.TotalPurchases + Model.TotalSales)</div>
-                    <small style="opacity:0.8">@Model.TotalPurchases in · @Model.TotalSales out</small>
-                </div>
-            </div>
-        </div>
-
-        <!-- Monthly chart -->
-        <div class="chart-card">
-            <div class="chart-title">
-                <i class="fas fa-calendar-alt text-primary"></i> Income vs Expenses — Last 6 Months
-            </div>
-            <canvas id="monthlyChart"></canvas>
-        </div>
-
-        <div class="row">
-
-            <!-- Top sold products -->
-            <div class="col-md-6">
-                <div class="chart-card">
-                    <div class="chart-title">
-                        <i class="fas fa-trophy text-warning"></i> Top 5 Products by Sales
-                    </div>
-                    @if (Model.TopSoldProducts.Any())
-                    {
-                        <canvas id="topSoldChart"></canvas>
-                    }
-                    else
-                    {
-                        <div class="no-data-msg"><i class="fas fa-inbox fa-2x d-block mb-2"></i>No sales yet</div>
-                    }
-                </div>
-            </div>
-
-            <!-- Top bought products -->
-            <div class="col-md-6">
-                <div class="chart-card">
-                    <div class="chart-title">
-                        <i class="fas fa-shopping-cart text-danger"></i> Top 5 Products by Purchases
-                    </div>
-                    @if (Model.TopBoughtProducts.Any())
-                    {
-                        <canvas id="topBoughtChart"></canvas>
-                    }
-                    else
-                    {
-                        <div class="no-data-msg"><i class="fas fa-inbox fa-2x d-block mb-2"></i>No purchases yet</div>
-                    }
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Revenue by store -->
-        <div class="chart-card">
-            <div class="chart-title">
-                <i class="fas fa-store text-success"></i> Revenue by Store
-            </div>
-            @if (Model.RevenueByStore.Any())
-            {
-                <canvas id="storeChart"></canvas>
-            }
-            else
-            {
-                <div class="no-data-msg"><i class="fas fa-inbox fa-2x d-block mb-2"></i>No store sales yet</div>
-            }
-        </div>
-
+    <div class="stat">
+        <div class="stat-ico green"><i class="fas fa-arrow-up"></i></div>
+        <div class="stat-lbl">Total Earned</div>
+        <div class="stat-val c-green">@FmtMoney(Model.TotalEarned)</div>
+        <div class="stat-sub">@Model.TotalSales sales</div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <div class="stat">
+        <div class="stat-ico orange"><i class="fas fa-chart-line"></i></div>
+        <div class="stat-lbl">Net Profit</div>
+        <div class="stat-val @(Model.NetProfit >= 0 ? "c-green" : "c-red")">@FmtMoney(Model.NetProfit)</div>
+        <div class="stat-sub">Earned − Spent</div>
+    </div>
 
-    <script>
-        const COLORS = [
-            '#667eea','#f5576c','#4facfe','#43e97b','#fccb90',
-            '#a18cd1','#fbc2eb','#d57eeb','#fee140','#00f2fe'
-        ];
+    <div class="stat">
+        <div class="stat-ico blue"><i class="fas fa-exchange-alt"></i></div>
+        <div class="stat-lbl">Total Transactions</div>
+        <div class="stat-val">@(Model.TotalPurchases + Model.TotalSales)</div>
+        <div class="stat-sub">@Model.TotalPurchases in · @Model.TotalSales out</div>
+    </div>
+</div>
 
-        // Monthly income vs expenses
-        new Chart(document.getElementById('monthlyChart'), {
+<div class="chart-row">
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3>Income vs Expenses</h3>
+                <div class="hd-sub">Monthly comparison — last 6 months</div>
+            </div>
+        </div>
+        <div class="chart-host"><canvas id="monthlyChart"></canvas></div>
+    </div>
+</div>
+
+<div class="chart-row two">
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3>Top 5 by Sales</h3>
+                <div class="hd-sub">Most profitable products</div>
+            </div>
+        </div>
+        @if (Model.TopSoldProducts.Any())
+        {
+            <div class="chart-host"><canvas id="topSoldChart"></canvas></div>
+        }
+        else
+        {
+            <div class="chart-empty"><i class="fas fa-inbox"></i> No sales yet</div>
+        }
+    </div>
+
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3>Top 5 by Purchases</h3>
+                <div class="hd-sub">Most bought products</div>
+            </div>
+        </div>
+        @if (Model.TopBoughtProducts.Any())
+        {
+            <div class="chart-host"><canvas id="topBoughtChart"></canvas></div>
+        }
+        else
+        {
+            <div class="chart-empty"><i class="fas fa-inbox"></i> No purchases yet</div>
+        }
+    </div>
+</div>
+
+<div class="chart-row">
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3>Revenue by Store</h3>
+                <div class="hd-sub">Breakdown across retail points</div>
+            </div>
+        </div>
+        @if (Model.RevenueByStore.Any())
+        {
+            <div class="chart-host tall"><canvas id="storeChart"></canvas></div>
+        }
+        else
+        {
+            <div class="chart-empty"><i class="fas fa-inbox"></i> No store sales yet</div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+    const COLORS = ['#2D6A4F','#52B788','#E89A3C','#4A90E2','#9F7AEA','#D9534F','#F4C77B','#6FB0EE','#B795F3','#3D8961'];
+
+    const baseOpts = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: 'top', labels: { color: '#1A2B23', font: { family: 'Manrope', size: 12, weight: '600' } } },
+            tooltip: { backgroundColor: '#1A2B23', padding: 12, cornerRadius: 10, titleFont: { family: 'Manrope' }, bodyFont: { family: 'Manrope' } }
+        }
+    };
+
+    new Chart(document.getElementById('monthlyChart'), {
+        type: 'bar',
+        data: {
+            labels: @Html.Raw(monthLabels),
+            datasets: [
+                { label: 'Income',   data: @Html.Raw(monthlyEarned), backgroundColor: '#2D6A4F', borderRadius: 6, barPercentage: .65, categoryPercentage: .7 },
+                { label: 'Expenses', data: @Html.Raw(monthlySpent),  backgroundColor: '#E89A3C', borderRadius: 6, barPercentage: .65, categoryPercentage: .7 }
+            ]
+        },
+        options: {
+            ...baseOpts,
+            scales: {
+                y: { beginAtZero: true, ticks: { color: '#6B7280', callback: v => '$' + v.toLocaleString() }, grid: { color: '#F1EFE8' } },
+                x: { ticks: { color: '#6B7280' }, grid: { display: false } }
+            }
+        }
+    });
+
+    @if (Model.TopSoldProducts.Any())
+    {
+        <text>
+        new Chart(document.getElementById('topSoldChart'), {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(topSoldLabels),
+                datasets: [{ data: @Html.Raw(topSoldValues), backgroundColor: COLORS, borderWidth: 2, borderColor: '#fff' }]
+            },
+            options: { ...baseOpts, plugins: { ...baseOpts.plugins, legend: { position: 'right', labels: baseOpts.plugins.legend.labels } }, cutout: '62%' }
+        });
+        </text>
+    }
+
+    @if (Model.TopBoughtProducts.Any())
+    {
+        <text>
+        new Chart(document.getElementById('topBoughtChart'), {
+            type: 'doughnut',
+            data: {
+                labels: @Html.Raw(topBoughtLabels),
+                datasets: [{ data: @Html.Raw(topBoughtValues), backgroundColor: COLORS, borderWidth: 2, borderColor: '#fff' }]
+            },
+            options: { ...baseOpts, plugins: { ...baseOpts.plugins, legend: { position: 'right', labels: baseOpts.plugins.legend.labels } }, cutout: '62%' }
+        });
+        </text>
+    }
+
+    @if (Model.RevenueByStore.Any())
+    {
+        <text>
+        new Chart(document.getElementById('storeChart'), {
             type: 'bar',
             data: {
-                labels: @Html.Raw(monthLabels),
-                datasets: [
-                    {
-                        label: 'Spent',
-                        data: @Html.Raw(monthlySpent),
-                        backgroundColor: 'rgba(245, 87, 108, 0.75)',
-                        borderColor: '#f5576c',
-                        borderWidth: 1,
-                        borderRadius: 6
-                    },
-                    {
-                        label: 'Earned',
-                        data: @Html.Raw(monthlyEarned),
-                        backgroundColor: 'rgba(79, 172, 254, 0.75)',
-                        borderColor: '#4facfe',
-                        borderWidth: 1,
-                        borderRadius: 6
-                    }
-                ]
+                labels: @Html.Raw(storeLabels),
+                datasets: [{ label: 'Revenue', data: @Html.Raw(storeValues), backgroundColor: COLORS, borderRadius: 6 }]
             },
             options: {
-                responsive: true,
-                plugins: { legend: { position: 'top' } },
+                ...baseOpts,
+                indexAxis: 'y',
+                plugins: { ...baseOpts.plugins, legend: { display: false } },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            callback: v => '$' + v.toLocaleString()
-                        }
-                    }
+                    x: { beginAtZero: true, ticks: { color: '#6B7280', callback: v => '$' + v.toLocaleString() }, grid: { color: '#F1EFE8' } },
+                    y: { ticks: { color: '#6B7280' }, grid: { display: false } }
                 }
             }
         });
-
-        @if (Model.TopSoldProducts.Any())
-        {
-            <text>
-            new Chart(document.getElementById('topSoldChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: @Html.Raw(topSoldLabels),
-                    datasets: [{
-                        data: @Html.Raw(topSoldValues),
-                        backgroundColor: COLORS,
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'right' },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => ' $' + ctx.parsed.toLocaleString()
-                            }
-                        }
-                    }
-                }
-            });
-            </text>
-        }
-
-        @if (Model.TopBoughtProducts.Any())
-        {
-            <text>
-            new Chart(document.getElementById('topBoughtChart'), {
-                type: 'doughnut',
-                data: {
-                    labels: @Html.Raw(topBoughtLabels),
-                    datasets: [{
-                        data: @Html.Raw(topBoughtValues),
-                        backgroundColor: COLORS,
-                        borderWidth: 2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: { position: 'right' },
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => ' $' + ctx.parsed.toLocaleString()
-                            }
-                        }
-                    }
-                }
-            });
-            </text>
-        }
-
-        @if (Model.RevenueByStore.Any())
-        {
-            <text>
-            new Chart(document.getElementById('storeChart'), {
-                type: 'bar',
-                data: {
-                    labels: @Html.Raw(storeLabels),
-                    datasets: [{
-                        label: 'Revenue',
-                        data: @Html.Raw(storeValues),
-                        backgroundColor: COLORS,
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    responsive: true,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: {
-                            beginAtZero: true,
-                            ticks: { callback: v => '$' + v.toLocaleString() }
-                        }
-                    }
-                }
-            });
-            </text>
-        }
-    </script>
-
-</body>
-</html>
+        </text>
+    }
+</script>
+}

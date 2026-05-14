@@ -25,10 +25,11 @@ namespace Accounting_Software.Service
                 SoldDate = transactionHistoryViewModel.SoldDate,
                 Description = transactionHistoryViewModel.Description,
                 Mass = transactionHistoryViewModel.Mass,
-                unitOfmass = transactionHistoryViewModel.unitOfmass,  
+                unitOfmass = transactionHistoryViewModel.unitOfmass,
                 typeofAction = transactionHistoryViewModel.typeofAction,
                 StoreName = transactionHistoryViewModel.StoreName
             };
+            _transactionHistoryRepository.Add(transactionHistory);
         }
 
         public void Delete(int id)

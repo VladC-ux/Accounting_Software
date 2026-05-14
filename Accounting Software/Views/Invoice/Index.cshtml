@@ -1,0 +1,195 @@
+@using System.Globalization
+@model IEnumerable<Accounting_Software.ViewModel.InvoiceViewModel>
+@{
+    Layout = "_FintegraLayout";
+    var inv = CultureInfo.InvariantCulture;
+    var enCulture = new CultureInfo("en-US");
+    var count = Model?.Count() ?? 0;
+    var totalRevenue = Model?.Sum(x => x.Total) ?? 0m;
+    var totalItems   = Model?.Sum(x => x.Items.Count) ?? 0;
+
+    string FmtMoney(decimal v) => v.ToString("N2", inv);
+
+    ViewBag.ActivePage = "invoices";
+    ViewBag.PageTitle = "Invoices";
+    ViewBag.PageHeading = "Invoices";
+    ViewBag.PageSubtitle = count + " invoice" + (count == 1 ? "" : "s") + " · Tracking all sales receipts";
+    ViewBag.HeaderActions =
+        "<div class='search-pill'>"
+        + "<i class='fas fa-search'></i>"
+        + "<input type='text' id='invSearch' placeholder='Search by number or buyer...' />"
+        + "</div>"
+        + "<a class='btn btn-primary' href='/Store/Index'><i class='fas fa-store'></i> Sell from Store</a>";
+}
+
+@section Styles {
+<style>
+    .search-pill{
+        display:inline-flex;align-items:center;gap:8px;
+        padding:9px 14px;background:var(--card);border:1px solid var(--border-soft);
+        border-radius:12px;box-shadow:var(--shadow-xs);min-width:280px;
+    }
+    .search-pill i{color:var(--muted);font-size:.85rem;}
+    .search-pill input{border:none;outline:none;background:transparent;flex:1;font-family:inherit;font-size:.85rem;color:var(--text);}
+    .search-pill input::placeholder{color:var(--muted-soft);}
+
+    .summary-row{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:22px;}
+    .stat{
+        background:var(--card);border-radius:var(--r-lg);padding:20px 22px;
+        box-shadow:var(--shadow-sm);position:relative;
+    }
+    .stat-ico{
+        width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+        font-size:1rem;margin-bottom:14px;
+    }
+    .stat-ico.green{background:var(--green-tint);color:var(--green);}
+    .stat-ico.orange{background:var(--orange-soft);color:var(--orange);}
+    .stat-ico.blue{background:var(--blue-soft);color:var(--blue);}
+    .stat-lbl{font-size:.74rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:600;}
+    .stat-val{font-size:1.55rem;font-weight:800;letter-spacing:-.02em;margin-top:6px;}
+    .stat-val.c-green{color:var(--green);}
+
+    .alert{
+        border-radius:12px;padding:12px 16px;font-size:.86rem;font-weight:500;
+        display:flex;align-items:center;gap:10px;margin-bottom:14px;
+    }
+    .alert.ok{background:var(--green-tint);color:var(--green);border:1px solid #BCDDC6;}
+    .alert.err{background:var(--red-soft);color:var(--red);border:1px solid #F4C5BD;}
+
+    .inv-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+    .inv-table th{
+        text-align:left;padding:12px 16px;font-size:.7rem;color:var(--muted);
+        text-transform:uppercase;letter-spacing:.05em;font-weight:700;
+        border-bottom:1px solid var(--border-soft);
+    }
+    .inv-table td{padding:14px 16px;border-bottom:1px solid var(--border-soft);}
+    .inv-table tr:last-child td{border-bottom:none;}
+    .inv-table tr:hover td{background:var(--green-soft);}
+    .inv-num{
+        font-family:'JetBrains Mono','Courier New',monospace;font-weight:700;
+        color:var(--green);background:var(--green-tint);
+        padding:4px 10px;border-radius:8px;font-size:.8rem;
+    }
+    .inv-num:hover{background:var(--green);color:#fff;}
+    .muted{color:var(--muted);}
+    .inv-total{font-weight:700;color:var(--green);font-variant-numeric:tabular-nums;text-align:right;}
+    .badge{
+        display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:99px;
+        font-size:.72rem;font-weight:700;
+    }
+    .badge.walk{background:var(--bg);color:var(--muted);}
+    .badge.named{background:var(--blue-soft);color:var(--blue);}
+    .a-act{
+        background:var(--green-tint);color:var(--green);border:none;cursor:pointer;
+        padding:7px 11px;border-radius:9px;font-size:.76rem;font-weight:600;
+        display:inline-flex;align-items:center;gap:5px;transition:all .15s;
+    }
+    .a-act:hover{background:var(--green);color:#fff;}
+    .a-act.pdf{background:var(--red-soft);color:var(--red);}
+    .a-act.pdf:hover{background:var(--red);color:#fff;}
+
+    @@media(max-width:900px){
+        .summary-row{grid-template-columns:1fr;}
+    }
+</style>
+}
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert ok"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert err"><i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
+}
+
+<div class="summary-row">
+    <div class="stat">
+        <div class="stat-ico blue"><i class="far fa-file-lines"></i></div>
+        <div class="stat-lbl">Total Invoices</div>
+        <div class="stat-val">@count</div>
+    </div>
+    <div class="stat">
+        <div class="stat-ico green"><i class="fas fa-coins"></i></div>
+        <div class="stat-lbl">Total Revenue</div>
+        <div class="stat-val c-green">@FmtMoney(totalRevenue)</div>
+    </div>
+    <div class="stat">
+        <div class="stat-ico orange"><i class="fas fa-box"></i></div>
+        <div class="stat-lbl">Items Sold</div>
+        <div class="stat-val">@totalItems</div>
+    </div>
+</div>
+
+@if (Model != null && Model.Any())
+{
+    <div class="card" style="padding:0;">
+        <table class="inv-table" id="invTable">
+            <thead>
+                <tr>
+                    <th>Number</th>
+                    <th>Date</th>
+                    <th>Store</th>
+                    <th>Buyer</th>
+                    <th style="text-align:right;">Items</th>
+                    <th style="text-align:right;">Total</th>
+                    <th style="text-align:right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var i in Model)
+                {
+                    <tr data-search="@((i.Number + " " + (i.BuyerName ?? "")).ToLower())">
+                        <td><a class="inv-num" asp-action="Details" asp-route-id="@i.Id">@i.Number</a></td>
+                        <td class="muted">@i.IssuedAt.ToString("dd MMM yyyy HH:mm", enCulture)</td>
+                        <td>@(i.StoreName ?? "—")</td>
+                        <td>
+                            @if (!string.IsNullOrWhiteSpace(i.BuyerName))
+                            {
+                                <span class="badge named"><i class="fas fa-user"></i> @i.BuyerName</span>
+                            }
+                            else
+                            {
+                                <span class="badge walk"><i class="fas fa-walking"></i> Walk-in</span>
+                            }
+                        </td>
+                        <td style="text-align:right;">@i.Items.Count</td>
+                        <td class="inv-total">@FmtMoney(i.Total)</td>
+                        <td style="text-align:right;white-space:nowrap;">
+                            <a class="a-act" asp-action="Details" asp-route-id="@i.Id" title="View details">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <a class="a-act pdf" asp-action="Pdf" asp-route-id="@i.Id" title="Download PDF" target="_blank">
+                                <i class="fas fa-file-pdf"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="empty-ico"><i class="far fa-file-lines"></i></div>
+        <h4>No invoices yet</h4>
+        <p>Sell something from a Store to create your first invoice.</p>
+        <a class="btn btn-primary" asp-controller="Store" asp-action="Index"><i class="fas fa-store"></i> Open Stores</a>
+    </div>
+}
+
+@section Scripts {
+<script>
+    var input = document.getElementById('invSearch');
+    if (input) {
+        input.addEventListener('input', function () {
+            var q = this.value.toLowerCase().trim();
+            document.querySelectorAll('#invTable tbody tr').forEach(function (tr) {
+                var s = tr.getAttribute('data-search') || '';
+                tr.style.display = s.indexOf(q) >= 0 ? '' : 'none';
+            });
+        });
+    }
+</script>
+}
