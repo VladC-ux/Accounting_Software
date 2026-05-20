@@ -83,6 +83,9 @@
 
     .warn-box{padding:14px 16px;background:var(--orange-soft);color:#7A4A12;border-radius:12px;font-size:.86rem;display:flex;gap:8px;align-items:flex-start;}
     .warn-box i{color:var(--orange);margin-top:2px;}
+
+    .stock-banner{background:var(--green-soft);border:1px solid var(--green-tint);border-radius:12px;padding:11px 14px;margin-bottom:14px;font-size:.84rem;color:var(--green-dark);display:flex;align-items:center;gap:9px;}
+    .stock-banner i{color:var(--green);}
 </style>
 }
 
@@ -207,6 +210,9 @@
                     <input type="hidden" name="StoreId" value="@storeId" />
                     <input type="hidden" name="StoreName" value="@storeName" />
                     <input type="hidden" name="ProductName" id="qa_ProductName" />
+                    @* Единица и масса наследуются от товара — пользователь их не выбирает *@
+                    <input type="hidden" name="unitOfmass" id="qa_Unit" value="0" />
+                    <input type="hidden" name="Mass" id="qa_Mass" value="0" />
 
                     <div class="fg">
                         <label for="qa_ProductId">Product</label>
@@ -219,6 +225,7 @@
                                         data-price="@p.Price"
                                         data-mass="@p.Mass"
                                         data-unit="@((int)p.unitOfmass)"
+                                        data-unitname="@p.unitOfmass"
                                         data-stock="@p.Count"
                                         data-desc="@p.Description"
                                         data-seller="@p.SellerName">
@@ -228,28 +235,20 @@
                         </select>
                     </div>
 
+                    <div class="stock-banner" id="qa_StockBanner" style="display:none;">
+                        <i class="fas fa-warehouse"></i>
+                        <span id="qa_StockText"></span>
+                    </div>
+
                     <div class="fg-row">
                         <div class="fg">
                             <label for="qa_Price">Price</label>
                             <input type="number" step="0.01" min="0.01" name="Price" id="qa_Price" required />
                         </div>
                         <div class="fg">
-                            <label for="qa_Count">Quantity</label>
-                            <input type="number" min="1" name="Count" id="qa_Count" required />
+                            <label for="qa_Count" id="qa_CountLabel">Quantity</label>
+                            <input type="number" min="1" name="Count" id="qa_Count" required oninput="updateTransfer()" />
                             <div class="hint" id="qa_StockHint"></div>
-                        </div>
-                        <div class="fg">
-                            <label for="qa_Mass">Mass</label>
-                            <input type="number" min="0" name="Mass" id="qa_Mass" />
-                        </div>
-                        <div class="fg">
-                            <label for="qa_Unit">Unit</label>
-                            <select name="unitOfmass" id="qa_Unit">
-                                @foreach (var unit in Enum.GetValues(typeof(Accounting_Software.Enums.Unit_of_mass)))
-                                {
-                                    <option value="@((int)unit)">@unit</option>
-                                }
-                            </select>
                         </div>
                     </div>
 
@@ -272,22 +271,80 @@
 <script>
     function openQuickAdd(){document.getElementById('quickAddModal').classList.add('open');}
     function closeQuickAdd(){document.getElementById('quickAddModal').classList.remove('open');}
+
+    // 0 = Pcs (штучный товар). Для него масса не нужна.
+    function isPieceUnit(unitVal){ return unitVal === '0' || unitVal === 0; }
+
     function fillFromProduct(){
         var sel=document.getElementById('qa_ProductId');
         var opt=sel.options[sel.selectedIndex];
         if(!opt||!opt.value){return;}
-        document.getElementById('qa_ProductName').value=opt.dataset.name||'';
-        document.getElementById('qa_Price').value=opt.dataset.price||'';
-        document.getElementById('qa_Mass').value=opt.dataset.mass||'';
-        var unit=opt.dataset.unit;
-        if(unit){document.getElementById('qa_Unit').value=unit;}
-        document.getElementById('qa_Description').value=opt.dataset.desc||'';
-        var stock=opt.dataset.stock||'0';
-        var c=document.getElementById('qa_Count');
-        c.max=stock;
-        if(!c.value||parseInt(c.value)>parseInt(stock)){c.value=stock>0?1:0;}
-        document.getElementById('qa_StockHint').textContent='Available stock: '+stock;
+
+        document.getElementById('qa_ProductName').value = opt.dataset.name || '';
+        document.getElementById('qa_Price').value = opt.dataset.price || '';
+        document.getElementById('qa_Description').value = opt.dataset.desc || '';
+
+        // Единица и масса наследуются от товара (скрытые поля)
+        var unit = opt.dataset.unit || '0';
+        var unitName = opt.dataset.unitname || 'Pcs';
+        var mass = parseInt(opt.dataset.mass) || 0;
+        document.getElementById('qa_Unit').value = unit;
+        document.getElementById('qa_Mass').value = isPieceUnit(unit) ? 0 : mass;
+
+        var stock = parseInt(opt.dataset.stock) || 0;
+        var c = document.getElementById('qa_Count');
+        c.max = stock;
+        if(!c.value || parseInt(c.value) > stock){ c.value = stock > 0 ? 1 : 0; }
+        document.getElementById('qa_CountLabel').textContent = isPieceUnit(unit) ? 'Quantity (pcs)' : 'Quantity (units)';
+
+        // Баннер с остатком на складе в правильных единицах
+        var banner = document.getElementById('qa_StockBanner');
+        var stockText = document.getElementById('qa_StockText');
+        banner.style.display = 'flex';
+        if(isPieceUnit(unit)){
+            stockText.innerHTML = 'In stock: <strong>' + stock + ' pcs</strong>';
+        } else {
+            var totalKg = stock * mass;
+            stockText.innerHTML = 'In stock: <strong>' + stock + ' units &times; ' + mass + ' ' + unitName +
+                                  ' = ' + totalKg + ' ' + unitName + '</strong>';
+        }
+        updateTransfer();
     }
+
+    // Показывает, сколько фактически переносится (для весовых — в единицах массы)
+    function updateTransfer(){
+        var sel=document.getElementById('qa_ProductId');
+        var opt=sel.options[sel.selectedIndex];
+        var hint=document.getElementById('qa_StockHint');
+        if(!opt||!opt.value){ hint.textContent=''; return; }
+        var unit = opt.dataset.unit || '0';
+        var unitName = opt.dataset.unitname || 'Pcs';
+        var mass = parseInt(opt.dataset.mass) || 0;
+        var count = parseInt(document.getElementById('qa_Count').value) || 0;
+        if(isPieceUnit(unit)){
+            hint.textContent = 'Adding ' + count + ' pcs';
+        } else {
+            hint.textContent = 'Adding ' + count + ' units = ' + (count * mass) + ' ' + unitName;
+        }
+    }
+
+    function openQuickAddFor(productId){
+        var sel=document.getElementById('qa_ProductId');
+        if(!sel){return;}
+        sel.value=String(productId);
+        if(sel.value===String(productId)){
+            fillFromProduct();
+            openQuickAdd();
+        }
+    }
+
     document.addEventListener('keydown',function(e){if(e.key==='Escape')closeQuickAdd();});
+
+    // Если пришли из Browse Products (?add=<productId>) — сразу открываем модалку с этим товаром
+    (function(){
+        var params=new URLSearchParams(window.location.search);
+        var add=params.get('add');
+        if(add){ openQuickAddFor(add); }
+    })();
 </script>
 }

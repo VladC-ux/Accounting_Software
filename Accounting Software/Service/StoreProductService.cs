@@ -41,6 +41,9 @@ namespace Accounting_Software.Service
             if (storeProduct.Count > product.Count)
                 throw new InvalidOperationException($"Not enough stock. Available: {product.Count}, Requested: {storeProduct.Count}");
 
+            if (storeProduct.unitOfmass == Unit_of_mass.Pcs)
+                storeProduct.Mass = 0;
+
             StoreProduct st = new StoreProduct
             {
                 Id = storeProduct.Id,

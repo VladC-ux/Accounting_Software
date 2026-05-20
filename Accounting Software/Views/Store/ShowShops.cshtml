@@ -54,7 +54,7 @@
     <div class="store-grid">
         @foreach (var store in Model)
         {
-            <a class="store-pick" href="@Url.Action("AddProductToStore", "Store", new { storeId = store.StoreId, productId = ViewBag.ProductId })">
+            <a class="store-pick" href="@Url.Action("ShowStoreProduct", "Store", new { storeId = store.StoreId, add = ViewBag.ProductId })">
                 <div class="ic"><i class="fas fa-store"></i></div>
                 <div class="name">@store.StoreName</div>
                 <div class="arrow"><i class="fas fa-arrow-right"></i></div>

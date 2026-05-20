@@ -85,19 +85,16 @@
 
                 <div class="fg">
                     <label asp-for="Count">Quantity</label>
-                    <input asp-for="Count" type="number" min="1" />
+                    <input asp-for="Count" type="number" min="1" max="@ViewBag.AvailableStock" />
+                    <small style="display:block;color:var(--muted);font-size:.74rem;margin-top:5px;">
+                        <i class="fas fa-warehouse"></i> In stock: <strong>@ViewBag.AvailableStock</strong>
+                    </small>
                     <span asp-validation-for="Count" class="form-error"></span>
                 </div>
 
                 <div class="fg">
-                    <label asp-for="Mass">Mass</label>
-                    <input asp-for="Mass" type="number" min="0" />
-                    <span asp-validation-for="Mass" class="form-error"></span>
-                </div>
-
-                <div class="fg">
                     <label asp-for="unitOfmass">Unit</label>
-                    <select asp-for="unitOfmass">
+                    <select asp-for="unitOfmass" id="unitSelect">
                         <option value="0">Select Unit</option>
                         @foreach (var unit in Enum.GetValues(typeof(Accounting_Software.Enums.Unit_of_mass)))
                         {
@@ -105,6 +102,12 @@
                         }
                     </select>
                     <span asp-validation-for="unitOfmass" class="form-error"></span>
+                </div>
+
+                <div class="fg" id="massGroup">
+                    <label asp-for="Mass">Mass</label>
+                    <input asp-for="Mass" type="number" min="0" id="massInput" data-default="@Model.Mass" />
+                    <span asp-validation-for="Mass" class="form-error"></span>
                 </div>
             </div>
 
@@ -130,4 +133,30 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+<script>
+    (function () {
+        const unitSelect = document.getElementById('unitSelect');
+        const massGroup = document.getElementById('massGroup');
+        const massInput = document.getElementById('massInput');
+        const defaultMass = massInput.getAttribute('data-default') || '0';
+
+        // "Pcs" (штуки) и "Select Unit" имеют value "0" — масса для них не нужна
+        function toggleMass() {
+            const needsMass = unitSelect.value !== '0' && unitSelect.value !== 'Pcs';
+            if (needsMass) {
+                massGroup.style.display = '';
+                // если поле пустое или 0 — подставляем массу по умолчанию из товара
+                if (!massInput.value || massInput.value === '0') {
+                    massInput.value = defaultMass;
+                }
+            } else {
+                massGroup.style.display = 'none';
+                massInput.value = 0; // штучный товар — масса не учитывается
+            }
+        }
+
+        unitSelect.addEventListener('change', toggleMass);
+        toggleMass();
+    })();
+</script>
 }

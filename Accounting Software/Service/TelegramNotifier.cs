@@ -36,7 +36,7 @@ namespace Accounting_Software.Service
             }
         }
 
-        public async Task NotifySaleAsync(int userId, string productName, decimal price, string? storeName)
+        public async Task NotifySaleAsync(int userId, string productName, decimal unitPrice, int count, ushort mass, Accounting_Software.Enums.Unit_of_mass unitOfMass, decimal total, string? storeName)
         {
             if (_bot == null) return;
 
@@ -45,11 +45,19 @@ namespace Accounting_Software.Service
             var user = userRepo.GetUserById(userId);
             if (user?.TelegramChatId == null || !user.TelegramNotifySales) return;
 
+            // Для весовых товаров показываем общую массу: кол-во × масса единицы
+            bool isWeight = unitOfMass != Accounting_Software.Enums.Unit_of_mass.Pcs && mass > 0;
+            string quantityLine = isWeight
+                ? $"🔢 <b>Quantity:</b> {count} × {mass} {unitOfMass} = {count * mass} {unitOfMass}\n"
+                : $"🔢 <b>Quantity:</b> {count} pcs\n";
+
             var store = string.IsNullOrEmpty(storeName) ? "" : $"\n🏪 <b>Store:</b> {Escape(storeName)}";
             var text =
                 "🟢 <b>New sale</b>\n" +
                 $"📦 <b>Product:</b> {Escape(productName)}\n" +
-                $"💵 <b>Amount:</b> {price:N2}{store}\n" +
+                quantityLine +
+                $"💰 <b>Unit price:</b> {unitPrice:N2}\n" +
+                $"💵 <b>Total:</b> {total:N2}{store}\n" +
                 $"🕒 {DateTime.Now:dd.MM.yyyy HH:mm}";
 
             await SendMessageAsync(user.TelegramChatId.Value, text);

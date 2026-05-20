@@ -166,6 +166,9 @@ namespace Accounting_Software.Controllers
                 Mass = product.Mass,
             };
 
+            // Остаток на складе — используется в форме для ограничения количества (max)
+            ViewBag.AvailableStock = product.Count;
+
             return View(viewModel);
         }
 
@@ -208,6 +211,35 @@ namespace Accounting_Software.Controllers
                 TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction("ShowStoreProduct", new { storeId = model.StoreId });
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult RemoveOutOfStockProduct(int productId, int storeId)
+        {
+            try
+            {
+                var product = _productService.GetById(productId);
+                if (product == null)
+                {
+                    TempData["ErrorMessage"] = "Product not found.";
+                }
+                else if (product.Count > 0)
+                {
+                    // Защита: удаляем только реально закончившиеся товары
+                    TempData["ErrorMessage"] = "Only out-of-stock products can be removed.";
+                }
+                else
+                {
+                    _productService.Delete(product);
+                    TempData["SuccessMessage"] = $"\"{product.Name}\" removed from inventory.";
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            return RedirectToAction("PickProductForStore", new { storeId });
         }
 
         [HttpGet]

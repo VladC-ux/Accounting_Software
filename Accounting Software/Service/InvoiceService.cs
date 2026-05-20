@@ -122,7 +122,7 @@ namespace Accounting_Software.Service
                     StoreName = sp.StoreName
                 });
 
-                _ = _telegramNotifier.NotifySaleAsync(userId, sp.ProductName, sp.Price, sp.StoreName);
+                _ = _telegramNotifier.NotifySaleAsync(userId, sp.ProductName, sp.Price, count, sp.Mass, sp.Unitofmass, lineTotal, sp.StoreName);
             }
 
             user.Balance += invoiceTotalForBalance + Math.Round(invoiceTotalForBalance * invoice.TaxRate / 100m, 2);
