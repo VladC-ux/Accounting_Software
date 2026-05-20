@@ -8,84 +8,110 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Setup Login – Accounting Software</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
+    <title>Setup Login — StockFlow</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
-        * { box-sizing: border-box; }
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', sans-serif;
-            padding: 30px 16px;
+        :root{
+            --green:#2D6A4F; --green-dark:#1F4D37; --green-light:#52B788; --green-tint:#E8F0E5;
+            --green-soft:#F1F6EE;
+            --bg:#F7F4EC; --card:#FFFFFF;
+            --text:#1A2B23; --muted:#6B7280;
+            --border:#E5E7EB; --border-soft:#F1EFE8;
+            --red:#D9534F; --red-soft:#FBE5E1;
+            --orange:#E89A3C; --orange-soft:#FBE9CF;
         }
-        .auth-card {
-            background: #fff;
-            border-radius: 18px;
-            padding: 44px 40px 36px;
-            width: 100%;
-            max-width: 440px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{
+            background:var(--bg);min-height:100vh;display:flex;
+            align-items:center;justify-content:center;
+            font-family:'Manrope',system-ui,sans-serif;color:var(--text);
+            padding:30px 16px;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(45,106,79,0.10), transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(82,183,136,0.10), transparent 45%);
         }
-        .auth-logo { text-align: center; margin-bottom: 28px; }
-        .auth-logo .icon-wrap {
-            width: 64px; height: 64px; border-radius: 16px;
-            background: linear-gradient(135deg, #fccb90, #d57eeb);
-            display: inline-flex; align-items: center; justify-content: center; margin-bottom: 14px;
+        .auth-card{
+            background:var(--card);border-radius:22px;padding:40px 36px 32px;
+            width:100%;max-width:440px;
+            box-shadow:0 22px 60px rgba(31,41,55,0.10),0 4px 14px rgba(31,41,55,0.04);
+            border:1px solid var(--border-soft);
         }
-        .auth-logo .icon-wrap i { font-size: 1.8rem; color: #fff; }
-        .auth-logo h1 { font-size: 1.4rem; font-weight: 700; color: #1a1a2e; margin: 0; }
-        .auth-logo p { color: #6c757d; font-size: 0.9rem; margin: 4px 0 0; }
-        .setup-badge {
-            background: linear-gradient(135deg, #fccb90, #d57eeb);
-            color: #fff; border-radius: 20px; padding: 4px 14px;
-            font-size: 0.75rem; font-weight: 700; display: inline-block;
-            margin-bottom: 6px; letter-spacing: 0.5px;
+        .auth-logo{text-align:center;margin-bottom:24px;}
+        .setup-badge{
+            background:linear-gradient(135deg,var(--orange),#C9762F);
+            color:#fff;border-radius:20px;padding:4px 14px;
+            font-size:0.72rem;font-weight:700;display:inline-block;
+            margin-bottom:8px;letter-spacing:0.5px;
         }
-        .form-group label { font-weight: 600; font-size: 0.88rem; color: #1a1a2e; margin-bottom: 6px; }
-        .form-control {
-            border-radius: 10px; border: 1.5px solid #e0e0e0;
-            padding: 11px 14px; font-size: 0.95rem; transition: border-color 0.2s;
+        .auth-logo .icon-wrap{
+            width:64px;height:64px;border-radius:18px;
+            background:linear-gradient(135deg,var(--green),var(--green-light));
+            display:inline-flex;align-items:center;justify-content:center;margin-bottom:14px;
+            box-shadow:0 8px 20px rgba(45,106,79,0.30);
         }
-        .form-control:focus { border-color: #d57eeb; box-shadow: 0 0 0 3px rgba(213,126,235,0.15); }
-        .input-icon { position: relative; }
-        .input-icon i { position: absolute; left: 13px; top: 50%; transform: translateY(-50%); color: #aaa; font-size: 0.9rem; }
-        .input-icon .form-control { padding-left: 36px; }
-        .btn-auth {
-            background: linear-gradient(135deg, #fccb90, #d57eeb);
-            color: #fff; border: none; border-radius: 10px; padding: 12px;
-            font-size: 1rem; font-weight: 700; width: 100%; transition: opacity 0.2s, transform 0.15s;
+        .auth-logo .icon-wrap i{font-size:1.8rem;color:#fff;}
+        .auth-logo h1{font-size:1.4rem;font-weight:800;color:var(--text);letter-spacing:-.02em;}
+        .auth-logo p{color:var(--muted);font-size:0.88rem;margin:4px 0 0;}
+
+        .note-text{
+            background:var(--orange-soft);border:1px solid var(--orange);
+            border-radius:12px;padding:12px 14px;
+            font-size:0.84rem;color:#7A4A12;margin-bottom:20px;
+            display:flex;gap:8px;align-items:flex-start;
         }
-        .btn-auth:hover { opacity: 0.9; transform: translateY(-1px); color: #fff; }
-        .text-danger { font-size: 0.82rem; }
-        .note-text {
-            background: #fff8e1; border-radius: 10px; padding: 12px 14px;
-            font-size: 0.85rem; color: #f57f17; margin-bottom: 22px;
+        .note-text i{margin-top:2px;color:var(--orange);}
+
+        .form-group{margin-bottom:16px;}
+        .form-group label{
+            display:block;font-weight:600;font-size:0.78rem;
+            color:var(--muted);margin-bottom:6px;
+            text-transform:uppercase;letter-spacing:.04em;
         }
+        .input-icon{position:relative;}
+        .input-icon i{
+            position:absolute;left:14px;top:50%;transform:translateY(-50%);
+            color:var(--muted);font-size:0.9rem;
+        }
+        .form-control{
+            width:100%;border-radius:12px;border:1.5px solid var(--border);
+            padding:12px 14px 12px 40px;font-size:0.92rem;font-family:inherit;
+            background:#fff;color:var(--text);transition:all .15s;
+        }
+        .form-control:focus{
+            outline:none;border-color:var(--green);
+            box-shadow:0 0 0 4px rgba(45,106,79,0.12);
+        }
+        .text-muted{font-size:0.74rem;color:var(--muted);margin-top:4px;display:block;}
+
+        .btn-auth{
+            background:var(--green);color:#fff;border:none;border-radius:12px;
+            padding:13px;font-size:0.95rem;font-weight:700;width:100%;
+            cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+            box-shadow:0 6px 16px rgba(45,106,79,0.28);
+            transition:all .15s;
+        }
+        .btn-auth:hover{background:var(--green-dark);transform:translateY(-1px);box-shadow:0 9px 22px rgba(45,106,79,0.35);}
+
+        .text-danger{color:var(--red);font-size:0.78rem;display:block;margin-top:4px;}
     </style>
 </head>
 <body>
     <div class="auth-card">
         <div class="auth-logo">
-            <div style="text-align:center;margin-bottom:6px;">
-                <span class="setup-badge">ACCOUNT SETUP REQUIRED</span>
-            </div>
+            <span class="setup-badge">ACCOUNT SETUP REQUIRED</span>
             <div class="icon-wrap"><i class="fas fa-key"></i></div>
             <h1>Set Up Your Login</h1>
             <p>Your account needs a password and email</p>
         </div>
 
         <div class="note-text">
-            <i class="fas fa-exclamation-triangle mr-1"></i>
-            Your account was created without login credentials. Please set them up now.
+            <i class="fas fa-exclamation-triangle"></i>
+            <span>Your account was created without login credentials. Please set them up now.</span>
         </div>
 
         <form asp-action="SetupAuth" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3" style="font-size:0.88rem;"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom:12px;"></div>
 
             <div class="form-group">
                 <label>Your Name</label>
@@ -97,7 +123,7 @@
             </div>
 
             <div class="form-group">
-                <label>Email <span style="color:#f5576c;">*</span></label>
+                <label>Email</label>
                 <div class="input-icon">
                     <i class="fas fa-envelope"></i>
                     <input asp-for="Email" class="form-control" placeholder="your@email.com" autocomplete="email" />
@@ -124,8 +150,8 @@
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
 
-            <button type="submit" class="btn btn-auth">
-                <i class="fas fa-check mr-2"></i>Save &amp; Continue
+            <button type="submit" class="btn-auth">
+                <i class="fas fa-check"></i> Save &amp; Continue
             </button>
         </form>
     </div>

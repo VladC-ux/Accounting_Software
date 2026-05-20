@@ -1,248 +1,204 @@
 @model List<Accounting_Software.ViewModel.StoreProductViewModel>
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
     var storeName = (Model?.FirstOrDefault()?.StoreName) ?? (ViewBag.StoreName as string);
     var storeId = (Model?.FirstOrDefault()?.StoreId) ?? (ViewBag.StoreId is int sid ? sid : 0);
     var allProducts = ViewBag.AllProducts as List<Accounting_Software.ViewModel.ProductViewModel>
                       ?? new List<Accounting_Software.ViewModel.ProductViewModel>();
+    var count = Model?.Count ?? 0;
+    ViewBag.ActivePage = "stores";
+    ViewBag.PageTitle = $"{storeName ?? "Store"} Products";
+    ViewBag.PageHeading = $"{storeName ?? "Store"} Products";
+    ViewBag.PageSubtitle = $"{count} item{(count == 1 ? "" : "s")} in stock";
+    ViewBag.HeaderActions = $@"<button type='button' class='btn btn-primary' onclick='openQuickAdd()'><i class='fas fa-bolt'></i> Quick Add</button>"
+                          + $@"<a class='btn btn-ghost' href='/Store/PickProductForStore?storeId={storeId}'><i class='fas fa-th-large'></i> Browse Products</a>";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@(storeName ?? "Store") Products — Accounting Software</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;min-height:100vh;}
-        .topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;}
-        .brand{font-size:0.92rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
-        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
-        .top-nav{display:flex;gap:2px;margin-left:32px;}
-        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;}
-        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
-        .tn.active{color:#2563eb;font-weight:600;}
-        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
 
-        .wrap{max-width:1300px;margin:32px auto;padding:0 24px;}
-        .back-link{color:#6b7280;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:14px;}
-        .back-link:hover{color:#2563eb;text-decoration:none;}
+@section Styles {
+<style>
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
 
-        .pg-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:14px;}
-        .pg-title h1{font-size:1.35rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:10px;}
-        .pg-title .sub{font-size:0.82rem;color:#9ca3af;margin-top:3px;}
+    .alert-box{
+        padding:12px 16px;border-radius:12px;margin-bottom:16px;font-size:.86rem;font-weight:500;
+        display:flex;align-items:center;gap:10px;
+    }
+    .alert-ok{background:var(--green-soft);color:var(--green-dark);border:1px solid var(--green-tint);}
+    .alert-err{background:var(--red-soft);color:#7A2322;border:1px solid #F1B3B0;}
 
-        .alert-box{padding:12px 16px;border-radius:10px;margin-bottom:18px;font-size:0.85rem;font-weight:500;display:flex;align-items:center;gap:8px;}
-        .alert-ok{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
-        .alert-err{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
+    .tbl-wrap{overflow-x:auto;}
+    table.s-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+    .s-table th{
+        background:var(--green-soft);color:var(--muted);font-weight:700;
+        font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;
+        padding:11px 14px;text-align:left;border-bottom:1px solid var(--border-soft);white-space:nowrap;
+    }
+    .s-table td{padding:14px;border-bottom:1px solid var(--border-soft);color:var(--text);vertical-align:middle;}
+    .s-table tr:last-child td{border-bottom:none;}
+    .s-table tbody tr:hover td{background:var(--green-soft);}
 
-        .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;}
-        .tbl-wrap{overflow-x:auto;}
-        table{width:100%;border-collapse:collapse;font-size:0.85rem;}
-        thead th{background:#f9fafb;color:#374151;font-weight:600;font-size:0.72rem;text-transform:uppercase;letter-spacing:.5px;padding:12px 14px;text-align:left;border-bottom:1px solid #e5e7eb;white-space:nowrap;}
-        tbody td{padding:14px;border-bottom:1px solid #f3f4f6;color:#374151;vertical-align:middle;}
-        tbody tr:last-child td{border-bottom:none;}
-        tbody tr:hover{background:#fafbfc;}
+    .product-name{font-weight:700;color:var(--text);}
+    .product-desc{font-size:.76rem;color:var(--muted);margin-top:2px;}
+    .price{font-weight:700;color:var(--green);white-space:nowrap;}
+    .count-pill{display:inline-flex;align-items:center;background:var(--green-tint);color:var(--green);padding:3px 10px;border-radius:99px;font-size:.78rem;font-weight:700;}
+    .count-pill.low{background:var(--orange-soft);color:var(--orange);}
+    .count-pill.out{background:var(--red-soft);color:var(--red);}
 
-        .product-name{font-weight:600;color:#111827;}
-        .product-desc{font-size:0.78rem;color:#9ca3af;margin-top:2px;}
-        .price{font-weight:700;color:#16a34a;white-space:nowrap;}
-        .count-pill{display:inline-flex;align-items:center;background:#eff6ff;color:#1d4ed8;padding:3px 10px;border-radius:99px;font-size:0.78rem;font-weight:600;}
-        .count-pill.low{background:#fef3c7;color:#92400e;}
-        .count-pill.out{background:#fee2e2;color:#991b1b;}
+    .row-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;align-items:center;}
+    .row-actions form{display:inline;}
+    .btn-icon-sm{padding:7px 12px;border-radius:10px;font-size:.78rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;border:none;cursor:pointer;transition:all .15s;}
+    .btn-sale{background:var(--green);color:#fff;}
+    .btn-sale:hover{background:var(--green-dark);color:#fff;text-decoration:none;}
+    .btn-sale:disabled{background:var(--border);color:var(--muted-soft);cursor:not-allowed;}
+    .btn-edit{background:var(--orange-soft);color:var(--orange);}
+    .btn-edit:hover{background:var(--orange);color:#fff;text-decoration:none;}
+    .btn-del{background:var(--red-soft);color:var(--red);}
+    .btn-del:hover{background:var(--red);color:#fff;}
+    .qty-input{width:64px;padding:6px 8px;border:1.5px solid var(--border);border-radius:8px;font-size:.78rem;font-family:inherit;text-align:right;}
+    .qty-input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(45,106,79,.12);}
+    .qty-input:disabled{background:var(--green-soft);color:var(--muted-soft);cursor:not-allowed;}
+    .unit-label{font-size:.74rem;color:var(--muted);font-weight:600;margin-right:2px;}
 
-        .row-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;}
-        .row-actions form{display:inline;}
-        .btn-icon{padding:7px 12px;border-radius:7px;font-size:0.78rem;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;border:none;cursor:pointer;transition:all .15s;}
-        .btn-sale{background:#16a34a;color:#fff;}
-        .btn-sale:hover{background:#15803d;color:#fff;text-decoration:none;}
-        .btn-edit{background:#f3f4f6;color:#374151;}
-        .btn-edit:hover{background:#e5e7eb;color:#111827;text-decoration:none;}
-        .btn-del{background:#fff;color:#dc2626;border:1px solid #fca5a5;}
-        .btn-del:hover{background:#fef2f2;color:#dc2626;}
-        .qty-input{width:64px;padding:6px 8px;border:1px solid #d1d5db;border-radius:6px;font-size:0.78rem;font-family:inherit;text-align:right;}
-        .qty-input:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 2px rgba(37,99,235,.1);}
-        .qty-input:disabled{background:#f3f4f6;color:#9ca3af;cursor:not-allowed;}
-        .unit-label{font-size:0.74rem;color:#6b7280;font-weight:500;margin-right:2px;}
+    .empty{padding:48px;text-align:center;color:var(--muted);}
+    .empty .ic{width:64px;height:64px;border-radius:50%;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-size:1.4rem;margin:0 auto 12px;}
 
-        .empty{padding:48px;text-align:center;color:#9ca3af;}
-        .empty i{font-size:2rem;display:block;margin-bottom:10px;color:#cbd5e1;}
+    .modal-backdrop{position:fixed;inset:0;background:rgba(26,43,35,.55);display:none;align-items:flex-start;justify-content:center;z-index:1000;overflow-y:auto;padding:40px 16px;}
+    .modal-backdrop.open{display:flex;}
+    .modal-card{background:var(--card);border-radius:var(--r-lg);width:100%;max-width:560px;box-shadow:0 22px 60px rgba(0,0,0,.25);overflow:hidden;}
+    .modal-hd{padding:18px 22px;border-bottom:1px solid var(--border-soft);display:flex;align-items:center;justify-content:space-between;}
+    .modal-hd h2{font-size:1.05rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;}
+    .modal-close{background:none;border:none;color:var(--muted);font-size:1.1rem;cursor:pointer;padding:4px 10px;border-radius:8px;}
+    .modal-close:hover{background:var(--green-soft);color:var(--text);}
+    .modal-body{padding:22px;}
+    .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid var(--border-soft);}
 
-        .btn{padding:9px 18px;border-radius:8px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
-        .btn-primary{background:#2563eb;color:#fff;}
-        .btn-primary:hover{background:#1d4ed8;color:#fff;text-decoration:none;}
-        .btn-ghost{background:#fff;color:#374151;border:1px solid #e5e7eb;}
-        .btn-ghost:hover{background:#f9fafb;color:#111827;text-decoration:none;}
+    .fg{margin-bottom:14px;}
+    .fg label{display:block;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
+    .fg input, .fg select, .fg textarea{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:10px;font-size:.88rem;font-family:inherit;background:#fff;color:var(--text);transition:all .15s;}
+    .fg input:focus, .fg select:focus, .fg textarea:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(45,106,79,.12);}
+    .fg textarea{resize:vertical;min-height:64px;}
+    .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+    @@media(max-width:480px){.fg-row{grid-template-columns:1fr;}}
+    .hint{font-size:.72rem;color:var(--muted);margin-top:4px;}
 
-        .modal-backdrop{position:fixed;inset:0;background:rgba(17,24,39,.55);display:none;align-items:flex-start;justify-content:center;z-index:1000;overflow-y:auto;padding:40px 16px;}
-        .modal-backdrop.open{display:flex;}
-        .modal-card{background:#fff;border-radius:14px;width:100%;max-width:560px;box-shadow:0 20px 50px rgba(0,0,0,.25);overflow:hidden;}
-        .modal-hd{padding:18px 22px;border-bottom:1px solid #f3f4f6;display:flex;align-items:center;justify-content:space-between;}
-        .modal-hd h2{font-size:1.05rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
-        .modal-close{background:none;border:none;color:#9ca3af;font-size:1.1rem;cursor:pointer;padding:4px 8px;border-radius:6px;}
-        .modal-close:hover{background:#f3f4f6;color:#111827;}
-        .modal-body{padding:22px;}
-        .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:18px;padding-top:16px;border-top:1px solid #f3f4f6;}
+    .warn-box{padding:14px 16px;background:var(--orange-soft);color:#7A4A12;border-radius:12px;font-size:.86rem;display:flex;gap:8px;align-items:flex-start;}
+    .warn-box i{color:var(--orange);margin-top:2px;}
+</style>
+}
 
-        .fg{margin-bottom:14px;}
-        .fg label{display:block;font-size:0.8rem;font-weight:600;color:#374151;margin-bottom:5px;}
-        .fg input, .fg select, .fg textarea{width:100%;padding:9px 11px;border:1px solid #d1d5db;border-radius:7px;font-size:0.86rem;font-family:inherit;background:#fff;}
-        .fg input:focus, .fg select:focus, .fg textarea:focus{outline:none;border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.1);}
-        .fg textarea{resize:vertical;min-height:60px;}
-        .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-        @@media(max-width:480px){.fg-row{grid-template-columns:1fr;}}
-        .hint{font-size:0.74rem;color:#9ca3af;margin-top:4px;}
-    </style>
-</head>
-<body>
+<a class="back-link" asp-action="Index">
+    <i class="fas fa-arrow-left"></i> Back to Stores
+</a>
 
-<header class="topbar">
-    <div style="display:flex;align-items:center;">
-        <div class="brand"><span class="brand-dot"></span> Accounting Software</div>
-        <nav class="top-nav">
-            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn active" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn" asp-controller="Invoice" asp-action="Index">Invoices</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
-    </div>
-    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</header>
-
-<div class="wrap">
-
-    <a class="back-link" asp-action="Index"><i class="fas fa-arrow-left"></i> Back to Stores</a>
-
-    <div class="pg-head">
-        <div class="pg-title">
-            <h1><i class="fas fa-box-open" style="color:#2563eb;"></i> @(storeName ?? "Store") Products</h1>
-            <div class="sub">@(Model?.Count ?? 0) item@((Model?.Count ?? 0) == 1 ? "" : "s") in stock</div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button type="button" class="btn btn-primary" onclick="openQuickAdd()">
-                <i class="fas fa-bolt"></i> Quick Add
-            </button>
-            <a class="btn btn-ghost" asp-action="PickProductForStore" asp-route-storeId="@storeId">
-                <i class="fas fa-th-large"></i> Browse Products
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    var lastInvoiceId = TempData["LastInvoiceId"] as int?;
+    <div class="alert-box alert-ok" style="justify-content:space-between;">
+        <span><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</span>
+        @if (lastInvoiceId.HasValue)
+        {
+            <a class="btn-icon-sm btn-sale" asp-controller="Invoice" asp-action="Pdf" asp-route-id="@lastInvoiceId.Value" target="_blank">
+                <i class="fas fa-file-pdf"></i> Download Invoice
             </a>
-        </div>
+        }
     </div>
+}
 
-    @if (TempData["ErrorMessage"] != null)
+<div class="card">
+    @if (Model != null && Model.Any())
     {
-        <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
-    }
-    @if (TempData["SuccessMessage"] != null)
-    {
-        var lastInvoiceId = TempData["LastInvoiceId"] as int?;
-        <div class="alert-box alert-ok" style="justify-content:space-between;">
-            <span><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</span>
-            @if (lastInvoiceId.HasValue)
-            {
-                <a class="btn-icon btn-sale" asp-controller="Invoice" asp-action="Pdf" asp-route-id="@lastInvoiceId.Value" target="_blank">
-                    <i class="fas fa-file-pdf"></i> Download Invoice
-                </a>
-            }
-        </div>
-    }
-
-    <div class="card">
-        @if (Model != null && Model.Any())
-        {
-            <div class="tbl-wrap">
-                <table>
-                    <thead>
+        <div class="tbl-wrap">
+            <table class="s-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Seller</th>
+                        <th>Price</th>
+                        <th>Mass</th>
+                        <th>Stock</th>
+                        <th>Added</th>
+                        <th style="text-align:right;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var product in Model)
+                    {
+                        var countClass = product.Count == 0 ? "out" : product.Count <= 5 ? "low" : "";
                         <tr>
-                            <th>Product</th>
-                            <th>Seller</th>
-                            <th>Price</th>
-                            <th>Mass</th>
-                            <th>Stock</th>
-                            <th>Added</th>
-                            <th style="text-align:right;">Actions</th>
+                            <td>
+                                <div class="product-name">@product.ProductName</div>
+                                @if (!string.IsNullOrEmpty(product.Description))
+                                {
+                                    <div class="product-desc">@product.Description</div>
+                                }
+                            </td>
+                            <td>@product.SellerName</td>
+                            <td class="price">@product.Price.ToString("N2")</td>
+                            <td>@product.Mass @product.unitOfmass</td>
+                            <td><span class="count-pill @countClass">@product.Count pcs</span></td>
+                            <td style="color:var(--muted);font-size:.8rem;">@product.AddDate.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <div class="row-actions">
+                                    <form asp-action="Sell" method="post" style="display:inline-flex;gap:4px;align-items:center;">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="storeProductId" value="@product.Id" />
+                                        <input type="number" name="quantity" value="1" min="1" max="@product.Count"
+                                               class="qty-input" title="Quantity in @product.unitOfmass"
+                                               @(product.Count <= 0 ? "disabled" : "") />
+                                        <span class="unit-label">@product.unitOfmass</span>
+                                        <button class="btn-icon-sm btn-sale" type="submit" @(product.Count <= 0 ? "disabled" : "")>
+                                            <i class="fas fa-cash-register"></i> Sell
+                                        </button>
+                                    </form>
+                                    <a class="btn-icon-sm btn-edit" href="/Store/EditAllStore/@product.Id">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <form asp-action="DeleteStoreProduct" method="post"
+                                          onsubmit="return confirm('Delete this product?');">
+                                        <input type="hidden" name="Id" value="@product.Id" />
+                                        <input type="hidden" name="ProductId" value="@product.ProductId" />
+                                        <input type="hidden" name="StoreId" value="@product.StoreId" />
+                                        <button class="btn-icon-sm btn-del" type="submit">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var product in Model)
-                        {
-                            var countClass = product.Count == 0 ? "out" : product.Count <= 5 ? "low" : "";
-                            <tr>
-                                <td>
-                                    <div class="product-name">@product.ProductName</div>
-                                    @if (!string.IsNullOrEmpty(product.Description))
-                                    {
-                                        <div class="product-desc">@product.Description</div>
-                                    }
-                                </td>
-                                <td>@product.SellerName</td>
-                                <td class="price">@product.Price.ToString("N2")</td>
-                                <td>@product.Mass @product.unitOfmass</td>
-                                <td><span class="count-pill @countClass">@product.Count pcs</span></td>
-                                <td style="color:#9ca3af;font-size:0.8rem;">@product.AddDate.ToString("dd MMM yyyy")</td>
-                                <td>
-                                    <div class="row-actions">
-                                        <form asp-action="Sell" method="post" style="display:inline-flex;gap:4px;align-items:center;">
-                                            @Html.AntiForgeryToken()
-                                            <input type="hidden" name="storeProductId" value="@product.Id" />
-                                            <input type="number" name="quantity" value="1" min="1" max="@product.Count"
-                                                   class="qty-input" title="Quantity in @product.unitOfmass"
-                                                   @(product.Count <= 0 ? "disabled" : "") />
-                                            <span class="unit-label">@product.unitOfmass</span>
-                                            <button class="btn-icon btn-sale" type="submit" @(product.Count <= 0 ? "disabled" : "")>
-                                                <i class="fas fa-cash-register"></i> Sell
-                                            </button>
-                                        </form>
-                                        <a class="btn-icon btn-edit" href="/Store/EditAllStore/@product.Id">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form asp-action="DeleteStoreProduct" method="post"
-                                              onsubmit="return confirm('Delete this product?');">
-                                            <input type="hidden" name="Id" value="@product.Id" />
-                                            <input type="hidden" name="ProductId" value="@product.ProductId" />
-                                            <input type="hidden" name="StoreId" value="@product.StoreId" />
-                                            <button class="btn-icon btn-del" type="submit">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
-        else
-        {
-            <div class="empty">
-                <i class="fas fa-box"></i>
-                <p>No products in this store yet</p>
-            </div>
-        }
-    </div>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty">
+            <div class="ic"><i class="fas fa-box"></i></div>
+            <p style="font-size:.9rem;">No products in this store yet</p>
+        </div>
+    }
+</div>
 
-    <div style="margin-top:24px;">
-        <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-arrow-left"></i> Back to Stores</a>
-    </div>
-
+<div style="margin-top:24px;">
+    <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-arrow-left"></i> Back to Stores</a>
 </div>
 
 <div id="quickAddModal" class="modal-backdrop" onclick="if(event.target===this)closeQuickAdd()">
     <div class="modal-card">
         <div class="modal-hd">
-            <h2><i class="fas fa-bolt" style="color:#2563eb;"></i> Quick Add to @(storeName ?? "Store")</h2>
+            <h2><i class="fas fa-bolt" style="color:var(--green);"></i> Quick Add to @(storeName ?? "Store")</h2>
             <button type="button" class="modal-close" onclick="closeQuickAdd()"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
             @if (!allProducts.Any())
             {
-                <div style="padding:18px;background:#fef3c7;color:#92400e;border-radius:8px;font-size:0.85rem;">
-                    <i class="fas fa-exclamation-triangle"></i> No products available. Add products to a seller first.
+                <div class="warn-box">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    No products available. Add products to a seller first.
                 </div>
             }
             else
@@ -312,6 +268,7 @@
     </div>
 </div>
 
+@section Scripts {
 <script>
     function openQuickAdd(){document.getElementById('quickAddModal').classList.add('open');}
     function closeQuickAdd(){document.getElementById('quickAddModal').classList.remove('open');}
@@ -333,5 +290,4 @@
     }
     document.addEventListener('keydown',function(e){if(e.key==='Escape')closeQuickAdd();});
 </script>
-</body>
-</html>
+}

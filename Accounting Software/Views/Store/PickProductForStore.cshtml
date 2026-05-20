@@ -1,176 +1,144 @@
 @model List<Accounting_Software.ViewModel.ProductViewModel>
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
     var storeId = ViewBag.StoreId is int sid ? sid : 0;
     var storeName = ViewBag.StoreName as string ?? "Store";
+    ViewBag.ActivePage = "stores";
+    ViewBag.PageTitle = $"Add Products to {storeName}";
+    ViewBag.PageHeading = $"Add Products to {storeName}";
+    ViewBag.PageSubtitle = "Pick a product — pre-filled price and quantity, edit as needed";
 }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Add Products to @storeName — Accounting Software</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;min-height:100vh;}
-        .topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;}
-        .brand{font-size:0.92rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
-        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
-        .top-nav{display:flex;gap:2px;margin-left:32px;}
-        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;}
-        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
-        .tn.active{color:#2563eb;font-weight:600;}
-        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
 
-        .wrap{max-width:1200px;margin:32px auto;padding:0 24px;}
-        .back-link{color:#6b7280;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:14px;}
-        .back-link:hover{color:#2563eb;text-decoration:none;}
+@section Styles {
+<style>
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
 
-        .pg-head{margin-bottom:22px;}
-        .pg-head h1{font-size:1.35rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:10px;}
-        .pg-head .sub{font-size:0.82rem;color:#9ca3af;margin-top:3px;}
+    .alert-box{
+        padding:12px 16px;border-radius:12px;margin-bottom:16px;font-size:.86rem;font-weight:500;
+        display:flex;align-items:center;gap:10px;
+    }
+    .alert-ok{background:var(--green-soft);color:var(--green-dark);border:1px solid var(--green-tint);}
+    .alert-err{background:var(--red-soft);color:#7A2322;border:1px solid #F1B3B0;}
 
-        .toolbar{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:10px;}
-        .toolbar i{color:#9ca3af;}
-        .toolbar input{flex:1;border:none;outline:none;font-size:0.9rem;font-family:inherit;background:transparent;}
-        .toolbar input::placeholder{color:#cbd5e1;}
+    .toolbar{
+        background:var(--card);border-radius:var(--r);padding:12px 16px;
+        box-shadow:var(--shadow-sm);margin-bottom:16px;
+        display:flex;align-items:center;gap:10px;
+    }
+    .toolbar i{color:var(--muted);}
+    .toolbar input{flex:1;border:none;outline:none;font-size:.92rem;font-family:inherit;background:transparent;color:var(--text);}
+    .toolbar input::placeholder{color:var(--muted-soft);}
 
-        .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
-        .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;transition:all .15s;}
-        .card:hover{border-color:#bfdbfe;box-shadow:0 6px 14px rgba(37,99,235,.08);transform:translateY(-2px);}
-        .p-name{font-size:1rem;font-weight:700;color:#111827;}
-        .p-seller{font-size:0.78rem;color:#6b7280;}
-        .p-meta{display:flex;gap:10px;flex-wrap:wrap;font-size:0.78rem;color:#374151;margin-top:4px;}
-        .p-meta span{background:#f3f4f6;padding:3px 8px;border-radius:99px;}
-        .p-price{font-size:1.05rem;font-weight:700;color:#16a34a;}
-        .p-stock{display:inline-flex;align-items:center;background:#eff6ff;color:#1d4ed8;padding:3px 10px;border-radius:99px;font-size:0.74rem;font-weight:600;}
-        .p-stock.out{background:#fee2e2;color:#991b1b;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+    .p-card{
+        background:var(--card);border:1px solid var(--border-soft);
+        border-radius:var(--r-lg);padding:18px;display:flex;flex-direction:column;gap:10px;
+        transition:all .15s;box-shadow:var(--shadow-sm);
+    }
+    .p-card:hover{border-color:var(--green-tint);box-shadow:var(--shadow-md);transform:translateY(-2px);}
+    .p-name{font-size:1rem;font-weight:800;color:var(--text);}
+    .p-seller{font-size:.78rem;color:var(--muted);display:inline-flex;align-items:center;gap:5px;}
+    .p-meta{display:flex;gap:8px;flex-wrap:wrap;font-size:.78rem;color:var(--text);margin-top:4px;align-items:center;}
+    .p-meta .chip{background:var(--green-soft);padding:3px 10px;border-radius:99px;font-weight:600;color:var(--muted);}
+    .p-price{font-size:1.05rem;font-weight:800;color:var(--green);}
+    .p-stock{display:inline-flex;align-items:center;background:var(--green-tint);color:var(--green);padding:3px 10px;border-radius:99px;font-size:.72rem;font-weight:700;}
+    .p-stock.out{background:var(--red-soft);color:var(--red);}
 
-        .btn{padding:9px 14px;border-radius:8px;font-size:0.84rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:all .15s;width:100%;}
-        .btn-primary{background:#2563eb;color:#fff;}
-        .btn-primary:hover{background:#1d4ed8;color:#fff;text-decoration:none;}
-        .btn-disabled{background:#f3f4f6;color:#9ca3af;cursor:not-allowed;}
-        .btn-ghost{background:#fff;color:#374151;border:1px solid #e5e7eb;width:auto;padding:9px 18px;}
-        .btn-ghost:hover{background:#f9fafb;color:#111827;text-decoration:none;}
+    .btn-full{width:100%;justify-content:center;}
+    .btn-disabled{background:var(--border-soft);color:var(--muted-soft);cursor:not-allowed;padding:9px 16px;border-radius:12px;font-size:.85rem;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;}
 
-        .empty{background:#fff;border:2px dashed #e5e7eb;border-radius:12px;padding:48px;text-align:center;color:#9ca3af;}
-        .empty i{font-size:2rem;display:block;margin-bottom:10px;color:#cbd5e1;}
+    .empty{
+        background:var(--card);border-radius:var(--r-lg);padding:48px;
+        text-align:center;color:var(--muted);box-shadow:var(--shadow-sm);
+    }
+    .empty .ic{width:64px;height:64px;border-radius:50%;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-size:1.4rem;margin:0 auto 12px;}
+</style>
+}
 
-        .alert-box{padding:12px 16px;border-radius:10px;margin-bottom:18px;font-size:0.85rem;font-weight:500;display:flex;align-items:center;gap:8px;}
-        .alert-err{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5;}
-        .alert-ok{background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;}
-    </style>
-</head>
-<body>
+<a class="back-link" asp-action="ShowStoreProduct" asp-route-storeId="@storeId">
+    <i class="fas fa-arrow-left"></i> Back to @storeName
+</a>
 
-<header class="topbar">
-    <div style="display:flex;align-items:center;">
-        <div class="brand"><span class="brand-dot"></span> Accounting Software</div>
-        <nav class="top-nav">
-            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn active" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
-    </div>
-    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</header>
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert-box alert-ok"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+}
 
-<div class="wrap">
-
-    <a class="back-link" asp-action="ShowStoreProduct" asp-route-storeId="@storeId">
-        <i class="fas fa-arrow-left"></i> Back to @storeName
-    </a>
-
-    <div class="pg-head">
-        <h1><i class="fas fa-th-large" style="color:#2563eb;"></i> Add Products to @storeName</h1>
-        <div class="sub">Pick a product to add — pre-filled price and quantity, edit as needed</div>
+@if (Model != null && Model.Any())
+{
+    <div class="toolbar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="productSearch" placeholder="Search by product or seller name..." />
     </div>
 
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
-    }
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert-box alert-ok"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
-    }
-
-    @if (Model != null && Model.Any())
-    {
-        <div class="toolbar">
-            <i class="fas fa-search"></i>
-            <input type="text" id="productSearch" placeholder="Search by product or seller name..." />
-        </div>
-
-        <div class="grid" id="productGrid">
-            @foreach (var p in Model)
-            {
-                var outOfStock = p.Count <= 0;
-                <div class="card" data-search="@((p.Name + " " + (p.SellerName ?? "")).ToLower())">
-                    <div>
-                        <div class="p-name">@p.Name</div>
-                        @if (!string.IsNullOrEmpty(p.SellerName))
-                        {
-                            <div class="p-seller"><i class="fas fa-user-tie"></i> @p.SellerName</div>
-                        }
-                    </div>
-                    <div class="p-meta">
-                        <span class="p-price">@p.Price.ToString("N2")</span>
-                        <span>@p.Mass @p.unitOfmass</span>
-                        <span class="p-stock @(outOfStock ? "out" : "")">stock: @p.Count</span>
-                    </div>
-                    @if (outOfStock)
+    <div class="grid" id="productGrid">
+        @foreach (var p in Model)
+        {
+            var outOfStock = p.Count <= 0;
+            <div class="p-card" data-search="@((p.Name + " " + (p.SellerName ?? "")).ToLower())">
+                <div>
+                    <div class="p-name">@p.Name</div>
+                    @if (!string.IsNullOrEmpty(p.SellerName))
                     {
-                        <button class="btn btn-disabled" disabled><i class="fas fa-ban"></i> Out of stock</button>
-                    }
-                    else
-                    {
-                        <a class="btn btn-primary"
-                           asp-action="AddProductToStore"
-                           asp-route-storeId="@storeId"
-                           asp-route-productId="@p.Id">
-                            <i class="fas fa-plus"></i> Add to Store
-                        </a>
+                        <div class="p-seller"><i class="fas fa-user-tie"></i> @p.SellerName</div>
                     }
                 </div>
-            }
-        </div>
-    }
-    else
-    {
-        <div class="empty">
-            <i class="fas fa-box-open"></i>
-            <p>No products available. Add products to a seller first.</p>
-            <a class="btn btn-ghost" asp-controller="Seller" asp-action="Index" style="margin-top:14px;">
-                <i class="fas fa-user-tie"></i> Go to Sellers
-            </a>
-        </div>
-    }
-
-    <div style="margin-top:24px;">
-        <a class="btn btn-ghost" asp-action="ShowStoreProduct" asp-route-storeId="@storeId">
-            <i class="fas fa-arrow-left"></i> Back to @storeName
+                <div class="p-meta">
+                    <span class="p-price">@p.Price.ToString("N2")</span>
+                    <span class="chip">@p.Mass @p.unitOfmass</span>
+                    <span class="p-stock @(outOfStock ? "out" : "")">stock: @p.Count</span>
+                </div>
+                @if (outOfStock)
+                {
+                    <button class="btn-disabled" disabled><i class="fas fa-ban"></i> Out of stock</button>
+                }
+                else
+                {
+                    <a class="btn btn-primary btn-full"
+                       asp-action="AddProductToStore"
+                       asp-route-storeId="@storeId"
+                       asp-route-productId="@p.Id">
+                        <i class="fas fa-plus"></i> Add to Store
+                    </a>
+                }
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="empty">
+        <div class="ic"><i class="fas fa-box-open"></i></div>
+        <h4 style="font-weight:700;color:var(--text);margin-bottom:6px;">No products available</h4>
+        <p style="font-size:.86rem;margin-bottom:14px;">Add products to a seller first.</p>
+        <a class="btn btn-primary" asp-controller="Seller" asp-action="Index">
+            <i class="fas fa-user-tie"></i> Go to Sellers
         </a>
     </div>
+}
 
+<div style="margin-top:24px;">
+    <a class="btn btn-ghost" asp-action="ShowStoreProduct" asp-route-storeId="@storeId">
+        <i class="fas fa-arrow-left"></i> Back to @storeName
+    </a>
 </div>
 
+@section Scripts {
 <script>
     var search = document.getElementById('productSearch');
     if (search) {
         search.addEventListener('input', function () {
             var q = this.value.toLowerCase().trim();
-            document.querySelectorAll('#productGrid .card').forEach(function (c) {
+            document.querySelectorAll('#productGrid .p-card').forEach(function (c) {
                 var key = c.getAttribute('data-search') || '';
                 c.style.display = key.includes(q) ? '' : 'none';
             });
         });
     }
 </script>
-</body>
-</html>
+}

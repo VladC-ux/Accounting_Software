@@ -103,7 +103,9 @@ namespace Accounting_Software.Service
                 else
                     _storeProductRepository.Update(sp);
 
-                var lineTotal = sp.Price * count;
+                var lineTotal = sp.Unitofmass != Enums.Unit_of_mass.Pcs && sp.Mass > 0
+                    ? sp.Price * count * sp.Mass
+                    : sp.Price * count;
                 invoiceTotalForBalance += lineTotal;
 
                 _transactionHistoryRepository.Add(new TransactionHistory

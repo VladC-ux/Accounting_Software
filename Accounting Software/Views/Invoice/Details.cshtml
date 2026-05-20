@@ -1,99 +1,71 @@
 @model Accounting_Software.ViewModel.InvoiceViewModel
-@{ Layout = null; }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Invoice @Model.Number — Accounting Software</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;min-height:100vh;}
-        .topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;}
-        .brand{font-size:0.92rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
-        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
-        .top-nav{display:flex;gap:2px;margin-left:32px;}
-        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;}
-        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
-        .tn.active{color:#2563eb;font-weight:600;}
-        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
+@{
+    Layout = "_FintegraLayout";
+    ViewBag.ActivePage = "invoices";
+    ViewBag.PageTitle = $"Invoice {Model.Number}";
+    ViewBag.PageHeading = $"Invoice {Model.Number}";
+    ViewBag.PageSubtitle = Model.IssuedAt.ToString("dd MMMM yyyy HH:mm");
+    ViewBag.HeaderActions = $@"<a class='btn btn-ghost' href='/Invoice/Index'><i class='fas fa-arrow-left'></i> All invoices</a>"
+                          + $@"<a class='btn btn-primary' href='/Invoice/Pdf/{Model.Id}' target='_blank'><i class='fas fa-file-pdf'></i> Download PDF</a>";
+}
 
-        .wrap{max-width:900px;margin:32px auto;padding:0 24px;}
-        .btn{padding:9px 18px;border-radius:8px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
-        .btn-primary{background:#2563eb;color:#fff;}
-        .btn-primary:hover{background:#1d4ed8;color:#fff;text-decoration:none;}
-        .btn-ghost{background:#fff;color:#374151;border:1px solid #e5e7eb;}
-        .btn-ghost:hover{background:#f9fafb;color:#111827;text-decoration:none;}
+@section Styles {
+<style>
+    .doc-wrap{max-width:920px;}
+    .doc{
+        background:var(--card);border:1px solid var(--border-soft);border-radius:var(--r-lg);
+        padding:36px;box-shadow:var(--shadow-sm);
+    }
+    .doc-head{
+        display:flex;justify-content:space-between;align-items:flex-start;
+        border-bottom:1px solid var(--border-soft);padding-bottom:22px;margin-bottom:24px;
+        gap:16px;flex-wrap:wrap;
+    }
+    .doc-title{font-size:1.85rem;font-weight:800;color:var(--green);letter-spacing:-0.02em;}
+    .doc-sub{font-size:.85rem;color:var(--muted);margin-top:4px;}
+    .doc-meta{text-align:right;}
+    .doc-meta .label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;}
+    .doc-meta .val{font-size:1.05rem;font-weight:800;color:var(--text);font-family:'JetBrains Mono','Courier New',monospace;}
+    .doc-meta .date{font-size:.85rem;color:var(--text);margin-top:6px;}
 
-        .actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+    .parties{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:22px;}
+    @@media(max-width:640px){.parties{grid-template-columns:1fr;}}
+    .party .label{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:6px;}
+    .party .name{font-size:1rem;font-weight:800;color:var(--text);}
+    .party .detail{font-size:.85rem;color:var(--muted);margin-top:3px;}
 
-        .doc{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:36px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
-        .doc-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid #e5e7eb;padding-bottom:22px;margin-bottom:24px;}
-        .doc-title{font-size:1.85rem;font-weight:800;color:#2563eb;letter-spacing:-0.02em;}
-        .doc-sub{font-size:0.85rem;color:#9ca3af;margin-top:4px;}
-        .doc-meta{text-align:right;}
-        .doc-meta .label{font-size:0.7rem;color:#9ca3af;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;}
-        .doc-meta .val{font-size:1.05rem;font-weight:700;color:#111827;font-family:'JetBrains Mono','Courier New',monospace;}
-        .doc-meta .date{font-size:0.85rem;color:#374151;margin-top:6px;}
+    table.items{width:100%;border-collapse:collapse;margin-bottom:18px;}
+    table.items th{
+        background:var(--green-soft);font-size:.7rem;font-weight:700;color:var(--muted);
+        text-align:left;padding:10px 12px;text-transform:uppercase;letter-spacing:.05em;
+        border-bottom:1px solid var(--border-soft);
+    }
+    table.items td{padding:13px 12px;border-bottom:1px solid var(--border-soft);font-size:.88rem;vertical-align:top;color:var(--text);}
+    table.items td.r{text-align:right;}
+    table.items th.r{text-align:right;}
+    table.items tr:last-child td{border-bottom:none;}
+    .item-name{font-weight:700;color:var(--text);}
+    .item-desc{color:var(--muted);font-size:.78rem;margin-top:2px;}
 
-        .parties{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:22px;}
-        .party .label{font-size:0.7rem;color:#9ca3af;text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:6px;}
-        .party .name{font-size:1rem;font-weight:700;color:#111827;}
-        .party .detail{font-size:0.85rem;color:#6b7280;margin-top:3px;}
+    .totals{display:flex;justify-content:flex-end;margin-top:18px;}
+    .totals-box{min-width:300px;}
+    .totals-row{display:flex;justify-content:space-between;padding:6px 0;font-size:.92rem;color:var(--text);}
+    .totals-row .lbl{color:var(--muted);}
+    .totals-total{
+        border-top:1px solid var(--border-soft);margin-top:8px;padding-top:14px;
+        display:flex;justify-content:space-between;align-items:baseline;
+    }
+    .totals-total .lbl{font-size:.86rem;font-weight:800;color:var(--text);text-transform:uppercase;letter-spacing:.04em;}
+    .totals-total .val{font-size:1.6rem;font-weight:800;color:var(--green);letter-spacing:-.02em;}
+</style>
+}
 
-        table.items{width:100%;border-collapse:collapse;margin-bottom:18px;}
-        table.items th{background:#f9fafb;font-size:0.72rem;font-weight:600;color:#6b7280;text-align:left;padding:10px 12px;text-transform:uppercase;letter-spacing:0.05em;}
-        table.items td{padding:12px;border-bottom:1px solid #f3f4f6;font-size:0.88rem;vertical-align:top;}
-        table.items td.r{text-align:right;}
-        table.items th.r{text-align:right;}
-        .item-name{font-weight:600;color:#111827;}
-        .item-desc{color:#9ca3af;font-size:0.78rem;margin-top:2px;}
-
-        .totals{display:flex;justify-content:flex-end;}
-        .totals-box{min-width:280px;}
-        .totals-row{display:flex;justify-content:space-between;padding:6px 0;font-size:0.9rem;color:#374151;}
-        .totals-row .lbl{color:#6b7280;}
-        .totals-total{border-top:1px solid #e5e7eb;margin-top:8px;padding-top:12px;display:flex;justify-content:space-between;align-items:baseline;}
-        .totals-total .lbl{font-size:0.85rem;font-weight:700;color:#111827;text-transform:uppercase;letter-spacing:0.04em;}
-        .totals-total .val{font-size:1.5rem;font-weight:800;color:#16a34a;}
-    </style>
-</head>
-<body>
-
-<header class="topbar">
-    <div style="display:flex;align-items:center;">
-        <div class="brand"><span class="brand-dot"></span> Accounting Software</div>
-        <nav class="top-nav">
-            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn active" asp-controller="Invoice" asp-action="Index">Invoices</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
-    </div>
-    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</header>
-
-<div class="wrap">
-
-    <div class="actions">
-        <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-arrow-left"></i> All invoices</a>
-        <a class="btn btn-primary" asp-action="Pdf" asp-route-id="@Model.Id" target="_blank">
-            <i class="fas fa-file-pdf"></i> Download PDF
-        </a>
-    </div>
-
+<div class="doc-wrap">
     <div class="doc">
-
         <div class="doc-head">
             <div>
                 <div class="doc-title">INVOICE</div>
-                <div class="doc-sub">Accounting Software</div>
+                <div class="doc-sub">StockFlow</div>
             </div>
             <div class="doc-meta">
                 <div class="label">Invoice #</div>
@@ -131,9 +103,9 @@
                 <tr>
                     <th style="width:30px;">#</th>
                     <th>Description</th>
-                    <th class="r" style="width:60px;">Qty</th>
-                    <th class="r" style="width:110px;">Unit price</th>
-                    <th class="r" style="width:110px;">Amount</th>
+                    <th class="r" style="width:80px;">Qty</th>
+                    <th class="r" style="width:120px;">Unit price</th>
+                    <th class="r" style="width:120px;">Amount</th>
                 </tr>
             </thead>
             <tbody>
@@ -177,9 +149,5 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
-</body>
-</html>

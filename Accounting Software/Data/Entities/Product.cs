@@ -15,7 +15,12 @@ namespace Accounting_Software.Data.Entities
         public int Count { get; set; }
         public decimal Total
         {
-            get { return Price * Count; }
+            get
+            {
+                return Unitofmass != Unit_of_mass.Pcs && Mass > 0
+                    ? Price * Count * Mass
+                    : Price * Count;
+            }
         }
        
         [NotMapped]

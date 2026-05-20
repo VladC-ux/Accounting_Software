@@ -1,48 +1,75 @@
-﻿@model Accounting_Software.ViewModel.UserViewModel
+@model Accounting_Software.ViewModel.UserViewModel
 @{
-    Layout = "_Layout";
+    Layout = "_FintegraLayout";
+    ViewBag.ActivePage = "income";
+    ViewBag.PageTitle = "Create User";
+    ViewBag.PageHeading = "Create User";
+    ViewBag.PageSubtitle = "Add the main account holder to the system";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create User</title>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-    <div class="container mt-4">
-        <h2 class="mb-4">Create User</h2>
+@section Styles {
+<style>
+    .form-wrap{max-width:560px;}
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
+
+    .fg{margin-bottom:18px;}
+    .fg label{display:block;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em;}
+    .fg input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:.92rem;font-family:inherit;background:#fff;color:var(--text);transition:all .15s;}
+    .fg input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);}
+    .invalid-feedback{color:var(--red);font-size:.78rem;margin-top:5px;display:block;}
+
+    .actions{display:flex;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-soft);}
+
+    .success-box{
+        background:var(--green-soft);border:1px solid var(--green-tint);
+        border-radius:14px;padding:18px 20px;color:var(--green-dark);
+        display:flex;gap:12px;align-items:center;font-size:.92rem;
+    }
+    .success-box i{font-size:1.6rem;color:var(--green);flex-shrink:0;}
+</style>
+}
+
+<a class="back-link" asp-controller="Seller" asp-action="Index">
+    <i class="fas fa-arrow-left"></i> Back to Sellers
+</a>
+
+<div class="form-wrap">
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3><i class="fas fa-user-plus" style="color:var(--green);margin-right:6px;"></i> Create user account</h3>
+                <div class="hd-sub">Only one main user account is allowed</div>
+            </div>
+        </div>
 
         @if (ViewBag.UserCreated == true)
         {
-            <div class="alert alert-success">
-                <strong>Success!</strong> The user has been created successfully. You cannot create another user.
+            <div class="success-box">
+                <i class="fas fa-check-circle"></i>
+                <div>
+                    <strong>Success!</strong> The user has been created. You cannot create another one.
+                </div>
             </div>
         }
         else
         {
             <form method="post" asp-action="AddUser" asp-controller="User">
-                <div class="form-group">
+                <div class="fg">
                     <label for="Name">Name</label>
-                    <input type="text" class="form-control" id="Name" asp-for="Name" placeholder="Enter your name" required />
-                    <div class="invalid-feedback">
-                        Please provide a valid name.
-                    </div>
+                    <input type="text" id="Name" asp-for="Name" placeholder="Enter your name" required />
+                    <span asp-validation-for="Name" class="invalid-feedback"></span>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Create User</button>
+                <div class="actions">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Create User
+                    </button>
+                    <a class="btn btn-ghost" href="@Url.Action("Index", "Seller")">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
             </form>
         }
-
-        <div class="mt-4">
-            <a class="btn btn-secondary" href="@Url.Action("Index", "Seller")">Back to Home</a>
-        </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" crossorigin="anonymous"></script>
-</body>
-</html>
+</div>

@@ -8,7 +8,7 @@
     var initial = userName.Length > 0 ? userName.Substring(0, 1).ToUpper() : "U";
 
     string active = (ViewBag.ActivePage as string) ?? "";
-    string pageTitle = (ViewBag.PageTitle as string) ?? "Accounting Software";
+    string pageTitle = (ViewBag.PageTitle as string) ?? "StockFlow";
     string pageHeading = (ViewBag.PageHeading as string) ?? pageTitle;
     string pageSubtitle = (ViewBag.PageSubtitle as string) ?? "";
     bool showHeader = ViewBag.HideHeader == null || !(bool)ViewBag.HideHeader;
@@ -20,7 +20,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@pageTitle — Accounting Software</title>
+    <title>@pageTitle — StockFlow</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@@400;500;600;700;800&display=swap" rel="stylesheet"/>
     <style>
@@ -188,7 +188,7 @@
 <aside class="sidebar">
     <div class="brand">
         <span class="brand-mark"><i class="fas fa-chart-line"></i></span>
-        <span class="brand-name">Accounting</span>
+        <span class="brand-name">StockFlow</span>
     </div>
 
     <nav class="sb-nav">

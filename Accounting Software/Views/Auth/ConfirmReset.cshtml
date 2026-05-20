@@ -7,82 +7,75 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Approve Password Reset – Accounting Software</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/css/bootstrap.min.css" />
+    <title>Approve Password Reset — StockFlow</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
-        * { box-sizing: border-box; }
-        body {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Inter', sans-serif;
-            padding: 30px 16px;
+        :root{
+            --green:#2D6A4F; --green-dark:#1F4D37; --green-light:#52B788; --green-tint:#E8F0E5;
+            --green-soft:#F1F6EE;
+            --bg:#F7F4EC; --card:#FFFFFF;
+            --text:#1A2B23; --muted:#6B7280;
+            --border:#E5E7EB; --border-soft:#F1EFE8;
+            --red:#D9534F; --red-soft:#FBE5E1;
+            --orange:#E89A3C; --orange-soft:#FBE9CF;
         }
-        .auth-card {
-            background: #fff;
-            border-radius: 18px;
-            padding: 44px 40px 36px;
-            width: 100%;
-            max-width: 460px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-            text-align: center;
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+        body{
+            background:var(--bg);min-height:100vh;display:flex;
+            align-items:center;justify-content:center;
+            font-family:'Manrope',system-ui,sans-serif;color:var(--text);
+            padding:30px 16px;
+            background-image:
+                radial-gradient(circle at 15% 20%, rgba(45,106,79,0.10), transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(82,183,136,0.10), transparent 45%);
         }
-        .icon-wrap {
-            width: 72px; height: 72px; border-radius: 18px;
-            background: linear-gradient(135deg, #f093fb, #f5576c);
-            display: inline-flex; align-items: center; justify-content: center;
-            margin-bottom: 20px;
+        .auth-card{
+            background:var(--card);border-radius:22px;padding:40px 36px 32px;
+            width:100%;max-width:460px;text-align:center;
+            box-shadow:0 22px 60px rgba(31,41,55,0.10),0 4px 14px rgba(31,41,55,0.04);
+            border:1px solid var(--border-soft);
         }
-        .icon-wrap i { font-size: 2rem; color: #fff; }
-        h1 { font-size: 1.5rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
-        .sub { color: #6c757d; font-size: 0.95rem; margin-bottom: 24px; }
-        .warning-box {
-            background: #fff8e1;
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin-bottom: 24px;
-            color: #e65100;
-            font-size: 0.88rem;
-            text-align: left;
+        .icon-wrap{
+            width:72px;height:72px;border-radius:20px;
+            background:linear-gradient(135deg,var(--green),var(--green-light));
+            display:inline-flex;align-items:center;justify-content:center;margin-bottom:20px;
+            box-shadow:0 10px 22px rgba(45,106,79,0.30);
         }
-        .btn-approve {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-            color: #1a1a2e;
-            border: none;
-            border-radius: 12px;
-            padding: 14px 32px;
-            font-size: 1rem;
-            font-weight: 700;
-            width: 100%;
-            transition: opacity 0.2s, transform 0.15s;
-            margin-bottom: 12px;
+        .icon-wrap i{font-size:2rem;color:#fff;}
+        h1{font-size:1.5rem;font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:8px;}
+        .sub{color:var(--muted);font-size:0.92rem;margin-bottom:22px;}
+
+        .warning-box{
+            background:var(--orange-soft);border:1px solid var(--orange);
+            border-radius:12px;padding:14px 18px;margin-bottom:22px;
+            color:#7A4A12;font-size:0.86rem;text-align:left;
+            display:flex;gap:10px;align-items:flex-start;
         }
-        .btn-approve:hover { opacity: 0.9; transform: translateY(-1px); color: #1a1a2e; }
-        .btn-cancel {
-            background: transparent;
-            color: #6c757d;
-            border: 1.5px solid #dee2e6;
-            border-radius: 12px;
-            padding: 12px 32px;
-            font-size: 0.95rem;
-            font-weight: 500;
-            width: 100%;
-            text-decoration: none;
-            display: block;
-            transition: background 0.15s;
+        .warning-box i{color:var(--orange);margin-top:2px;}
+
+        .btn-approve{
+            background:var(--green);color:#fff;border:none;border-radius:12px;
+            padding:13px 28px;font-size:0.95rem;font-weight:700;width:100%;
+            cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;
+            box-shadow:0 6px 16px rgba(45,106,79,0.28);text-decoration:none;
+            margin-bottom:10px;transition:all .15s;
         }
-        .btn-cancel:hover { background: #f8f9fa; color: #1a1a2e; text-decoration: none; }
-        .invalid-box {
-            background: #fce4ec;
-            border-radius: 12px;
-            padding: 24px;
-            color: #c62828;
+        .btn-approve:hover{background:var(--green-dark);color:#fff;transform:translateY(-1px);box-shadow:0 9px 22px rgba(45,106,79,0.35);text-decoration:none;}
+        .btn-cancel{
+            background:#fff;color:var(--muted);border:1.5px solid var(--border);
+            border-radius:12px;padding:12px 28px;font-size:0.9rem;font-weight:600;
+            width:100%;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;
+            transition:all .15s;
         }
-        .invalid-box i { font-size: 2.5rem; margin-bottom: 12px; display: block; }
+        .btn-cancel:hover{background:var(--green-soft);color:var(--text);text-decoration:none;border-color:var(--green-tint);}
+
+        .invalid-box{
+            background:var(--red-soft);border:1px solid var(--red);
+            border-radius:14px;padding:24px;color:var(--red);
+        }
+        .invalid-box i{font-size:2.4rem;margin-bottom:12px;display:block;}
+        .invalid-box h5{font-weight:800;color:#7A2322;margin-bottom:6px;}
     </style>
 </head>
 <body>
@@ -91,11 +84,11 @@
         {
             <div class="invalid-box">
                 <i class="fas fa-times-circle"></i>
-                <h5 style="font-weight:700;">Link Expired or Invalid</h5>
-                <p style="font-size:0.9rem;margin:0;">This reset link is no longer valid. Please request a new one.</p>
+                <h5>Link Expired or Invalid</h5>
+                <p style="font-size:0.88rem;margin:0;">This reset link is no longer valid. Please request a new one.</p>
             </div>
-            <a asp-action="ForgotPassword" class="btn-cancel mt-3">
-                <i class="fas fa-redo mr-1"></i>Request new link
+            <a asp-action="ForgotPassword" class="btn-cancel" style="margin-top:14px;">
+                <i class="fas fa-redo"></i> Request new link
             </a>
         }
         else
@@ -105,15 +98,15 @@
             <p class="sub">You received this link because a password reset was requested for your account.</p>
 
             <div class="warning-box">
-                <i class="fas fa-exclamation-triangle mr-1"></i>
-                <strong>Did not request this?</strong> Click "Cancel" and your password stays unchanged. The link expires in 1 hour.
+                <i class="fas fa-exclamation-triangle"></i>
+                <div><strong>Did not request this?</strong> Click "Cancel" and your password stays unchanged. The link expires in 1 hour.</div>
             </div>
 
-            <a asp-action="ResetPassword" asp-route-token="@ViewBag.Token" class="btn btn-approve">
-                <i class="fas fa-check mr-2"></i>Yes, I approve – Set new password
+            <a asp-action="ResetPassword" asp-route-token="@ViewBag.Token" class="btn-approve">
+                <i class="fas fa-check"></i> Yes, I approve – Set new password
             </a>
             <a asp-action="Login" class="btn-cancel">
-                <i class="fas fa-times mr-1"></i>Cancel – I did not request this
+                <i class="fas fa-times"></i> Cancel – I did not request this
             </a>
         }
     </div>

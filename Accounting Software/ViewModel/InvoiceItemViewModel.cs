@@ -23,6 +23,8 @@ namespace Accounting_Software.ViewModel
         public ushort Mass { get; set; }
         public Unit_of_mass UnitOfMass { get; set; }
 
-        public decimal Total => Price * Count;
+        public decimal Total => UnitOfMass != Unit_of_mass.Pcs && Mass > 0
+            ? Price * Count * Mass
+            : Price * Count;
     }
 }

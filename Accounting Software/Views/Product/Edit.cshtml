@@ -1,319 +1,117 @@
 @using Accounting_Software.ViewModel
 @model ProductViewModel
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
+    ViewBag.ActivePage = "sellers";
+    ViewBag.PageTitle = "Edit Product";
+    ViewBag.PageHeading = "Edit Product";
+    ViewBag.PageSubtitle = "Update product details";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+@section Styles {
+<style>
+    .form-wrap{max-width:760px;}
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
 
-    <style>
-        * { box-sizing: border-box; }
+    .product-info{
+        background:var(--green-soft);border:1px solid var(--green-tint);
+        border-radius:14px;padding:14px 16px;margin-bottom:22px;
+        display:flex;align-items:center;gap:14px;
+    }
+    .product-info .ic{
+        width:44px;height:44px;border-radius:12px;flex-shrink:0;
+        background:linear-gradient(135deg,var(--green),var(--green-light));color:#fff;
+        display:grid;place-items:center;font-size:1rem;
+        box-shadow:0 4px 10px rgba(45,106,79,.22);
+    }
+    .product-info .title{font-weight:800;font-size:1rem;color:var(--text);}
+    .product-info .sub{font-size:.76rem;color:var(--muted);margin-top:2px;}
 
-        body {
-            background: #f0f2f5;
-            font-family: 'Inter', sans-serif;
-            color: #1a1a2e;
-            margin: 0;
-        }
+    .fg{margin-bottom:16px;}
+    .fg label{display:block;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em;}
+    .fg input, .fg select, .fg textarea{
+        width:100%;padding:11px 13px;border:1.5px solid var(--border);
+        border-radius:12px;font-size:.92rem;font-family:inherit;
+        background:#fff;color:var(--text);transition:all .15s;
+    }
+    .fg input:focus, .fg select:focus, .fg textarea:focus{
+        outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);
+    }
+    .fg textarea{resize:vertical;min-height:84px;}
 
-        /* NAV */
-        .top-nav {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-            padding: 14px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    @@media(max-width:640px){.grid-2{grid-template-columns:1fr;}}
 
-        .top-nav .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 1.1rem;
-            text-decoration: none;
-        }
+    .actions{display:flex;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-soft);}
+</style>
+}
 
-        .top-nav .brand i { color: #e94560; }
+<a class="back-link" asp-action="ShowSellerProduct" asp-controller="Product" asp-route-SellerId="@Model.SellerId">
+    <i class="fas fa-arrow-left"></i> Back to Products
+</a>
 
-        .btn-nav-outline {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.3);
-            color: rgba(255,255,255,0.85);
-            border-radius: 8px;
-            font-size: 0.82rem;
-            font-weight: 500;
-            padding: 7px 14px;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-nav-outline:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            border-color: rgba(255,255,255,0.6);
-            transform: translateY(-1px);
-            text-decoration: none;
-        }
-
-        /* HERO */
-        .hero {
-            background: linear-gradient(135deg, #0f3460 0%, #16213e 100%);
-            padding: 36px 32px 46px;
-            color: #fff;
-        }
-
-        .hero h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 0 0 4px;
-        }
-
-        .hero p { opacity: 0.8; margin: 0; font-size: 0.9rem; }
-
-        /* MAIN */
-        .main-content {
-            padding: 32px;
-            margin-top: -24px;
-        }
-
-        /* FORM CARD */
-        .form-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-            overflow: hidden;
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .form-card-accent {
-            height: 5px;
-            background: linear-gradient(90deg, #0f3460, #e94560);
-        }
-
-        .form-card-body { padding: 32px; }
-
-        /* PRODUCT INFO BADGE */
-        .product-info-badge {
-            background: #f0f2f5;
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin-bottom: 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .product-info-badge .product-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #0f3460, #e94560);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 1rem;
-            flex-shrink: 0;
-        }
-
-        .product-info-badge .product-title {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #1a1a2e;
-        }
-
-        .product-info-badge .product-subtitle {
-            font-size: 0.78rem;
-            color: #888;
-        }
-
-        .form-label {
-            font-weight: 600;
-            font-size: 0.82rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #555;
-            margin-bottom: 6px;
-        }
-
-        .form-control, .form-select {
-            border: 1.5px solid #e8e8e8;
-            border-radius: 10px;
-            padding: 10px 14px;
-            font-size: 0.92rem;
-            font-family: 'Inter', sans-serif;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            color: #1a1a2e;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: #0f3460;
-            box-shadow: 0 0 0 3px rgba(15,52,96,0.1);
-            outline: none;
-        }
-
-        .form-row-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-        }
-
-        .form-group { margin-bottom: 18px; }
-
-        .form-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-        }
-
-        .btn-save {
-            background: linear-gradient(135deg, #0f3460, #16213e);
-            color: #fff;
-            border: none;
-            border-radius: 10px;
-            padding: 11px 28px;
-            font-size: 0.92rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-        }
-        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(15,52,96,0.35); }
-
-        .btn-cancel {
-            background: #fdecea;
-            color: #b71c1c;
-            border: 1px solid #ef9a9a;
-            border-radius: 10px;
-            padding: 11px 22px;
-            font-size: 0.92rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 7px;
-        }
-        .btn-cancel:hover { background: #e53935; color: #fff; border-color: #e53935; text-decoration: none; }
-
-        @@media (max-width: 600px) {
-            .form-row-grid { grid-template-columns: 1fr; }
-            .main-content { padding: 16px; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- NAV -->
-    <nav class="top-nav">
-        <a class="brand" href="#">
-            <i class="fas fa-edit"></i> Edit Product
-        </a>
-        <a class="btn-nav-outline"
-           asp-action="ShowSellerProduct" asp-controller="Product"
-           asp-route-SellerId="@Model.SellerId">
-            <i class="fas fa-arrow-left"></i> Back to Products
-        </a>
-    </nav>
-
-    <!-- HERO -->
-    <div class="hero">
-        <h1><i class="fas fa-pencil-alt" style="margin-right:10px;"></i>Edit Product</h1>
-        <p>Update the product details below</p>
-    </div>
-
-    <!-- MAIN -->
-    <div class="main-content">
-        <div class="form-card">
-            <div class="form-card-accent"></div>
-            <div class="form-card-body">
-
-                <div class="product-info-badge">
-                    <div class="product-icon">
-                        <i class="fas fa-box"></i>
-                    </div>
-                    <div>
-                        <div class="product-title">@Model.Name</div>
-                        <div class="product-subtitle">ID: @Model.Id &nbsp;|&nbsp; Seller ID: @Model.SellerId</div>
-                    </div>
-                </div>
-
-                <form method="post">
-                    <input type="hidden" asp-for="Id" />
-                    <input type="hidden" asp-for="SellerId" />
-
-                    <div class="form-row-grid">
-                        <div class="form-group">
-                            <label class="form-label">Product Name</label>
-                            <input asp-for="Name" class="form-control" required />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Price</label>
-                            <input asp-for="Price" class="form-control" min="1" required />
-                        </div>
-                    </div>
-
-                    <div class="form-row-grid">
-                        <div class="form-group">
-                            <label class="form-label">Mass</label>
-                            <input asp-for="Mass" class="form-control" min="1" required />
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Unit of Mass</label>
-                            <select asp-for="unitOfmass" class="form-control" required>
-                                <option value="Kg">Kg</option>
-                                <option value="Gram">Gram</option>
-                                <option value="Ml">Ml</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Description</label>
-                        <textarea asp-for="Description" class="form-control" rows="3" placeholder="Description..."></textarea>
-                    </div>
-
-                    <div class="form-actions">
-                        <button type="submit" class="btn-save">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                        <a asp-action="ShowSellerProduct" asp-controller="Product"
-                           asp-route-SellerId="@Model.SellerId" class="btn-cancel">
-                            <i class="fas fa-times"></i> Cancel
-                        </a>
-                    </div>
-                </form>
+<div class="form-wrap">
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3><i class="fas fa-pencil-alt" style="color:var(--green);margin-right:6px;"></i> Edit product</h3>
+                <div class="hd-sub">Change the values below and save</div>
             </div>
         </div>
-    </div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
-</body>
-</html>
+        <div class="product-info">
+            <div class="ic"><i class="fas fa-box"></i></div>
+            <div>
+                <div class="title">@Model.Name</div>
+                <div class="sub">ID: @Model.Id &nbsp;·&nbsp; Seller ID: @Model.SellerId</div>
+            </div>
+        </div>
+
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="SellerId" />
+
+            <div class="grid-2">
+                <div class="fg">
+                    <label>Product Name</label>
+                    <input asp-for="Name" required />
+                </div>
+                <div class="fg">
+                    <label>Price</label>
+                    <input asp-for="Price" min="1" required />
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="fg">
+                    <label>Mass</label>
+                    <input asp-for="Mass" min="1" required />
+                </div>
+                <div class="fg">
+                    <label>Unit of Mass</label>
+                    <select asp-for="unitOfmass" required>
+                        <option value="Kg">Kg</option>
+                        <option value="Gram">Gram</option>
+                        <option value="Ml">Ml</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="fg">
+                <label>Description</label>
+                <textarea asp-for="Description" rows="3" placeholder="Description..."></textarea>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+                <a asp-action="ShowSellerProduct" asp-controller="Product"
+                   asp-route-SellerId="@Model.SellerId" class="btn btn-ghost">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

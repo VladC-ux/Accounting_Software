@@ -1,469 +1,178 @@
 @using Accounting_Software.ViewModel;
 @model List<ProductViewModel>
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
     var sellerId = Model != null && Model.Any() ? Model.First().SellerId : 0;
     var totalValue = Model != null ? Model.Sum(p => p.Total) : 0;
     var totalItems = Model != null ? Model.Sum(p => p.Count) : 0;
+    var count = Model?.Count ?? 0;
+    ViewBag.ActivePage = "sellers";
+    ViewBag.PageTitle = "Products";
+    ViewBag.PageHeading = "Products";
+    ViewBag.PageSubtitle = $"{count} item{(count == 1 ? "" : "s")} for this seller";
+
+    if (sellerId > 0)
+    {
+        ViewBag.HeaderActions = $@"<a class='btn btn-primary' href='/Product/Add?SellerId={sellerId}'><i class='fas fa-plus'></i> Add Product</a>"
+                              + $@"<a class='btn btn-ghost' href='/Seller/Index'><i class='fas fa-arrow-left'></i> Sellers</a>";
+    }
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products List</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+@section Styles {
+<style>
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
 
-    <style>
-        * { box-sizing: border-box; }
+    .kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+    .kpi{background:var(--card);border-radius:var(--r-lg);padding:18px 20px;box-shadow:var(--shadow-sm);display:flex;align-items:center;gap:14px;}
+    .kpi .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.1rem;flex-shrink:0;}
+    .kpi .ic.g{background:var(--green-tint);color:var(--green);}
+    .kpi .ic.o{background:var(--orange-soft);color:var(--orange);}
+    .kpi .ic.b{background:#E1ECFB;color:#4A90E2;}
+    .kpi .lbl{font-size:.74rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+    .kpi .val{font-size:1.3rem;font-weight:800;color:var(--text);letter-spacing:-.02em;}
+    @@media(max-width:780px){.kpi-row{grid-template-columns:1fr;}}
 
-        body {
-            background: #f0f2f5;
-            font-family: 'Inter', sans-serif;
-            color: #1a1a2e;
-            margin: 0;
-        }
+    .toolbar{
+        background:var(--card);border-radius:var(--r);padding:12px 16px;
+        box-shadow:var(--shadow-sm);margin-bottom:16px;
+        display:flex;align-items:center;gap:10px;
+    }
+    .toolbar i{color:var(--muted);}
+    .toolbar input{flex:1;border:none;outline:none;font-size:.92rem;font-family:inherit;background:transparent;color:var(--text);}
+    .toolbar input::placeholder{color:var(--muted-soft);}
 
-        /* NAV */
-        .top-nav {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
-            padding: 14px 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.25);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+    .tbl-wrap{overflow-x:auto;}
+    table.products-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+    .products-table th{
+        background:var(--green-soft);color:var(--muted);font-weight:700;
+        font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;
+        padding:11px 14px;text-align:left;border-bottom:1px solid var(--border-soft);white-space:nowrap;
+    }
+    .products-table td{padding:14px;border-bottom:1px solid var(--border-soft);color:var(--text);vertical-align:middle;}
+    .products-table tr:last-child td{border-bottom:none;}
+    .products-table tbody tr:hover td{background:var(--green-soft);}
+    .price-badge{background:var(--green-tint);color:var(--green);padding:3px 10px;border-radius:99px;font-weight:700;font-size:.78rem;white-space:nowrap;}
+    .total-badge{background:var(--green);color:#fff;padding:3px 10px;border-radius:99px;font-weight:700;font-size:.78rem;white-space:nowrap;}
+    .unit-pill{display:inline-flex;align-items:center;background:var(--orange-soft);color:var(--orange);padding:3px 10px;border-radius:99px;font-size:.74rem;font-weight:700;}
 
-        .top-nav .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-            font-weight: 700;
-            font-size: 1.1rem;
-            text-decoration: none;
-        }
+    .row-actions{display:flex;gap:6px;flex-wrap:nowrap;}
+    .btn-icon-sm{padding:7px 10px;border-radius:10px;font-size:.76rem;font-weight:600;display:inline-flex;align-items:center;gap:5px;text-decoration:none;transition:all .15s;}
+    .btn-edit{background:var(--orange-soft);color:var(--orange);border:1px solid var(--orange-soft);}
+    .btn-edit:hover{background:var(--orange);color:#fff;text-decoration:none;}
+    .btn-del{background:var(--red-soft);color:var(--red);border:1px solid var(--red-soft);}
+    .btn-del:hover{background:var(--red);color:#fff;text-decoration:none;}
+    .btn-shops{background:#E1ECFB;color:#4A90E2;border:1px solid #E1ECFB;}
+    .btn-shops:hover{background:#4A90E2;color:#fff;text-decoration:none;}
 
-        .top-nav .brand i { color: #e94560; }
+    .empty{padding:48px;text-align:center;color:var(--muted);}
+    .empty .ic{width:64px;height:64px;border-radius:50%;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-size:1.4rem;margin:0 auto 12px;}
 
-        .nav-links { display: flex; gap: 8px; flex-wrap: wrap; }
+    .table-foot{padding:14px 18px;border-top:1px solid var(--border-soft);display:flex;justify-content:flex-end;gap:24px;font-size:.86rem;color:var(--muted);font-weight:600;}
+    .table-foot strong{color:var(--text);}
+</style>
+}
 
-        .btn-nav-outline {
-            background: transparent;
-            border: 1px solid rgba(255,255,255,0.3);
-            color: rgba(255,255,255,0.85);
-            border-radius: 8px;
-            font-size: 0.82rem;
-            font-weight: 500;
-            padding: 7px 14px;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-nav-outline:hover {
-            background: rgba(255,255,255,0.1);
-            color: #fff;
-            border-color: rgba(255,255,255,0.6);
-            transform: translateY(-1px);
-            text-decoration: none;
-        }
+<a class="back-link" asp-controller="Seller" asp-action="Index">
+    <i class="fas fa-arrow-left"></i> Back to Sellers
+</a>
 
-        .btn-nav-primary {
-            background: #e94560;
-            border: none;
-            color: #fff;
-            border-radius: 8px;
-            font-size: 0.82rem;
-            font-weight: 500;
-            padding: 7px 14px;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .btn-nav-primary:hover { background: #c73652; color: #fff; transform: translateY(-1px); text-decoration: none; }
+<div class="kpi-row">
+    <div class="kpi"><div class="ic g"><i class="fas fa-cube"></i></div><div><div class="lbl">Products</div><div class="val">@count</div></div></div>
+    <div class="kpi"><div class="ic o"><i class="fas fa-layer-group"></i></div><div><div class="lbl">Items in stock</div><div class="val">@totalItems</div></div></div>
+    <div class="kpi"><div class="ic b"><i class="fas fa-dollar-sign"></i></div><div><div class="lbl">Total value</div><div class="val">@totalValue.ToString("N2")</div></div></div>
+</div>
 
-        /* HERO */
-        .hero {
-            background: linear-gradient(135deg, #e94560 0%, #0f3460 100%);
-            padding: 36px 32px 50px;
-            color: #fff;
-        }
+<div class="card">
+    <div class="card-hd">
+        <div>
+            <h3><i class="fas fa-boxes" style="color:var(--green);margin-right:6px;"></i> Product list</h3>
+            <div class="hd-sub">All products for this seller</div>
+        </div>
+    </div>
 
-        .hero h1 { font-size: 1.8rem; font-weight: 700; margin: 0 0 4px; }
-        .hero p { opacity: 0.8; margin: 0; font-size: 0.9rem; }
+    <div class="toolbar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="productSearch" placeholder="Search products..." />
+    </div>
 
-        .stat-pills {
-            display: flex;
-            gap: 14px;
-            margin-top: 18px;
-            flex-wrap: wrap;
-        }
+    @if (Model != null && Model.Any())
+    {
+        <div class="tbl-wrap">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th>Mass</th>
+                        <th>Unit</th>
+                        <th>Count</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td><strong>@item.Name</strong></td>
+                            <td><span class="price-badge">@item.Price.ToString("N2")</span></td>
+                            <td style="color:var(--muted);">@item.Description</td>
+                            <td>@item.Mass</td>
+                            <td><span class="unit-pill">@item.unitOfmass</span></td>
+                            <td>@item.Count</td>
+                            <td><span class="total-badge">@item.Total.ToString("N2")</span></td>
+                            <td>
+                                <div class="row-actions">
+                                    <a class="btn-icon-sm btn-edit" asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <a class="btn-icon-sm btn-del" asp-action="Delete" asp-controller="Product"
+                                       asp-route-id="@item.Id" asp-route-SellerId="@item.SellerId"
+                                       onclick="return confirm('Delete @item.Name?')">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </a>
+                                    <a class="btn-icon-sm btn-shops" asp-action="ShowShops" asp-controller="Store" asp-route-id="@item.Id">
+                                        <i class="fas fa-warehouse"></i> Shops
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
-        .stat-pill {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 50px;
-            padding: 7px 18px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-        }
-
-        /* MAIN */
-        .main-content { padding: 32px; margin-top: -24px; }
-
-        /* SEARCH */
-        .toolbar {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-            padding: 14px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .toolbar i { color: #aaa; }
-
-        .toolbar input {
-            border: none;
-            outline: none;
-            flex: 1;
-            font-size: 0.92rem;
-            font-family: 'Inter', sans-serif;
-            color: #333;
-        }
-
-        .toolbar input::placeholder { color: #bbb; }
-
-        /* TABLE CARD */
-        .table-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.07);
-            overflow: hidden;
-        }
-
-        .table-card-header {
-            padding: 18px 24px;
-            border-bottom: 1px solid #f0f2f5;
-            font-weight: 700;
-            font-size: 1rem;
-            color: #1a1a2e;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .table-card-header i { color: #e94560; }
-
-        table.products-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .products-table th {
-            background: #f8f9fa;
-            padding: 12px 18px;
-            text-align: left;
-            font-size: 0.77rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #888;
-            border-bottom: 1px solid #f0f2f5;
-            white-space: nowrap;
-        }
-
-        .products-table td {
-            padding: 14px 18px;
-            font-size: 0.88rem;
-            border-bottom: 1px solid #f8f9fa;
-            color: #333;
-            vertical-align: middle;
-        }
-
-        .products-table tr:last-child td { border-bottom: none; }
-
-        .products-table tbody tr {
-            transition: background 0.15s;
-        }
-        .products-table tbody tr:hover td { background: #fafbfc; }
-
-        /* BADGES */
-        .price-badge {
-            background: #e8f5e9;
-            color: #2e7d32;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            white-space: nowrap;
-        }
-
-        .total-badge {
-            background: #e3f2fd;
-            color: #1565c0;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.82rem;
-            white-space: nowrap;
-        }
-
-        .unit-badge {
-            background: #f3e5f5;
-            color: #6a1b9a;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 0.78rem;
-            font-weight: 600;
-        }
-
-        /* ACTION BUTTONS */
-        .action-btns { display: flex; gap: 6px; flex-wrap: nowrap; }
-
-        .btn-action {
-            border-radius: 7px;
-            font-size: 0.78rem;
-            font-weight: 500;
-            padding: 6px 12px;
-            transition: all 0.18s;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-        .btn-action:hover { transform: translateY(-1px); text-decoration: none; }
-
-        .btn-action-edit {
-            background: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffc107;
-        }
-        .btn-action-edit:hover { background: #ffc107; color: #fff; }
-
-        .btn-action-delete {
-            background: #fdecea;
-            color: #b71c1c;
-            border: 1px solid #ef9a9a;
-        }
-        .btn-action-delete:hover { background: #e53935; color: #fff; border-color: #e53935; }
-
-        .btn-action-shops {
-            background: #e8f4fd;
-            color: #0f3460;
-            border: 1px solid #90caf9;
-        }
-        .btn-action-shops:hover { background: #0f3460; color: #fff; border-color: #0f3460; }
-
-        /* EMPTY */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: #aaa;
-        }
-        .empty-state i { font-size: 3rem; margin-bottom: 14px; color: #ddd; }
-        .empty-state h4 { color: #ccc; font-weight: 600; }
-
-        /* FOOTER TOTAL */
-        .table-footer {
-            padding: 14px 18px;
-            border-top: 2px solid #f0f2f5;
-            display: flex;
-            justify-content: flex-end;
-            gap: 24px;
-            font-size: 0.88rem;
-        }
-
-        .table-footer .total-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-weight: 600;
-            color: #555;
-        }
-
-        .table-footer .total-item span {
-            color: #1a1a2e;
-            font-size: 1rem;
-        }
-
-        @@media (max-width: 768px) {
-            .main-content { padding: 16px; }
-            .products-table th, .products-table td { padding: 10px 12px; }
-        }
-    </style>
-</head>
-<body>
-
-    <!-- NAV -->
-    <nav class="top-nav">
-        <a class="brand" href="#">
-            <i class="fas fa-boxes"></i> Products
-        </a>
-        <div class="nav-links">
-            <a class="btn-nav-outline" asp-action="Index" asp-controller="Seller">
-                <i class="fas fa-arrow-left"></i> Sellers
-            </a>
-            <a class="btn-nav-outline" asp-action="Index" asp-controller="Dashboard">
-                <i class="fas fa-chart-line"></i> Dashboard
-            </a>
+        <div class="table-foot">
+            <div><i class="fas fa-layer-group" style="color:var(--orange);"></i> Total items: <strong>@totalItems</strong></div>
+            <div><i class="fas fa-dollar-sign" style="color:var(--green);"></i> Total value: <strong>@totalValue.ToString("N2")</strong></div>
+        </div>
+    }
+    else
+    {
+        <div class="empty">
+            <div class="ic"><i class="fas fa-box-open"></i></div>
+            <h4 style="font-weight:700;margin-bottom:6px;color:var(--text);">No products yet</h4>
+            <p style="font-size:.86rem;">Add a product to get started.</p>
             @if (sellerId > 0)
             {
-                <a class="btn-nav-primary" asp-action="Add" asp-controller="Product" asp-route-SellerId="@sellerId">
+                <a class="btn btn-primary" asp-action="Add" asp-controller="Product" asp-route-SellerId="@sellerId" style="margin-top:14px;">
                     <i class="fas fa-plus"></i> Add Product
                 </a>
             }
         </div>
-    </nav>
+    }
+</div>
 
-    <!-- HERO -->
-    <div class="hero">
-        <h1><i class="fas fa-boxes" style="margin-right:10px;"></i>Product List</h1>
-        <p>All products for this seller</p>
-        <div class="stat-pills">
-            <div class="stat-pill">
-                <i class="fas fa-cube"></i> @(Model?.Count ?? 0) Products
-            </div>
-            <div class="stat-pill">
-                <i class="fas fa-layer-group"></i> @totalItems Items
-            </div>
-            <div class="stat-pill">
-                <i class="fas fa-dollar-sign"></i> @totalValue.ToString("F2") Total Value
-            </div>
-        </div>
-    </div>
-
-    <!-- MAIN -->
-    <div class="main-content">
-
-        <!-- SEARCH -->
-        <div class="toolbar">
-            <i class="fas fa-search"></i>
-            <input type="text" id="productSearch" placeholder="Search products..." />
-        </div>
-
-        <!-- TABLE -->
-        <div class="table-card">
-            <div class="table-card-header">
-                <i class="fas fa-list"></i> Products
-            </div>
-
-            @if (Model != null && Model.Any())
-            {
-                <table class="products-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                            <th>Mass</th>
-                            <th>Unit</th>
-                            <th>Count</th>
-                            <th>Total</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td><strong>@item.Name</strong></td>
-                                <td><span class="price-badge">@item.Price.ToString("F2")</span></td>
-                                <td>@item.Description</td>
-                                <td>@item.Mass</td>
-                                <td><span class="unit-badge">@item.unitOfmass</span></td>
-                                <td>@item.Count</td>
-                                <td><span class="total-badge">@item.Total.ToString("F2")</span></td>
-                                <td>
-                                    <div class="action-btns">
-                                        <a class="btn-action btn-action-edit"
-                                           asp-action="Edit" asp-controller="Product"
-                                           asp-route-id="@item.Id">
-                                            <i class="fas fa-edit"></i> Edit
-                                        </a>
-                                        <a class="btn-action btn-action-delete"
-                                           asp-action="Delete" asp-controller="Product"
-                                           asp-route-id="@item.Id"
-                                           asp-route-SellerId="@item.SellerId"
-                                           onclick="return confirm('Delete @item.Name?')">
-                                            <i class="fas fa-trash-alt"></i> Delete
-                                        </a>
-                                        <a class="btn-action btn-action-shops"
-                                           asp-action="ShowShops" asp-controller="Store"
-                                           asp-route-id="@item.Id">
-                                            <i class="fas fa-warehouse"></i> Shops
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-
-                <div class="table-footer">
-                    <div class="total-item">
-                        <i class="fas fa-layer-group" style="color:#e94560;"></i>
-                        Total items: <span>@totalItems</span>
-                    </div>
-                    <div class="total-item">
-                        <i class="fas fa-dollar-sign" style="color:#2e7d32;"></i>
-                        Total value: <span>@totalValue.ToString("F2")</span>
-                    </div>
-                </div>
-            }
-            else
-            {
-                <div class="empty-state">
-                    <i class="fas fa-box-open"></i>
-                    <h4>No products yet</h4>
-                    <p>Add a product to get started.</p>
-                    @if (sellerId > 0)
-                    {
-                        <a class="btn-nav-primary mt-2 d-inline-flex"
-                           asp-action="Add" asp-controller="Product"
-                           asp-route-SellerId="@sellerId">
-                            <i class="fas fa-plus"></i> Add Product
-                        </a>
-                    }
-                </div>
-            }
-        </div>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-            crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-            crossorigin="anonymous"></script>
-
-    <script>
-        document.getElementById('productSearch').addEventListener('input', function () {
-            const q = this.value.toLowerCase().trim();
-            document.querySelectorAll('.products-table tbody tr').forEach(function (row) {
-                const name = row.cells[0].textContent.toLowerCase();
-                row.style.display = name.includes(q) ? '' : 'none';
-            });
+@section Scripts {
+<script>
+    document.getElementById('productSearch').addEventListener('input', function () {
+        const q = this.value.toLowerCase().trim();
+        document.querySelectorAll('.products-table tbody tr').forEach(function (row) {
+            const name = row.cells[0].textContent.toLowerCase();
+            row.style.display = name.includes(q) ? '' : 'none';
         });
-    </script>
-</body>
-</html>
+    });
+</script>
+}

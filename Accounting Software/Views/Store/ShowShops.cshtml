@@ -1,106 +1,81 @@
 @model List<Accounting_Software.ViewModel.StoreProductViewModel>
-@{ Layout = null; }
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Choose Store — Accounting Software</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f4f6f9;color:#1c2434;min-height:100vh;}
-        .topbar{height:56px;background:#fff;border-bottom:1px solid #e5e7eb;display:flex;align-items:center;justify-content:space-between;padding:0 28px;}
-        .brand{font-size:0.92rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:8px;}
-        .brand-dot{width:7px;height:7px;background:#2563eb;border-radius:50%;}
-        .top-nav{display:flex;gap:2px;margin-left:32px;}
-        .tn{color:#6b7280;font-size:0.8rem;font-weight:500;padding:5px 10px;border-radius:6px;text-decoration:none;}
-        .tn:hover{background:#f3f4f6;color:#111827;text-decoration:none;}
-        .tn.active{color:#2563eb;font-weight:600;}
-        .btn-logout{font-size:0.78rem;color:#9ca3af;text-decoration:none;padding:5px 10px;border-radius:6px;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
+@{
+    Layout = "_FintegraLayout";
+    ViewBag.ActivePage = "stores";
+    ViewBag.PageTitle = "Choose Store";
+    ViewBag.PageHeading = "Choose Store";
+    ViewBag.PageSubtitle = "Select where to add this product";
+}
 
-        .wrap{max-width:900px;margin:32px auto;padding:0 24px;}
-        .back-link{color:#6b7280;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:14px;}
-        .back-link:hover{color:#2563eb;text-decoration:none;}
+@section Styles {
+<style>
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
 
-        .pg-title{margin-bottom:22px;}
-        .pg-title h1{font-size:1.35rem;font-weight:700;color:#111827;display:flex;align-items:center;gap:10px;}
-        .pg-title .sub{font-size:0.82rem;color:#9ca3af;margin-top:3px;}
-
-        .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
-        .store-pick{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px 18px;background:#fff;border:1px solid #e5e7eb;border-radius:12px;text-decoration:none;transition:all .15s;cursor:pointer;}
-        .store-pick:hover{border-color:#2563eb;background:#eff6ff;transform:translateY(-2px);box-shadow:0 6px 14px rgba(37,99,235,.1);text-decoration:none;}
-        .store-pick .ico{width:48px;height:48px;border-radius:12px;background:#eff6ff;color:#2563eb;display:flex;align-items:center;justify-content:center;font-size:1.3rem;transition:all .15s;}
-        .store-pick:hover .ico{background:#2563eb;color:#fff;}
-        .store-pick .name{font-size:0.92rem;font-weight:700;color:#111827;text-align:center;}
-        .store-pick .arrow{font-size:0.75rem;color:#9ca3af;}
-
-        .empty{background:#fff;border:2px dashed #e5e7eb;border-radius:12px;padding:48px;text-align:center;color:#9ca3af;}
-        .empty i{font-size:2rem;display:block;margin-bottom:10px;color:#cbd5e1;}
-        .empty p{font-size:0.95rem;}
-
-        .btn{padding:9px 18px;border-radius:8px;font-size:0.85rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .15s;}
-        .btn-ghost{background:#fff;color:#374151;border:1px solid #e5e7eb;}
-        .btn-ghost:hover{background:#f9fafb;color:#111827;text-decoration:none;}
-    </style>
-</head>
-<body>
-
-<header class="topbar">
-    <div style="display:flex;align-items:center;">
-        <div class="brand"><span class="brand-dot"></span> Accounting Software</div>
-        <nav class="top-nav">
-            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn active" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
-    </div>
-    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</header>
-
-<div class="wrap">
-
-    <a class="back-link" asp-controller="Seller" asp-action="Index"><i class="fas fa-arrow-left"></i> Back to Products</a>
-
-    <div class="pg-title">
-        <h1><i class="fas fa-store" style="color:#2563eb;"></i> Choose Store</h1>
-        <div class="sub">Select where to add this product</div>
-    </div>
-
-    @if (Model != null && Model.Any())
-    {
-        <div class="store-grid">
-            @foreach (var store in Model)
-            {
-                <a class="store-pick" href="@Url.Action("AddProductToStore", "Store", new { storeId = store.StoreId, productId = ViewBag.ProductId })">
-                    <div class="ico"><i class="fas fa-store"></i></div>
-                    <div class="name">@store.StoreName</div>
-                    <div class="arrow"><i class="fas fa-arrow-right"></i></div>
-                </a>
-            }
-        </div>
+    .store-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+    .store-pick{
+        display:flex;flex-direction:column;align-items:center;gap:10px;
+        padding:24px 18px;background:var(--card);
+        border:1px solid var(--border-soft);border-radius:var(--r-lg);
+        text-decoration:none;transition:all .15s;cursor:pointer;
+        box-shadow:var(--shadow-sm);
     }
-    else
-    {
-        <div class="empty">
-            <i class="fas fa-store-slash"></i>
-            <p>No stores available. Create a store first.</p>
-            <a class="btn btn-ghost" asp-action="Index" style="margin-top:14px;">
-                <i class="fas fa-plus"></i> Go to Stores
+    .store-pick:hover{
+        border-color:var(--green);background:var(--green-soft);
+        transform:translateY(-2px);box-shadow:var(--shadow-md);
+        text-decoration:none;
+    }
+    .store-pick .ic{
+        width:54px;height:54px;border-radius:14px;
+        background:var(--green-tint);color:var(--green);
+        display:grid;place-items:center;font-size:1.4rem;transition:all .15s;
+    }
+    .store-pick:hover .ic{background:var(--green);color:#fff;}
+    .store-pick .name{font-size:.94rem;font-weight:700;color:var(--text);text-align:center;}
+    .store-pick .arrow{font-size:.75rem;color:var(--muted-soft);}
+
+    .empty-state{
+        background:var(--card);border-radius:var(--r-lg);padding:48px;
+        text-align:center;color:var(--muted);box-shadow:var(--shadow-sm);
+    }
+    .empty-state .ic{
+        width:64px;height:64px;border-radius:50%;background:var(--green-soft);
+        color:var(--green);display:grid;place-items:center;font-size:1.4rem;margin:0 auto 12px;
+    }
+</style>
+}
+
+<a class="back-link" asp-controller="Seller" asp-action="Index">
+    <i class="fas fa-arrow-left"></i> Back to Products
+</a>
+
+@if (Model != null && Model.Any())
+{
+    <div class="store-grid">
+        @foreach (var store in Model)
+        {
+            <a class="store-pick" href="@Url.Action("AddProductToStore", "Store", new { storeId = store.StoreId, productId = ViewBag.ProductId })">
+                <div class="ic"><i class="fas fa-store"></i></div>
+                <div class="name">@store.StoreName</div>
+                <div class="arrow"><i class="fas fa-arrow-right"></i></div>
             </a>
-        </div>
-    }
-
-    <div style="margin-top:24px;">
-        <a class="btn btn-ghost" asp-controller="Seller" asp-action="Index">
-            <i class="fas fa-arrow-left"></i> Back to Product List
+        }
+    </div>
+}
+else
+{
+    <div class="empty-state">
+        <div class="ic"><i class="fas fa-store-slash"></i></div>
+        <h4 style="font-weight:700;color:var(--text);margin-bottom:6px;">No stores available</h4>
+        <p style="font-size:.86rem;margin-bottom:14px;">Create a store first to continue.</p>
+        <a class="btn btn-primary" asp-action="Index">
+            <i class="fas fa-plus"></i> Go to Stores
         </a>
     </div>
+}
 
+<div style="margin-top:24px;">
+    <a class="btn btn-ghost" asp-controller="Seller" asp-action="Index">
+        <i class="fas fa-arrow-left"></i> Back to Product List
+    </a>
 </div>
-</body>
-</html>

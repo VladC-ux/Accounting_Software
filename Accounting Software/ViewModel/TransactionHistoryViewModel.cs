@@ -15,7 +15,12 @@ namespace Accounting_Software.ViewModel
         public int Count { get; set; }
         public decimal Total
         {
-            get { return Price * Count; }
+            get
+            {
+                return unitOfmass != Unit_of_mass.Pcs && Mass > 0
+                    ? Price * Count * Mass
+                    : Price * Count;
+            }
         }
         public string ProductName { get; set; } = null!;
         public string typeofAction { get; set; } = null!;

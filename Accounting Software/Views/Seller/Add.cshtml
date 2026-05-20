@@ -1,113 +1,60 @@
 @using Accounting_Software.ViewModel
 @model SellerViewModel
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
+    ViewBag.ActivePage = "sellers";
+    ViewBag.PageTitle = "New Seller";
+    ViewBag.PageHeading = "New Seller";
+    ViewBag.PageSubtitle = "Add a new partner to start tracking their products";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Seller — Accounting Software</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f5f6fb;color:#1c2434;min-height:100vh;}
+@section Styles {
+<style>
+    .form-wrap{max-width:680px;}
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
 
-        .topbar{height:60px;background:#fff;border-bottom:1px solid #eaecf3;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 rgba(15,23,42,0.02);}
-        .brand{font-size:0.95rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:10px;letter-spacing:-.01em;}
-        .brand-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;box-shadow:0 4px 10px rgba(99,102,241,.35);}
-        .top-nav{display:flex;gap:2px;margin-left:32px;}
-        .tn{color:#64748b;font-size:0.82rem;font-weight:500;padding:6px 12px;border-radius:7px;text-decoration:none;transition:all .15s;}
-        .tn:hover{background:#f1f5f9;color:#0f172a;text-decoration:none;}
-        .tn.active{color:#4f46e5;font-weight:600;background:#eef2ff;}
-        .btn-logout{font-size:0.78rem;color:#94a3b8;text-decoration:none;padding:6px 12px;border-radius:7px;display:inline-flex;align-items:center;gap:6px;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
+    .fg{margin-bottom:18px;}
+    .fg label{display:block;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em;}
+    .fg input{width:100%;padding:11px 14px;border:1.5px solid var(--border);border-radius:12px;font-size:.92rem;font-family:inherit;background:#fff;color:var(--text);transition:all .15s;}
+    .fg input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);}
+    .hint{font-size:.76rem;color:var(--muted);margin-top:6px;display:flex;align-items:center;gap:6px;}
+    .hint i{color:var(--green);}
+    .validation-error{color:var(--red);font-size:.78rem;margin-top:5px;display:block;}
 
-        .wrap{max-width:680px;margin:32px auto;padding:0 24px;}
-        .back-link{color:#64748b;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:18px;transition:color .15s;}
-        .back-link:hover{color:#4f46e5;text-decoration:none;}
+    .actions{display:flex;gap:10px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border-soft);}
+</style>
+}
 
-        .banner{background:linear-gradient(135deg,#eef2ff 0%,#f0f9ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:22px 26px;display:flex;align-items:center;gap:18px;margin-bottom:22px;position:relative;overflow:hidden;}
-        .banner::before{content:'';position:absolute;top:-30px;right:-30px;width:150px;height:150px;background:radial-gradient(circle,rgba(99,102,241,.18),transparent 70%);border-radius:50%;}
-        .banner-icon{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;box-shadow:0 8px 20px rgba(99,102,241,.35);flex-shrink:0;position:relative;z-index:1;}
-        .banner h1{font-size:1.4rem;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:3px;position:relative;z-index:1;}
-        .banner .sub{font-size:0.86rem;color:#64748b;position:relative;z-index:1;}
+<a class="back-link" asp-action="Index" asp-controller="Seller">
+    <i class="fas fa-arrow-left"></i> Back to Sellers
+</a>
 
-        .card{background:#fff;border:1px solid #eaecf3;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(15,23,42,.04);}
-        .card-accent{height:4px;background:linear-gradient(90deg,#6366f1,#3b82f6,#06b6d4);}
-        .card-body{padding:28px;}
-
-        .fg{margin-bottom:18px;}
-        .fg label{display:block;font-size:0.74rem;font-weight:700;color:#475569;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
-        .fg input{width:100%;padding:11px 14px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.92rem;font-family:inherit;background:#fff;color:#1c2434;transition:all .15s;}
-        .fg input:focus{outline:none;border-color:#6366f1;box-shadow:0 0 0 4px rgba(99,102,241,.1);}
-        .hint{font-size:0.76rem;color:#94a3b8;margin-top:5px;display:flex;align-items:center;gap:5px;}
-        .hint i{color:#6366f1;font-size:0.78rem;}
-        .validation-error{color:#dc2626;font-size:0.78rem;margin-top:5px;display:block;}
-
-        .actions{display:flex;gap:10px;margin-top:24px;padding-top:20px;border-top:1px solid #f1f5f9;}
-        .btn{padding:11px 22px;border-radius:9px;font-size:0.88rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .18s;}
-        .btn-primary{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;box-shadow:0 4px 12px rgba(99,102,241,.35);flex:1;justify-content:center;}
-        .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(99,102,241,.45);color:#fff;text-decoration:none;}
-        .btn-ghost{background:#fff;color:#334155;border:1px solid #e2e8f0;}
-        .btn-ghost:hover{background:#f8fafc;color:#0f172a;border-color:#cbd5e1;text-decoration:none;}
-    </style>
-</head>
-<body>
-
-<header class="topbar">
-    <div style="display:flex;align-items:center;">
-        <div class="brand"><span class="brand-mark"><i class="fas fa-chart-line"></i></span> Accounting Software</div>
-        <nav class="top-nav">
-            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn active" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
-    </div>
-    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</header>
-
-<div class="wrap">
-
-    <a class="back-link" asp-action="Index" asp-controller="Seller"><i class="fas fa-arrow-left"></i> Back to Sellers</a>
-
-    <div class="banner">
-        <div class="banner-icon"><i class="fas fa-user-plus"></i></div>
-        <div>
-            <h1>New Seller</h1>
-            <div class="sub">Add a new partner to start tracking their products</div>
-        </div>
-    </div>
-
+<div class="form-wrap">
     <div class="card">
-        <div class="card-accent"></div>
-        <div class="card-body">
-            <form method="post">
-                <div class="fg">
-                    <label>Seller Name</label>
-                    <input asp-for="Name" placeholder="e.g. Acme Distribution Ltd." required autofocus />
-                    <span asp-validation-for="Name" class="validation-error"></span>
-                    <div class="hint"><i class="fas fa-info-circle"></i> This name will appear on products, receipts and reports.</div>
-                </div>
-
-                <div class="actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-check"></i> Save Seller
-                    </button>
-                    <a class="btn btn-ghost" asp-action="Index" asp-controller="Seller">
-                        <i class="fas fa-times"></i> Cancel
-                    </a>
-                </div>
-            </form>
+        <div class="card-hd">
+            <div>
+                <h3><i class="fas fa-user-plus" style="color:var(--green);margin-right:6px;"></i> Seller details</h3>
+                <div class="hd-sub">This name will appear on products, receipts and reports</div>
+            </div>
         </div>
+
+        <form method="post">
+            <div class="fg">
+                <label>Seller Name</label>
+                <input asp-for="Name" placeholder="e.g. Acme Distribution Ltd." required autofocus />
+                <span asp-validation-for="Name" class="validation-error"></span>
+                <div class="hint"><i class="fas fa-info-circle"></i> Used across the system to identify this partner.</div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-check"></i> Save Seller
+                </button>
+                <a class="btn btn-ghost" asp-action="Index" asp-controller="Seller">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </div>
+        </form>
     </div>
-
 </div>
-
-</body>
-</html>

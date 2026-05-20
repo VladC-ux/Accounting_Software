@@ -22,7 +22,12 @@ namespace Accounting_Software.Data.Entities
         public DateTime AddDate { get; set; }
         public decimal Total
         {
-            get { return Price * Count; }
+            get
+            {
+                return Unitofmass != Unit_of_mass.Pcs && Mass > 0
+                    ? Price * Count * Mass
+                    : Price * Count;
+            }
         }
         public string? Description { get; set; }
         public ushort Mass { get; set; }

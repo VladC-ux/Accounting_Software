@@ -1,279 +1,284 @@
 @using Accounting_Software.ViewModel;
 @model ProductViewModel;
 @{
-    Layout = null;
+    Layout = "_FintegraLayout";
     var products = ViewBag.Products as List<Accounting_Software.ViewModel.ProductViewModel>;
     var balance = (ViewBag.UserBalance as decimal? ?? 0m);
+    ViewBag.ActivePage = "sellers";
+    ViewBag.PageTitle = "New Product";
+    ViewBag.PageHeading = "New Product";
+    ViewBag.PageSubtitle = "Register a new purchase from this seller";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product — Accounting Software</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-        body{font-family:'Inter',sans-serif;background:#f5f6fb;color:#1c2434;min-height:100vh;}
+@section Styles {
+<style>
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
 
-        .topbar{height:60px;background:#fff;border-bottom:1px solid #eaecf3;display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:200;box-shadow:0 1px 0 rgba(15,23,42,0.02);}
-        .brand{font-size:0.95rem;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:10px;letter-spacing:-.01em;}
-        .brand-mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#6366f1,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:.72rem;box-shadow:0 4px 10px rgba(99,102,241,.35);}
-        .top-nav{display:flex;gap:2px;margin-left:32px;}
-        .tn{color:#64748b;font-size:0.82rem;font-weight:500;padding:6px 12px;border-radius:7px;text-decoration:none;transition:all .15s;}
-        .tn:hover{background:#f1f5f9;color:#0f172a;text-decoration:none;}
-        .tn.active{color:#4f46e5;font-weight:600;background:#eef2ff;}
-        .btn-logout{font-size:0.78rem;color:#94a3b8;text-decoration:none;padding:6px 12px;border-radius:7px;display:inline-flex;align-items:center;gap:6px;}
-        .btn-logout:hover{background:#fef2f2;color:#dc2626;text-decoration:none;}
-
-        .wrap{max-width:980px;margin:28px auto;padding:0 24px;}
-        .back-link{color:#64748b;font-size:0.82rem;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:18px;transition:color .15s;}
-        .back-link:hover{color:#4f46e5;text-decoration:none;}
-
-        .banner{background:linear-gradient(135deg,#eef2ff 0%,#f0f9ff 100%);border:1px solid #e0e7ff;border-radius:16px;padding:22px 26px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;margin-bottom:22px;position:relative;overflow:hidden;}
-        .banner::before{content:'';position:absolute;top:-40px;right:-40px;width:180px;height:180px;background:radial-gradient(circle,rgba(99,102,241,.18),transparent 70%);border-radius:50%;}
-        .banner-l{display:flex;align-items:center;gap:18px;position:relative;z-index:1;}
-        .banner-icon{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,#6366f1,#3b82f6);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;box-shadow:0 8px 20px rgba(99,102,241,.35);flex-shrink:0;}
-        .banner h1{font-size:1.4rem;font-weight:800;color:#0f172a;letter-spacing:-.02em;margin-bottom:3px;}
-        .banner .sub{font-size:0.86rem;color:#64748b;}
-
-        .balance-card{background:#fff;border:1px solid #eaecf3;border-radius:12px;padding:10px 16px;display:flex;align-items:center;gap:12px;position:relative;z-index:1;box-shadow:0 2px 6px rgba(15,23,42,.04);}
-        .balance-card .icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);display:flex;align-items:center;justify-content:center;color:#fff;font-size:0.95rem;box-shadow:0 4px 10px rgba(16,185,129,.3);}
-        .balance-card .label{font-size:0.68rem;color:#94a3b8;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
-        .balance-card .value{font-size:1.05rem;font-weight:800;color:#0f172a;letter-spacing:-.01em;}
-
-        .alert-box{padding:13px 16px;border-radius:11px;margin-bottom:18px;font-size:0.86rem;font-weight:500;display:flex;align-items:center;gap:10px;}
-        .alert-ok{background:linear-gradient(135deg,#d1fae5,#a7f3d0);color:#065f46;border:1px solid #6ee7b7;}
-        .alert-err{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#991b1b;border:1px solid #fca5a5;}
-
-        .card{background:#fff;border:1px solid #eaecf3;border-radius:14px;overflow:hidden;margin-bottom:22px;box-shadow:0 1px 3px rgba(15,23,42,.04);}
-        .card-accent{height:4px;background:linear-gradient(90deg,#6366f1,#3b82f6,#06b6d4);}
-        .card-body{padding:26px;}
-
-        .section-head{display:flex;align-items:center;gap:9px;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#475569;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid #f1f5f9;}
-        .section-head .dot{width:6px;height:6px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#3b82f6);}
-
-        .fg{margin-bottom:16px;}
-        .fg label{display:block;font-size:0.74rem;font-weight:700;color:#475569;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
-        .fg input, .fg select, .fg textarea{width:100%;padding:11px 13px;border:1.5px solid #e2e8f0;border-radius:9px;font-size:0.9rem;font-family:inherit;background:#fff;color:#1c2434;transition:all .15s;}
-        .fg input:focus, .fg select:focus, .fg textarea:focus{outline:none;border-color:#6366f1;box-shadow:0 0 0 4px rgba(99,102,241,.1);}
-        .hint{font-size:0.74rem;color:#94a3b8;margin-top:5px;}
-
-        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-        .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
-        @@media(max-width:600px){.grid-2,.grid-3{grid-template-columns:1fr;}}
-
-        .type-toggle{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#f1f5f9;border-radius:9px;padding:5px;border:1px solid #e2e8f0;}
-        .type-toggle input[type="radio"]{display:none;}
-        .type-toggle label{text-align:center;padding:9px 12px;border-radius:7px;font-size:0.84rem;font-weight:600;color:#64748b;cursor:pointer;transition:all .18s;display:inline-flex;align-items:center;justify-content:center;gap:7px;margin:0;}
-        .type-toggle input[type="radio"]:checked + label{background:#fff;color:#4f46e5;box-shadow:0 2px 8px rgba(99,102,241,.15);}
-
-        .summary{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e3a8a 100%);border-radius:12px;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;margin-top:8px;margin-bottom:20px;position:relative;overflow:hidden;}
-        .summary::before{content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(99,102,241,.3),transparent 70%);border-radius:50%;}
-        .summary .col{position:relative;z-index:1;}
-        .summary .col .label{font-size:0.7rem;color:rgba(255,255,255,.6);font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px;}
-        .summary .col .amount{font-size:1.7rem;font-weight:800;color:#fff;letter-spacing:-.02em;}
-        .summary .col .balance-left{font-size:0.78rem;color:rgba(255,255,255,.65);margin-top:4px;}
-        .summary .warning{color:#fca5a5;font-weight:600;}
-        .summary .calc-icon{width:48px;height:48px;border-radius:12px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.4rem;position:relative;z-index:1;border:1px solid rgba(255,255,255,.15);}
-
-        .actions{display:flex;gap:10px;padding-top:6px;}
-        .btn{padding:11px 22px;border-radius:9px;font-size:0.88rem;font-weight:600;border:none;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:7px;transition:all .18s;}
-        .btn-primary{background:linear-gradient(135deg,#6366f1,#4f46e5);color:#fff;box-shadow:0 4px 12px rgba(99,102,241,.35);}
-        .btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 18px rgba(99,102,241,.45);color:#fff;text-decoration:none;}
-        .btn-ghost{background:#fff;color:#334155;border:1px solid #e2e8f0;}
-        .btn-ghost:hover{background:#f8fafc;color:#0f172a;border-color:#cbd5e1;text-decoration:none;}
-
-        .list-head{padding:18px 24px;border-bottom:1px solid #f1f5f9;display:flex;align-items:center;gap:10px;}
-        .list-head .icon{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#eef2ff,#dbeafe);display:flex;align-items:center;justify-content:center;color:#4f46e5;font-size:0.95rem;}
-        .list-head .title{font-size:0.98rem;font-weight:700;color:#0f172a;}
-        .list-head .count{margin-left:auto;background:#eef2ff;color:#4f46e5;padding:3px 10px;border-radius:99px;font-size:0.74rem;font-weight:700;}
-
-        .tbl-wrap{overflow-x:auto;}
-        table{width:100%;border-collapse:collapse;font-size:0.86rem;}
-        thead th{background:#f8fafc;color:#475569;font-weight:700;font-size:0.72rem;text-transform:uppercase;letter-spacing:.6px;padding:11px 14px;text-align:left;border-bottom:1px solid #e2e8f0;white-space:nowrap;}
-        tbody td{padding:13px 14px;border-bottom:1px solid #f1f5f9;color:#334155;}
-        tbody tr:last-child td{border-bottom:none;}
-        tbody tr:hover{background:#fafbff;}
-        .price-cell{font-weight:700;color:#059669;}
-        .unit-pill{display:inline-flex;align-items:center;background:#eef2ff;color:#4f46e5;padding:3px 10px;border-radius:99px;font-size:0.74rem;font-weight:600;}
-        .total-pill{display:inline-flex;align-items:center;background:linear-gradient(135deg,#1e1b4b,#312e81);color:#fff;padding:3px 10px;border-radius:99px;font-size:0.74rem;font-weight:700;box-shadow:0 2px 6px rgba(30,27,75,.25);}
-
-        .empty{padding:48px;text-align:center;color:#94a3b8;}
-        .empty .icon{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#eef2ff,#dbeafe);display:flex;align-items:center;justify-content:center;color:#6366f1;font-size:1.4rem;margin:0 auto 12px;}
-    </style>
-</head>
-<body>
-
-<header class="topbar">
-    <div style="display:flex;align-items:center;">
-        <div class="brand"><span class="brand-mark"><i class="fas fa-chart-line"></i></span> Accounting Software</div>
-        <nav class="top-nav">
-            <a class="tn" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-            <a class="tn active" asp-controller="Seller" asp-action="Index">Sellers</a>
-            <a class="tn" asp-controller="Store" asp-action="Index">Stores</a>
-            <a class="tn" asp-controller="Statistics" asp-action="Index">Reports</a>
-            <a class="tn" asp-controller="Telegram" asp-action="Index">Telegram</a>
-        </nav>
-    </div>
-    <a class="btn-logout" asp-controller="Auth" asp-action="Logout"><i class="fas fa-sign-out-alt"></i> Sign out</a>
-</header>
-
-<div class="wrap">
-
-    <a class="back-link" asp-action="Index" asp-controller="Seller"><i class="fas fa-arrow-left"></i> Back to Sellers</a>
-
-    <div class="banner">
-        <div class="banner-l">
-            <div class="banner-icon"><i class="fas fa-box-open"></i></div>
-            <div>
-                <h1>New Product</h1>
-                <div class="sub">Register a new purchase from this seller</div>
-            </div>
-        </div>
-        <div class="balance-card">
-            <div class="icon"><i class="fas fa-wallet"></i></div>
-            <div>
-                <div class="label">Current Balance</div>
-                <div class="value" id="balanceDisplay">@balance.ToString("N2")</div>
-            </div>
-        </div>
-    </div>
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
+    .balance-banner{
+        background:linear-gradient(135deg,var(--green-soft),var(--green-tint));
+        border:1px solid var(--green-tint);border-radius:var(--r-lg);
+        padding:18px 22px;display:flex;align-items:center;justify-content:space-between;
+        margin-bottom:20px;gap:14px;flex-wrap:wrap;
     }
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert-box alert-ok"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+    .balance-banner .l{display:flex;align-items:center;gap:14px;}
+    .balance-banner .ic{
+        width:48px;height:48px;border-radius:14px;flex-shrink:0;
+        background:linear-gradient(135deg,var(--green),var(--green-light));color:#fff;
+        display:grid;place-items:center;font-size:1.2rem;
+        box-shadow:0 6px 14px rgba(45,106,79,.28);
+    }
+    .balance-banner .lbl{font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
+    .balance-banner .val{font-size:1.25rem;font-weight:800;color:var(--text);letter-spacing:-.01em;}
+
+    .alert-box{
+        padding:12px 16px;border-radius:12px;margin-bottom:16px;font-size:.86rem;font-weight:500;
+        display:flex;align-items:center;gap:10px;
+    }
+    .alert-ok{background:var(--green-soft);color:var(--green-dark);border:1px solid var(--green-tint);}
+    .alert-err{background:var(--red-soft);color:#7A2322;border:1px solid #F1B3B0;}
+
+    .section-head{
+        display:flex;align-items:center;gap:9px;font-size:.74rem;font-weight:700;
+        text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+        margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--border-soft);
+    }
+    .section-head .dot{width:6px;height:6px;border-radius:50%;background:var(--green);}
+
+    .fg{margin-bottom:16px;}
+    .fg label{display:block;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em;}
+    .fg input, .fg select, .fg textarea{
+        width:100%;padding:11px 13px;border:1.5px solid var(--border);
+        border-radius:12px;font-size:.92rem;font-family:inherit;
+        background:#fff;color:var(--text);transition:all .15s;
+    }
+    .fg input:focus, .fg select:focus, .fg textarea:focus{
+        outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);
     }
 
-    <div class="card">
-        <div class="card-accent"></div>
-        <div class="card-body">
-            <form method="post" id="productForm">
-                <input type="hidden" name="SellerId" value="@ViewBag.SellerId" />
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+    @@media(max-width:640px){.grid-2,.grid-3{grid-template-columns:1fr;}}
 
-                <div class="section-head"><span class="dot"></span> Product Details</div>
+    .type-toggle{
+        display:grid;grid-template-columns:1fr 1fr;gap:6px;
+        background:var(--green-soft);border-radius:12px;padding:5px;border:1px solid var(--green-tint);
+    }
+    .type-toggle input[type="radio"]{display:none;}
+    .type-toggle label{
+        text-align:center;padding:9px 12px;border-radius:9px;
+        font-size:.84rem;font-weight:600;color:var(--muted);cursor:pointer;
+        transition:all .18s;display:inline-flex;align-items:center;justify-content:center;gap:7px;margin:0;
+    }
+    .type-toggle input[type="radio"]:checked + label{
+        background:#fff;color:var(--green);box-shadow:0 4px 10px rgba(45,106,79,.15);
+    }
 
-                <div class="grid-2">
-                    <div class="fg">
-                        <label>Product Name</label>
-                        <input asp-for="Name" placeholder="e.g. Apple" required />
-                    </div>
-                    <div class="fg">
-                        <label>Price per unit</label>
-                        <input type="number" name="Price" id="priceInput" placeholder="0.00" step="0.01" min="0.01" required />
-                    </div>
-                </div>
+    .summary{
+        background:linear-gradient(135deg,var(--green),var(--green-dark));
+        border-radius:14px;padding:18px 22px;
+        display:flex;align-items:center;justify-content:space-between;
+        margin:14px 0 20px;position:relative;overflow:hidden;color:#fff;
+    }
+    .summary::before{
+        content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;
+        background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%);border-radius:50%;
+    }
+    .summary .col{position:relative;z-index:1;}
+    .summary .label{font-size:.7rem;color:rgba(255,255,255,.7);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;}
+    .summary .amount{font-size:1.7rem;font-weight:800;letter-spacing:-.02em;}
+    .summary .balance-left{font-size:.78rem;color:rgba(255,255,255,.7);margin-top:4px;}
+    .summary .warning{color:#FFCFCB;font-weight:700;}
+    .summary .calc-icon{
+        width:48px;height:48px;border-radius:12px;
+        background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);
+        display:grid;place-items:center;font-size:1.3rem;position:relative;z-index:1;
+    }
 
-                <div class="fg">
-                    <label>Purchase Type</label>
-                    <div class="type-toggle">
-                        <input type="radio" id="typePiece" name="purchaseType" value="piece" checked />
-                        <label for="typePiece"><i class="fas fa-cubes"></i> By piece</label>
-                        <input type="radio" id="typeWeight" name="purchaseType" value="weight" />
-                        <label for="typeWeight"><i class="fas fa-weight-hanging"></i> By weight</label>
-                    </div>
-                </div>
+    .actions{display:flex;gap:10px;padding-top:6px;}
 
-                <div class="grid-3" id="quantityGrid">
-                    <div class="fg">
-                        <label>Count (pcs)</label>
-                        <input type="number" name="Count" id="countInput" placeholder="0" min="1" required />
-                    </div>
-                    <div class="fg weight-only">
-                        <label>Mass</label>
-                        <input type="number" name="Mass" id="massInput" placeholder="0" min="1" />
-                    </div>
-                    <div class="fg weight-only">
-                        <label>Unit</label>
-                        <select name="unitOfmass" id="unitInput">
-                            <option value="Kg">Kg</option>
-                            <option value="Gram">Gram</option>
-                            <option value="Ml">Ml</option>
-                        </select>
-                    </div>
-                </div>
+    .list-card{margin-top:22px;}
+    .list-head .count{
+        margin-left:auto;background:var(--green-tint);color:var(--green);
+        padding:4px 12px;border-radius:99px;font-size:.74rem;font-weight:700;
+    }
 
-                <div class="fg">
-                    <label>Description (optional)</label>
-                    <input asp-for="Description" placeholder="Short description..." />
-                </div>
+    .tbl-wrap{overflow-x:auto;}
+    table.products-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+    .products-table th{
+        background:var(--green-soft);color:var(--muted);font-weight:700;
+        font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;
+        padding:11px 14px;text-align:left;border-bottom:1px solid var(--border-soft);white-space:nowrap;
+    }
+    .products-table td{padding:14px;border-bottom:1px solid var(--border-soft);color:var(--text);vertical-align:middle;}
+    .products-table tr:last-child td{border-bottom:none;}
+    .products-table tbody tr:hover td{background:var(--green-soft);}
+    .price-cell{font-weight:700;color:var(--green);}
+    .unit-pill{display:inline-flex;align-items:center;background:var(--green-tint);color:var(--green);padding:3px 10px;border-radius:99px;font-size:.74rem;font-weight:700;}
+    .total-pill{display:inline-flex;align-items:center;background:var(--green);color:#fff;padding:3px 10px;border-radius:99px;font-size:.74rem;font-weight:700;}
 
-                <div class="summary">
-                    <div class="col">
-                        <div class="label">Total Cost</div>
-                        <div class="amount" id="totalDisplay">0.00</div>
-                        <div class="balance-left" id="balanceAfter">Balance after: <span id="balanceAfterVal">—</span></div>
-                    </div>
-                    <div class="calc-icon"><i class="fas fa-calculator"></i></div>
-                </div>
+    .empty{padding:48px;text-align:center;color:var(--muted);}
+    .empty .ic{
+        width:60px;height:60px;border-radius:50%;background:var(--green-soft);
+        color:var(--green);display:grid;place-items:center;font-size:1.4rem;margin:0 auto 12px;
+    }
+</style>
+}
 
-                <div class="actions">
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-check"></i> Save Product
-                    </button>
-                    <a asp-action="ShowSellerProduct" asp-controller="Product" asp-route-SellerId="@ViewBag.SellerId" class="btn btn-ghost">
-                        <i class="fas fa-list"></i> View Products
-                    </a>
-                </div>
-            </form>
+<a class="back-link" asp-action="Index" asp-controller="Seller">
+    <i class="fas fa-arrow-left"></i> Back to Sellers
+</a>
+
+<div class="balance-banner">
+    <div class="l">
+        <div class="ic"><i class="fas fa-box-open"></i></div>
+        <div>
+            <div style="font-size:1.05rem;font-weight:800;color:var(--text);">New Product</div>
+            <div style="font-size:.84rem;color:var(--muted);">Register a new purchase from this seller</div>
         </div>
     </div>
-
-    <div class="card">
-        <div class="list-head">
-            <div class="icon"><i class="fas fa-list"></i></div>
-            <div class="title">Products of this Seller</div>
-            @if (products != null) { <div class="count">@products.Count items</div> }
+    <div style="display:flex;align-items:center;gap:12px;">
+        <div class="ic" style="background:linear-gradient(135deg,#52B788,#74C69D);">
+            <i class="fas fa-wallet"></i>
         </div>
-        @if (products != null && products.Any())
-        {
-            <div class="tbl-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Count</th>
-                            <th>Mass</th>
-                            <th>Unit</th>
-                            <th>Total</th>
-                            <th>Description</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in products)
-                        {
-                            <tr>
-                                <td><strong style="color:#0f172a;">@item.Name</strong></td>
-                                <td class="price-cell">@item.Price.ToString("N2")</td>
-                                <td>@item.Count</td>
-                                <td>@item.Mass</td>
-                                <td><span class="unit-pill">@item.unitOfmass</span></td>
-                                <td><span class="total-pill">@item.Total.ToString("N2")</span></td>
-                                <td style="color:#94a3b8;">@item.Description</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
-        else
-        {
-            <div class="empty">
-                <div class="icon"><i class="fas fa-box"></i></div>
-                No products yet for this seller
-            </div>
-        }
+        <div>
+            <div class="lbl">Current Balance</div>
+            <div class="val" id="balanceDisplay">@balance.ToString("N2")</div>
+        </div>
     </div>
-
 </div>
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["ErrorMessage"]</div>
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert-box alert-ok"><i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]</div>
+}
+
+<div class="card">
+    <form method="post" id="productForm">
+        <input type="hidden" name="SellerId" value="@ViewBag.SellerId" />
+
+        <div class="section-head"><span class="dot"></span> Product Details</div>
+
+        <div class="grid-2">
+            <div class="fg">
+                <label>Product Name</label>
+                <input asp-for="Name" placeholder="e.g. Apple" required />
+            </div>
+            <div class="fg">
+                <label>Price per unit</label>
+                <input type="number" name="Price" id="priceInput" placeholder="0.00" step="0.01" min="0.01" required />
+            </div>
+        </div>
+
+        <div class="fg">
+            <label>Purchase Type</label>
+            <div class="type-toggle">
+                <input type="radio" id="typePiece" name="purchaseType" value="piece" checked />
+                <label for="typePiece"><i class="fas fa-cubes"></i> By piece</label>
+                <input type="radio" id="typeWeight" name="purchaseType" value="weight" />
+                <label for="typeWeight"><i class="fas fa-weight-hanging"></i> By weight</label>
+            </div>
+        </div>
+
+        <div class="grid-3" id="quantityGrid">
+            <div class="fg">
+                <label>Count (pcs)</label>
+                <input type="number" name="Count" id="countInput" placeholder="0" min="1" required />
+            </div>
+            <div class="fg weight-only">
+                <label>Mass</label>
+                <input type="number" name="Mass" id="massInput" placeholder="0" min="1" />
+            </div>
+            <div class="fg weight-only">
+                <label>Unit</label>
+                <select name="unitOfmass" id="unitInput">
+                    <option value="Kg">Kg</option>
+                    <option value="Gram">Gram</option>
+                    <option value="Ml">Ml</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="fg">
+            <label>Description (optional)</label>
+            <input asp-for="Description" placeholder="Short description..." />
+        </div>
+
+        <div class="summary">
+            <div class="col">
+                <div class="label">Total Cost</div>
+                <div class="amount" id="totalDisplay">0.00</div>
+                <div class="balance-left" id="balanceAfter">Balance after: <span id="balanceAfterVal">—</span></div>
+            </div>
+            <div class="calc-icon"><i class="fas fa-calculator"></i></div>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-check"></i> Save Product
+            </button>
+            <a asp-action="ShowSellerProduct" asp-controller="Product" asp-route-SellerId="@ViewBag.SellerId" class="btn btn-ghost">
+                <i class="fas fa-list"></i> View Products
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="card list-card">
+    <div class="card-hd">
+        <div>
+            <h3><i class="fas fa-list" style="color:var(--green);margin-right:6px;"></i> Products of this Seller</h3>
+            <div class="hd-sub">Existing items registered for this partner</div>
+        </div>
+        @if (products != null) { <div class="count">@products.Count items</div> }
+    </div>
+
+    @if (products != null && products.Any())
+    {
+        <div class="tbl-wrap">
+            <table class="products-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Count</th>
+                        <th>Mass</th>
+                        <th>Unit</th>
+                        <th>Total</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in products)
+                    {
+                        <tr>
+                            <td><strong>@item.Name</strong></td>
+                            <td class="price-cell">@item.Price.ToString("N2")</td>
+                            <td>@item.Count</td>
+                            <td>@item.Mass</td>
+                            <td><span class="unit-pill">@item.unitOfmass</span></td>
+                            <td><span class="total-pill">@item.Total.ToString("N2")</span></td>
+                            <td style="color:var(--muted);">@item.Description</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="empty">
+            <div class="ic"><i class="fas fa-box"></i></div>
+            No products yet for this seller
+        </div>
+    }
+</div>
+
+@section Scripts {
 <script>
     const balance = @balance.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
     const priceInput = document.getElementById('priceInput');
@@ -292,7 +297,9 @@
     function updateTotal() {
         const price = parseFloat(priceInput.value) || 0;
         const count = parseInt(countInput.value) || 0;
-        const total = price * count;
+        const mass = parseInt(massInput.value) || 0;
+        const isWeight = typeWeight.checked;
+        const total = isWeight && mass > 0 ? price * count * mass : price * count;
         const remaining = balance - total;
 
         totalDisplay.textContent = fmt(total);
@@ -300,7 +307,7 @@
 
         if (remaining < 0) {
             balanceAfter.classList.add('warning');
-            totalDisplay.style.color = '#fca5a5';
+            totalDisplay.style.color = '#FFCFCB';
         } else {
             balanceAfter.classList.remove('warning');
             totalDisplay.style.color = '#fff';
@@ -315,8 +322,9 @@
 
     priceInput.addEventListener('input', updateTotal);
     countInput.addEventListener('input', updateTotal);
-    typePiece.addEventListener('change', applyPurchaseType);
-    typeWeight.addEventListener('change', applyPurchaseType);
+    massInput.addEventListener('input', updateTotal);
+    typePiece.addEventListener('change', () => { applyPurchaseType(); updateTotal(); });
+    typeWeight.addEventListener('change', () => { applyPurchaseType(); updateTotal(); });
 
     productForm.addEventListener('submit', function () {
         if (!typeWeight.checked) {
@@ -327,5 +335,4 @@
     applyPurchaseType();
     updateTotal();
 </script>
-</body>
-</html>
+}
