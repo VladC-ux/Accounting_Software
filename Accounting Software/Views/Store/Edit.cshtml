@@ -2,9 +2,9 @@
 @{
     Layout = "_FintegraLayout";
     ViewBag.ActivePage = "stores";
-    ViewBag.PageTitle = "Edit Store";
-    ViewBag.PageHeading = "Edit Store";
-    ViewBag.PageSubtitle = "Update store details";
+    ViewBag.PageTitle = Localizer["Edit Store"].Value;
+    ViewBag.PageHeading = Localizer["Edit Store"].Value;
+    ViewBag.PageSubtitle = Localizer["Update store details"].Value;
 }
 
 @section Styles {
@@ -24,15 +24,15 @@
 }
 
 <a class="back-link" asp-action="Index">
-    <i class="fas fa-arrow-left"></i> Back to Stores
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Stores"]
 </a>
 
 <div class="form-wrap">
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3><i class="fas fa-edit" style="color:var(--green);margin-right:6px;"></i> Edit store</h3>
-                <div class="hd-sub">Change the store name</div>
+                <h3><i class="fas fa-edit" style="color:var(--green);margin-right:6px;"></i> @Localizer["Edit store"]</h3>
+                <div class="hd-sub">@Localizer["Change the store name"]</div>
             </div>
         </div>
 
@@ -40,14 +40,14 @@
             <input type="hidden" asp-for="Id" />
 
             <div class="fg">
-                <label asp-for="StoreName">Store Name</label>
+                <label asp-for="StoreName">@Localizer["Store Name"]</label>
                 <input asp-for="StoreName" autofocus />
                 <span asp-validation-for="StoreName" class="form-error"></span>
             </div>
 
             <div class="actions">
-                <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-times"></i> Cancel</a>
-                <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> Save Changes</button>
+                <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-times"></i> @Localizer["Cancel"]</a>
+                <button class="btn btn-primary" type="submit"><i class="fas fa-save"></i> @Localizer["Save Changes"]</button>
             </div>
         </form>
     </div>

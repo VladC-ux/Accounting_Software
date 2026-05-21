@@ -2,11 +2,11 @@
 @{
     Layout = "_FintegraLayout";
     var storeId = ViewBag.StoreId is int sid ? sid : 0;
-    var storeName = ViewBag.StoreName as string ?? "Store";
+    var storeName = ViewBag.StoreName as string ?? Localizer["Store"].Value;
     ViewBag.ActivePage = "stores";
-    ViewBag.PageTitle = $"Add Products to {storeName}";
-    ViewBag.PageHeading = $"Add Products to {storeName}";
-    ViewBag.PageSubtitle = "Pick a product — pre-filled price and quantity, edit as needed";
+    ViewBag.PageTitle = Localizer["Add Products to"].Value + $" {storeName}";
+    ViewBag.PageHeading = Localizer["Add Products to"].Value + $" {storeName}";
+    ViewBag.PageSubtitle = Localizer["Pick a product — pre-filled price and quantity, edit as needed"].Value;
 }
 
 @section Styles {
@@ -59,7 +59,7 @@
 }
 
 <a class="back-link" asp-action="ShowStoreProduct" asp-route-storeId="@storeId">
-    <i class="fas fa-arrow-left"></i> Back to @storeName
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to"] @storeName
 </a>
 
 @if (TempData["ErrorMessage"] != null)
@@ -75,7 +75,7 @@
 {
     <div class="toolbar">
         <i class="fas fa-search"></i>
-        <input type="text" id="productSearch" placeholder="Search by product or seller name..." />
+        <input type="text" id="productSearch" placeholder="@Localizer["Search by product or seller name..."]" />
     </div>
 
     <div class="grid" id="productGrid">
@@ -93,19 +93,19 @@
                 <div class="p-meta">
                     <span class="p-price">@p.Price.ToString("N2")</span>
                     <span class="chip">@p.Mass @p.unitOfmass</span>
-                    <span class="p-stock @(outOfStock ? "out" : "")">stock: @p.Count</span>
+                    <span class="p-stock @(outOfStock ? "out" : "")">@Localizer["stock:"] @p.Count</span>
                 </div>
                 @if (outOfStock)
                 {
                     <div style="display:flex;gap:8px;align-items:stretch;">
-                        <button class="btn-disabled" disabled style="flex:1;"><i class="fas fa-ban"></i> Out of stock</button>
+                        <button class="btn-disabled" disabled style="flex:1;"><i class="fas fa-ban"></i> @Localizer["Out of stock"]</button>
                         <form asp-action="RemoveOutOfStockProduct" method="post"
-                              onsubmit="return confirm('Remove &quot;@p.Name&quot; from inventory? This cannot be undone.');"
+                              onsubmit="return confirm('@Localizer["Remove"] &quot;@p.Name&quot; @Localizer["from inventory? This cannot be undone."]');"
                               style="margin:0;">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="productId" value="@p.Id" />
                             <input type="hidden" name="storeId" value="@storeId" />
-                            <button class="btn-remove" type="submit" title="Remove this product">
+                            <button class="btn-remove" type="submit" title="@Localizer["Remove this product"]">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>
@@ -117,7 +117,7 @@
                        asp-action="ShowStoreProduct"
                        asp-route-storeId="@storeId"
                        asp-route-add="@p.Id">
-                        <i class="fas fa-plus"></i> Add to Store
+                        <i class="fas fa-plus"></i> @Localizer["Add to Store"]
                     </a>
                 }
             </div>
@@ -128,10 +128,10 @@ else
 {
     <div class="empty">
         <div class="ic"><i class="fas fa-box-open"></i></div>
-        <h4 style="font-weight:700;color:var(--text);margin-bottom:6px;">No products available</h4>
-        <p style="font-size:.86rem;margin-bottom:14px;">Add products to a seller first.</p>
+        <h4 style="font-weight:700;color:var(--text);margin-bottom:6px;">@Localizer["No products available"]</h4>
+        <p style="font-size:.86rem;margin-bottom:14px;">@Localizer["Add products to a seller first."]</p>
         <a class="btn btn-primary" asp-controller="Seller" asp-action="Index">
-            <i class="fas fa-user-tie"></i> Go to Sellers
+            <i class="fas fa-user-tie"></i> @Localizer["Go to Sellers"]
         </a>
     </div>
 }

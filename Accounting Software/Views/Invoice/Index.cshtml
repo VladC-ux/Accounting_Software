@@ -11,15 +11,16 @@
     string FmtMoney(decimal v) => v.ToString("N2", inv);
 
     ViewBag.ActivePage = "invoices";
-    ViewBag.PageTitle = "Invoices";
-    ViewBag.PageHeading = "Invoices";
-    ViewBag.PageSubtitle = count + " invoice" + (count == 1 ? "" : "s") + " · Tracking all sales receipts";
+    ViewBag.PageTitle = Localizer["Invoices"].Value;
+    ViewBag.PageHeading = Localizer["Invoices"].Value;
+    var invoiceWord = count == 1 ? Localizer["invoice"].Value : Localizer["invoices"].Value;
+    ViewBag.PageSubtitle = count + " " + invoiceWord + " · " + Localizer["Tracking all sales receipts"].Value;
     ViewBag.HeaderActions =
         "<div class='search-pill'>"
         + "<i class='fas fa-search'></i>"
-        + "<input type='text' id='invSearch' placeholder='Search by number or buyer...' />"
+        + "<input type='text' id='invSearch' placeholder='" + Localizer["Search by number or buyer..."].Value + "' />"
         + "</div>"
-        + "<a class='btn btn-primary' href='/Store/Index'><i class='fas fa-store'></i> Sell from Store</a>";
+        + "<a class='btn btn-primary' href='/Store/Index'><i class='fas fa-store'></i> " + Localizer["Sell from Store"].Value + "</a>";
 }
 
 @section Styles {
@@ -106,17 +107,17 @@
 <div class="summary-row">
     <div class="stat">
         <div class="stat-ico blue"><i class="far fa-file-lines"></i></div>
-        <div class="stat-lbl">Total Invoices</div>
+        <div class="stat-lbl">@Localizer["Total Invoices"]</div>
         <div class="stat-val">@count</div>
     </div>
     <div class="stat">
         <div class="stat-ico green"><i class="fas fa-coins"></i></div>
-        <div class="stat-lbl">Total Revenue</div>
+        <div class="stat-lbl">@Localizer["Total Revenue"]</div>
         <div class="stat-val c-green">@FmtMoney(totalRevenue)</div>
     </div>
     <div class="stat">
         <div class="stat-ico orange"><i class="fas fa-box"></i></div>
-        <div class="stat-lbl">Items Sold</div>
+        <div class="stat-lbl">@Localizer["Items Sold"]</div>
         <div class="stat-val">@totalItems</div>
     </div>
 </div>
@@ -127,13 +128,13 @@
         <table class="inv-table" id="invTable">
             <thead>
                 <tr>
-                    <th>Number</th>
-                    <th>Date</th>
-                    <th>Store</th>
-                    <th>Buyer</th>
-                    <th style="text-align:right;">Items</th>
-                    <th style="text-align:right;">Total</th>
-                    <th style="text-align:right;">Actions</th>
+                    <th>@Localizer["Number"]</th>
+                    <th>@Localizer["Date"]</th>
+                    <th>@Localizer["Store"]</th>
+                    <th>@Localizer["Buyer"]</th>
+                    <th style="text-align:right;">@Localizer["Items"]</th>
+                    <th style="text-align:right;">@Localizer["Total"]</th>
+                    <th style="text-align:right;">@Localizer["Actions"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -150,16 +151,16 @@
                             }
                             else
                             {
-                                <span class="badge walk"><i class="fas fa-walking"></i> Walk-in</span>
+                                <span class="badge walk"><i class="fas fa-walking"></i> @Localizer["Walk-in"]</span>
                             }
                         </td>
                         <td style="text-align:right;">@i.Items.Count</td>
                         <td class="inv-total">@FmtMoney(i.Total)</td>
                         <td style="text-align:right;white-space:nowrap;">
-                            <a class="a-act" asp-action="Details" asp-route-id="@i.Id" title="View details">
+                            <a class="a-act" asp-action="Details" asp-route-id="@i.Id" title="@Localizer["View details"]">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a class="a-act pdf" asp-action="Pdf" asp-route-id="@i.Id" title="Download PDF" target="_blank">
+                            <a class="a-act pdf" asp-action="Pdf" asp-route-id="@i.Id" title="@Localizer["Download PDF"]" target="_blank">
                                 <i class="fas fa-file-pdf"></i>
                             </a>
                         </td>
@@ -173,9 +174,9 @@ else
 {
     <div class="empty-state">
         <div class="empty-ico"><i class="far fa-file-lines"></i></div>
-        <h4>No invoices yet</h4>
-        <p>Sell something from a Store to create your first invoice.</p>
-        <a class="btn btn-primary" asp-controller="Store" asp-action="Index"><i class="fas fa-store"></i> Open Stores</a>
+        <h4>@Localizer["No invoices yet"]</h4>
+        <p>@Localizer["Sell something from a Store to create your first invoice."]</p>
+        <a class="btn btn-primary" asp-controller="Store" asp-action="Index"><i class="fas fa-store"></i> @Localizer["Open Stores"]</a>
     </div>
 }
 

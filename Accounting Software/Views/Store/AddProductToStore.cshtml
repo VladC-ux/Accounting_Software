@@ -2,9 +2,9 @@
 @{
     Layout = "_FintegraLayout";
     ViewBag.ActivePage = "stores";
-    ViewBag.PageTitle = "Add Product to Store";
-    ViewBag.PageHeading = "Add Product to Store";
-    ViewBag.PageSubtitle = "Move a product from inventory into a store";
+    ViewBag.PageTitle = Localizer["Add Product to Store"].Value;
+    ViewBag.PageHeading = Localizer["Add Product to Store"].Value;
+    ViewBag.PageSubtitle = Localizer["Move a product from inventory into a store"].Value;
 }
 
 @section Styles {
@@ -48,7 +48,7 @@
 }
 
 <a class="back-link" asp-action="ShowStoreProduct" asp-route-storeId="@Model.StoreId">
-    <i class="fas fa-arrow-left"></i> Back to @Model.StoreName
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to"] @Model.StoreName
 </a>
 
 @if (TempData["ErrorMessage"] != null)
@@ -60,8 +60,8 @@
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3><i class="fas fa-exchange-alt" style="color:var(--green);margin-right:6px;"></i> Add Product to Store</h3>
-                <div class="hd-sub">Set price, quantity and notes for this store</div>
+                <h3><i class="fas fa-exchange-alt" style="color:var(--green);margin-right:6px;"></i> @Localizer["Add Product to Store"]</h3>
+                <div class="hd-sub">@Localizer["Set price, quantity and notes for this store"]</div>
             </div>
         </div>
 
@@ -78,24 +78,24 @@
 
             <div class="grid-2">
                 <div class="fg">
-                    <label asp-for="Price">Price</label>
+                    <label asp-for="Price">@Localizer["Price"]</label>
                     <input asp-for="Price" type="number" step="0.01" min="0.01" />
                     <span asp-validation-for="Price" class="form-error"></span>
                 </div>
 
                 <div class="fg">
-                    <label asp-for="Count">Quantity</label>
+                    <label asp-for="Count">@Localizer["Quantity"]</label>
                     <input asp-for="Count" type="number" min="1" max="@ViewBag.AvailableStock" />
                     <small style="display:block;color:var(--muted);font-size:.74rem;margin-top:5px;">
-                        <i class="fas fa-warehouse"></i> In stock: <strong>@ViewBag.AvailableStock</strong>
+                        <i class="fas fa-warehouse"></i> @Localizer["In stock:"] <strong>@ViewBag.AvailableStock</strong>
                     </small>
                     <span asp-validation-for="Count" class="form-error"></span>
                 </div>
 
                 <div class="fg">
-                    <label asp-for="unitOfmass">Unit</label>
+                    <label asp-for="unitOfmass">@Localizer["Unit"]</label>
                     <select asp-for="unitOfmass" id="unitSelect">
-                        <option value="0">Select Unit</option>
+                        <option value="0">@Localizer["Select Unit"]</option>
                         @foreach (var unit in Enum.GetValues(typeof(Accounting_Software.Enums.Unit_of_mass)))
                         {
                             <option value="@unit">@unit</option>
@@ -105,24 +105,24 @@
                 </div>
 
                 <div class="fg" id="massGroup">
-                    <label asp-for="Mass">Mass</label>
+                    <label asp-for="Mass">@Localizer["Mass"]</label>
                     <input asp-for="Mass" type="number" min="0" id="massInput" data-default="@Model.Mass" />
                     <span asp-validation-for="Mass" class="form-error"></span>
                 </div>
             </div>
 
             <div class="fg">
-                <label asp-for="Description">Description</label>
-                <textarea asp-for="Description" placeholder="Optional notes about this product..."></textarea>
+                <label asp-for="Description">@Localizer["Description"]</label>
+                <textarea asp-for="Description" placeholder="@Localizer["Optional notes about this product..."]"></textarea>
                 <span asp-validation-for="Description" class="form-error"></span>
             </div>
 
             <div class="actions">
                 <a class="btn btn-ghost" asp-action="ShowStoreProduct" asp-route-storeId="@Model.StoreId">
-                    <i class="fas fa-times"></i> Cancel
+                    <i class="fas fa-times"></i> @Localizer["Cancel"]
                 </a>
                 <button class="btn btn-primary" type="submit">
-                    <i class="fas fa-check"></i> Add to Store
+                    <i class="fas fa-check"></i> @Localizer["Add to Store"]
                 </button>
             </div>
         </form>

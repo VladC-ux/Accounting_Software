@@ -2,9 +2,9 @@
 @{
     Layout = "_FintegraLayout";
     ViewBag.ActivePage = "stores";
-    ViewBag.PageTitle = "Add Store";
-    ViewBag.PageHeading = "Add Store";
-    ViewBag.PageSubtitle = "Create a new store location";
+    ViewBag.PageTitle = Localizer["Add Store"].Value;
+    ViewBag.PageHeading = Localizer["Add Store"].Value;
+    ViewBag.PageSubtitle = Localizer["Create a new store location"].Value;
 }
 
 @section Styles {
@@ -24,28 +24,28 @@
 }
 
 <a class="back-link" asp-action="Index">
-    <i class="fas fa-arrow-left"></i> Back to Stores
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Stores"]
 </a>
 
 <div class="form-wrap">
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3><i class="fas fa-plus-circle" style="color:var(--green);margin-right:6px;"></i> Add new store</h3>
-                <div class="hd-sub">Each store keeps its own inventory and sales</div>
+                <h3><i class="fas fa-plus-circle" style="color:var(--green);margin-right:6px;"></i> @Localizer["Add new store"]</h3>
+                <div class="hd-sub">@Localizer["Each store keeps its own inventory and sales"]</div>
             </div>
         </div>
 
         <form asp-action="Add" method="post">
             <div class="fg">
-                <label asp-for="StoreName">Store Name</label>
-                <input asp-for="StoreName" placeholder="e.g. Downtown Branch" autofocus />
+                <label asp-for="StoreName">@Localizer["Store Name"]</label>
+                <input asp-for="StoreName" placeholder="@Localizer["e.g. Downtown Branch"]" autofocus />
                 <span asp-validation-for="StoreName" class="form-error"></span>
             </div>
 
             <div class="actions">
-                <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-times"></i> Cancel</a>
-                <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i> Create Store</button>
+                <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-times"></i> @Localizer["Cancel"]</a>
+                <button class="btn btn-primary" type="submit"><i class="fas fa-check"></i> @Localizer["Create Store"]</button>
             </div>
         </form>
     </div>

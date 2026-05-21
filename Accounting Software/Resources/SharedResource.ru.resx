@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Language" xml:space="preserve"><value>Язык</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Панель</value></data>
+  <data name="Income" xml:space="preserve"><value>Доходы</value></data>
+  <data name="Sellers" xml:space="preserve"><value>Продавцы</value></data>
+  <data name="Invoices" xml:space="preserve"><value>Накладные</value></data>
+  <data name="Stores" xml:space="preserve"><value>Магазины</value></data>
+  <data name="Reports" xml:space="preserve"><value>Отчёты</value></data>
+  <data name="Transactions" xml:space="preserve"><value>Транзакции</value></data>
+  <data name="Telegram" xml:space="preserve"><value>Telegram</value></data>
+  <data name="Account" xml:space="preserve"><value>Аккаунт</value></data>
+  <data name="Overview" xml:space="preserve"><value>Обзор</value></data>
+  <data name="Monthly profit" xml:space="preserve"><value>Прибыль за месяц</value></data>
+  <data name="Monthly loss" xml:space="preserve"><value>Убыток за месяц</value></data>
+  <data name="Net Profit" xml:space="preserve"><value>Чистая прибыль</value></data>
+  <data name="vs last month" xml:space="preserve"><value>по сравнению с прошлым месяцем</value></data>
+  <data name="Expenses" xml:space="preserve"><value>Расходы</value></data>
+  <data name="Cash Balance" xml:space="preserve"><value>Денежный баланс</value></data>
+  <data name="Cash flow" xml:space="preserve"><value>Денежный поток</value></data>
+  <data name="Income and expenses over the last 6 months" xml:space="preserve"><value>Доходы и расходы за последние 6 месяцев</value></data>
+  <data name="Last 6 months" xml:space="preserve"><value>Последние 6 месяцев</value></data>
+  <data name="Expense breakdown" xml:space="preserve"><value>Структура расходов</value></data>
+  <data name="Top 5 purchase categories" xml:space="preserve"><value>Топ-5 категорий закупок</value></data>
+  <data name="Total" xml:space="preserve"><value>Всего</value></data>
+  <data name="No expenses yet" xml:space="preserve"><value>Расходов пока нет</value></data>
+  <data name="Quick actions" xml:space="preserve"><value>Быстрые действия</value></data>
+  <data name="Most common operations" xml:space="preserve"><value>Самые частые операции</value></data>
+  <data name="New purchase" xml:space="preserve"><value>Новая закупка</value></data>
+  <data name="Buy products from a seller" xml:space="preserve"><value>Купить товары у продавца</value></data>
+  <data name="Record sale" xml:space="preserve"><value>Зафиксировать продажу</value></data>
+  <data name="Sell products from a store" xml:space="preserve"><value>Продать товары из магазина</value></data>
+  <data name="New invoice" xml:space="preserve"><value>Новая накладная</value></data>
+  <data name="Create an invoice for a client" xml:space="preserve"><value>Создать накладную для клиента</value></data>
+  <data name="Add funds" xml:space="preserve"><value>Пополнить счёт</value></data>
+  <data name="Top up your account balance" xml:space="preserve"><value>Пополнить баланс аккаунта</value></data>
+  <data name="Sales and profit analytics" xml:space="preserve"><value>Аналитика продаж и прибыли</value></data>
+  <data name="Export" xml:space="preserve"><value>Экспорт</value></data>
+  <data name="Download an Excel report" xml:space="preserve"><value>Скачать отчёт в Excel</value></data>
+  <data name="Recent activity" xml:space="preserve"><value>Последняя активность</value></data>
+  <data name="Latest transactions" xml:space="preserve"><value>Последние транзакции</value></data>
+  <data name="See all" xml:space="preserve"><value>Смотреть все</value></data>
+  <data name="No transactions yet" xml:space="preserve"><value>Транзакций пока нет</value></data>
+  <data name="Sign In" xml:space="preserve"><value>Войти</value></data>
+  <data name="Sign in to your account" xml:space="preserve"><value>Войдите в свой аккаунт</value></data>
+  <data name="Email" xml:space="preserve"><value>Эл. почта</value></data>
+  <data name="Password" xml:space="preserve"><value>Пароль</value></data>
+  <data name="Remember me for 30 days" xml:space="preserve"><value>Запомнить меня на 30 дней</value></data>
+  <data name="Forgot password?" xml:space="preserve"><value>Забыли пароль?</value></data>
+  <data name="Create Owner Account" xml:space="preserve"><value>Создать аккаунт владельца</value></data>
+  <data name="FIRST TIME SETUP" xml:space="preserve"><value>ПЕРВОНАЧАЛЬНАЯ НАСТРОЙКА</value></data>
+  <data name="Set up your credentials to access the system" xml:space="preserve"><value>Задайте учётные данные для доступа к системе</value></data>
+  <data name="This account will be the only account with access to the system. Keep your credentials safe." xml:space="preserve"><value>Этот аккаунт будет единственным с доступом к системе. Храните свои учётные данные в безопасности.</value></data>
+  <data name="Full Name" xml:space="preserve"><value>Полное имя</value></data>
+  <data name="Your name" xml:space="preserve"><value>Ваше имя</value></data>
+  <data name="Used for password recovery" xml:space="preserve"><value>Используется для восстановления пароля</value></data>
+  <data name="Min. 6 characters" xml:space="preserve"><value>Мин. 6 символов</value></data>
+  <data name="Confirm Password" xml:space="preserve"><value>Подтвердите пароль</value></data>
+  <data name="Repeat password" xml:space="preserve"><value>Повторите пароль</value></data>
+  <data name="Create Account &amp; Continue" xml:space="preserve"><value>Создать аккаунт и продолжить</value></data>
+  <data name="Forgot Password" xml:space="preserve"><value>Забыли пароль</value></data>
+  <data name="Enter your email to receive a reset request" xml:space="preserve"><value>Введите эл. почту, чтобы получить запрос на сброс</value></data>
+  <data name="Check your email!" xml:space="preserve"><value>Проверьте почту!</value></data>
+  <data name="A confirmation email has been sent. Open it and click &quot;Approve &amp; Reset Password&quot; to proceed." xml:space="preserve"><value>На вашу почту отправлено письмо. Откройте его и нажмите «Approve &amp; Reset Password», чтобы продолжить.</value></data>
+  <data name="The link expires in 1 hour." xml:space="preserve"><value>Ссылка действует 1 час.</value></data>
+  <data name="Email Could Not Be Sent" xml:space="preserve"><value>Не удалось отправить письмо</value></data>
+  <data name="The email service is not configured correctly." xml:space="preserve"><value>Почтовая служба настроена некорректно.</value></data>
+  <data name="Please contact your administrator to set up SMTP in appsettings.json." xml:space="preserve"><value>Обратитесь к администратору для настройки SMTP в appsettings.json.</value></data>
+  <data name="Email Address" xml:space="preserve"><value>Адрес эл. почты</value></data>
+  <data name="Send Reset Request" xml:space="preserve"><value>Отправить запрос на сброс</value></data>
+  <data name="Back to Login" xml:space="preserve"><value>Назад ко входу</value></data>
+  <data name="New Password" xml:space="preserve"><value>Новый пароль</value></data>
+  <data name="Enter your new password below" xml:space="preserve"><value>Введите новый пароль ниже</value></data>
+  <data name="Link Expired or Invalid" xml:space="preserve"><value>Ссылка истекла или недействительна</value></data>
+  <data name="This reset link is no longer valid. Please request a new one." xml:space="preserve"><value>Эта ссылка для сброса больше недействительна. Запросите новую.</value></data>
+  <data name="Request new link" xml:space="preserve"><value>Запросить новую ссылку</value></data>
+  <data name="Confirm New Password" xml:space="preserve"><value>Подтвердите новый пароль</value></data>
+  <data name="Set New Password" xml:space="preserve"><value>Установить новый пароль</value></data>
+  <data name="Approve Password Reset" xml:space="preserve"><value>Подтвердить сброс пароля</value></data>
+  <data name="You received this link because a password reset was requested for your account." xml:space="preserve"><value>Вы получили эту ссылку, потому что для вашего аккаунта запрошен сброс пароля.</value></data>
+  <data name="Did not request this? Click &quot;Cancel&quot; and your password stays unchanged. The link expires in 1 hour." xml:space="preserve"><value>Не запрашивали это? Нажмите «Cancel», и пароль останется без изменений. Ссылка действует 1 час.</value></data>
+  <data name="Yes, I approve – Set new password" xml:space="preserve"><value>Да, подтверждаю – установить новый пароль</value></data>
+  <data name="Cancel – I did not request this" xml:space="preserve"><value>Отмена – я этого не запрашивал</value></data>
+  <data name="ACCOUNT SETUP REQUIRED" xml:space="preserve"><value>ТРЕБУЕТСЯ НАСТРОЙКА АККАУНТА</value></data>
+  <data name="Set Up Your Login" xml:space="preserve"><value>Настройте вход</value></data>
+  <data name="Your account needs a password and email" xml:space="preserve"><value>Вашему аккаунту нужны пароль и эл. почта</value></data>
+  <data name="Your account was created without login credentials. Please set them up now." xml:space="preserve"><value>Ваш аккаунт создан без учётных данных. Настройте их сейчас.</value></data>
+  <data name="Your Name" xml:space="preserve"><value>Ваше имя</value></data>
+  <data name="Save &amp; Continue" xml:space="preserve"><value>Сохранить и продолжить</value></data>
+  <data name="supplier" xml:space="preserve"><value>поставщик</value></data>
+  <data name="suppliers" xml:space="preserve"><value>поставщиков</value></data>
+  <data name="Manage your network" xml:space="preserve"><value>Управляйте своей сетью</value></data>
+  <data name="Search sellers..." xml:space="preserve"><value>Поиск продавцов...</value></data>
+  <data name="Add Seller" xml:space="preserve"><value>Добавить продавца</value></data>
+  <data name="Active" xml:space="preserve"><value>Активен</value></data>
+  <data name="View" xml:space="preserve"><value>Просмотр</value></data>
+  <data name="Product" xml:space="preserve"><value>Товар</value></data>
+  <data name="Delete seller" xml:space="preserve"><value>Удалить продавца</value></data>
+  <data name="No sellers yet" xml:space="preserve"><value>Продавцов пока нет</value></data>
+  <data name="Add your first seller to start tracking products." xml:space="preserve"><value>Добавьте первого продавца, чтобы отслеживать товары.</value></data>
+  <data name="New Seller" xml:space="preserve"><value>Новый продавец</value></data>
+  <data name="Add a new partner to start tracking their products" xml:space="preserve"><value>Добавьте нового партнёра, чтобы отслеживать его товары</value></data>
+  <data name="Back to Sellers" xml:space="preserve"><value>Назад к продавцам</value></data>
+  <data name="Seller details" xml:space="preserve"><value>Данные продавца</value></data>
+  <data name="This name will appear on products, receipts and reports" xml:space="preserve"><value>Это имя будет отображаться в товарах, чеках и отчётах</value></data>
+  <data name="Seller Name" xml:space="preserve"><value>Имя продавца</value></data>
+  <data name="e.g. Acme Distribution Ltd." xml:space="preserve"><value>напр. ООО «Акме Дистрибьюшн»</value></data>
+  <data name="Used across the system to identify this partner." xml:space="preserve"><value>Используется в системе для идентификации этого партнёра.</value></data>
+  <data name="Save Seller" xml:space="preserve"><value>Сохранить продавца</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Отмена</value></data>
+  <data name="Edit Seller" xml:space="preserve"><value>Редактировать продавца</value></data>
+  <data name="Update the seller name" xml:space="preserve"><value>Обновите имя продавца</value></data>
+  <data name="Edit details" xml:space="preserve"><value>Редактировать данные</value></data>
+  <data name="Change the seller's display name" xml:space="preserve"><value>Измените отображаемое имя продавца</value></data>
+  <data name="Seller ID:" xml:space="preserve"><value>ID продавца:</value></data>
+  <data name="Enter new name..." xml:space="preserve"><value>Введите новое имя...</value></data>
+  <data name="Save Changes" xml:space="preserve"><value>Сохранить изменения</value></data>
+  <data name="location" xml:space="preserve"><value>точка</value></data>
+  <data name="locations" xml:space="preserve"><value>точек</value></data>
+  <data name="Manage your retail points" xml:space="preserve"><value>Управляйте торговыми точками</value></data>
+  <data name="Search stores..." xml:space="preserve"><value>Поиск магазинов...</value></data>
+  <data name="New Store" xml:space="preserve"><value>Новый магазин</value></data>
+  <data name="Products" xml:space="preserve"><value>Товары</value></data>
+  <data name="Edit" xml:space="preserve"><value>Изменить</value></data>
+  <data name="Delete" xml:space="preserve"><value>Удалить</value></data>
+  <data name="Delete this store?" xml:space="preserve"><value>Удалить этот магазин?</value></data>
+  <data name="No stores yet" xml:space="preserve"><value>Магазинов пока нет</value></data>
+  <data name="Create your first store to start managing inventory." xml:space="preserve"><value>Создайте первый магазин, чтобы управлять складом.</value></data>
+  <data name="Create your first store" xml:space="preserve"><value>Создать первый магазин</value></data>
+  <data name="Add Store" xml:space="preserve"><value>Добавить магазин</value></data>
+  <data name="Create a new store location" xml:space="preserve"><value>Создать новую торговую точку</value></data>
+  <data name="Back to Stores" xml:space="preserve"><value>Назад к магазинам</value></data>
+  <data name="Add new store" xml:space="preserve"><value>Добавить новый магазин</value></data>
+  <data name="Each store keeps its own inventory and sales" xml:space="preserve"><value>У каждого магазина свой склад и продажи</value></data>
+  <data name="Store Name" xml:space="preserve"><value>Название магазина</value></data>
+  <data name="e.g. Downtown Branch" xml:space="preserve"><value>напр. Центральный филиал</value></data>
+  <data name="Create Store" xml:space="preserve"><value>Создать магазин</value></data>
+  <data name="Edit Store" xml:space="preserve"><value>Редактировать магазин</value></data>
+  <data name="Update store details" xml:space="preserve"><value>Обновите данные магазина</value></data>
+  <data name="Edit store" xml:space="preserve"><value>Редактировать магазин</value></data>
+  <data name="Change the store name" xml:space="preserve"><value>Измените название магазина</value></data>
+  <data name="Choose Store" xml:space="preserve"><value>Выберите магазин</value></data>
+  <data name="Select where to add this product" xml:space="preserve"><value>Выберите, куда добавить этот товар</value></data>
+  <data name="Back to Products" xml:space="preserve"><value>Назад к товарам</value></data>
+  <data name="No stores available" xml:space="preserve"><value>Нет доступных магазинов</value></data>
+  <data name="Create a store first to continue." xml:space="preserve"><value>Сначала создайте магазин, чтобы продолжить.</value></data>
+  <data name="Go to Stores" xml:space="preserve"><value>Перейти к магазинам</value></data>
+  <data name="Back to Product List" xml:space="preserve"><value>Назад к списку товаров</value></data>
+  <data name="Edit Product" xml:space="preserve"><value>Редактировать товар</value></data>
+  <data name="update product details" xml:space="preserve"><value>обновите данные товара</value></data>
+  <data name="Back to Store Products" xml:space="preserve"><value>Назад к товарам магазина</value></data>
+  <data name="Edit product" xml:space="preserve"><value>Редактировать товар</value></data>
+  <data name="Product Name" xml:space="preserve"><value>Название товара</value></data>
+  <data name="Store" xml:space="preserve"><value>Магазин</value></data>
+  <data name="Price" xml:space="preserve"><value>Цена</value></data>
+  <data name="Quantity" xml:space="preserve"><value>Количество</value></data>
+  <data name="Mass" xml:space="preserve"><value>Масса</value></data>
+  <data name="Unit" xml:space="preserve"><value>Единица</value></data>
+  <data name="Added Date" xml:space="preserve"><value>Дата добавления</value></data>
+  <data name="Description" xml:space="preserve"><value>Описание</value></data>
+  <data name="Optional notes..." xml:space="preserve"><value>Необязательные заметки...</value></data>
+  <data name="Update Product" xml:space="preserve"><value>Обновить товар</value></data>
+  <data name="items in stock" xml:space="preserve"><value>товаров на складе</value></data>
+  <data name="Quick Add" xml:space="preserve"><value>Быстрое добавление</value></data>
+  <data name="Browse Products" xml:space="preserve"><value>Обзор товаров</value></data>
+  <data name="Download Invoice" xml:space="preserve"><value>Скачать накладную</value></data>
+  <data name="Seller" xml:space="preserve"><value>Продавец</value></data>
+  <data name="Stock" xml:space="preserve"><value>Остаток</value></data>
+  <data name="Added" xml:space="preserve"><value>Добавлено</value></data>
+  <data name="Actions" xml:space="preserve"><value>Действия</value></data>
+  <data name="pcs" xml:space="preserve"><value>шт.</value></data>
+  <data name="Quantity in" xml:space="preserve"><value>Количество в</value></data>
+  <data name="Sell" xml:space="preserve"><value>Продать</value></data>
+  <data name="Delete this product?" xml:space="preserve"><value>Удалить этот товар?</value></data>
+  <data name="No products in this store yet" xml:space="preserve"><value>В этом магазине пока нет товаров</value></data>
+  <data name="Quick Add to" xml:space="preserve"><value>Быстрое добавление в</value></data>
+  <data name="No products available. Add products to a seller first." xml:space="preserve"><value>Нет доступных товаров. Сначала добавьте товары продавцу.</value></data>
+  <data name="— Select a product —" xml:space="preserve"><value>— Выберите товар —</value></data>
+  <data name="stock:" xml:space="preserve"><value>остаток:</value></data>
+  <data name="Add to Store" xml:space="preserve"><value>Добавить в магазин</value></data>
+  <data name="Quantity (pcs)" xml:space="preserve"><value>Количество (шт.)</value></data>
+  <data name="Quantity (units)" xml:space="preserve"><value>Количество (единиц)</value></data>
+  <data name="In stock:" xml:space="preserve"><value>На складе:</value></data>
+  <data name="units" xml:space="preserve"><value>единиц</value></data>
+  <data name="Adding" xml:space="preserve"><value>Добавляется</value></data>
+  <data name="Add Product to Store" xml:space="preserve"><value>Добавить товар в магазин</value></data>
+  <data name="Move a product from inventory into a store" xml:space="preserve"><value>Переместите товар со склада в магазин</value></data>
+  <data name="Set price, quantity and notes for this store" xml:space="preserve"><value>Укажите цену, количество и заметки для этого магазина</value></data>
+  <data name="Select Unit" xml:space="preserve"><value>Выберите единицу</value></data>
+  <data name="Optional notes about this product..." xml:space="preserve"><value>Необязательные заметки об этом товаре...</value></data>
+  <data name="Back to" xml:space="preserve"><value>Назад к</value></data>
+  <data name="Add Products to" xml:space="preserve"><value>Добавить товары в</value></data>
+  <data name="Pick a product — pre-filled price and quantity, edit as needed" xml:space="preserve"><value>Выберите товар — цена и количество заполнены, измените при необходимости</value></data>
+  <data name="Search by product or seller name..." xml:space="preserve"><value>Поиск по названию товара или продавца...</value></data>
+  <data name="Out of stock" xml:space="preserve"><value>Нет в наличии</value></data>
+  <data name="Remove" xml:space="preserve"><value>Удалить</value></data>
+  <data name="from inventory? This cannot be undone." xml:space="preserve"><value>со склада? Это нельзя отменить.</value></data>
+  <data name="Remove this product" xml:space="preserve"><value>Удалить этот товар</value></data>
+  <data name="No products available" xml:space="preserve"><value>Нет доступных товаров</value></data>
+  <data name="Add products to a seller first." xml:space="preserve"><value>Сначала добавьте товары продавцу.</value></data>
+  <data name="Go to Sellers" xml:space="preserve"><value>Перейти к продавцам</value></data>
+  <data name="item" xml:space="preserve"><value>товар</value></data>
+  <data name="for this seller" xml:space="preserve"><value>у этого продавца</value></data>
+  <data name="Product list" xml:space="preserve"><value>Список товаров</value></data>
+  <data name="All products for this seller" xml:space="preserve"><value>Все товары этого продавца</value></data>
+  <data name="Items in stock" xml:space="preserve"><value>Товаров на складе</value></data>
+  <data name="Total value" xml:space="preserve"><value>Общая стоимость</value></data>
+  <data name="Search products..." xml:space="preserve"><value>Поиск товаров...</value></data>
+  <data name="Name" xml:space="preserve"><value>Название</value></data>
+  <data name="Count" xml:space="preserve"><value>Кол-во</value></data>
+  <data name="Shops" xml:space="preserve"><value>Магазины</value></data>
+  <data name="No products yet" xml:space="preserve"><value>Товаров пока нет</value></data>
+  <data name="Add a product to get started." xml:space="preserve"><value>Добавьте товар, чтобы начать.</value></data>
+  <data name="Total items:" xml:space="preserve"><value>Всего товаров:</value></data>
+  <data name="Total value:" xml:space="preserve"><value>Общая стоимость:</value></data>
+  <data name="Add Product" xml:space="preserve"><value>Добавить товар</value></data>
+  <data name="Change the values below and save" xml:space="preserve"><value>Измените значения ниже и сохраните</value></data>
+  <data name="ID:" xml:space="preserve"><value>ID:</value></data>
+  <data name="Unit of Mass" xml:space="preserve"><value>Единица измерения</value></data>
+  <data name="Description..." xml:space="preserve"><value>Описание...</value></data>
+  <data name="New Product" xml:space="preserve"><value>Новый товар</value></data>
+  <data name="Register a new purchase from this seller" xml:space="preserve"><value>Зарегистрируйте новую закупку у этого продавца</value></data>
+  <data name="Current Balance" xml:space="preserve"><value>Текущий баланс</value></data>
+  <data name="Product Details" xml:space="preserve"><value>Данные товара</value></data>
+  <data name="Price per unit" xml:space="preserve"><value>Цена за единицу</value></data>
+  <data name="Purchase Type" xml:space="preserve"><value>Тип закупки</value></data>
+  <data name="By piece" xml:space="preserve"><value>Поштучно</value></data>
+  <data name="By weight" xml:space="preserve"><value>По весу</value></data>
+  <data name="Count (pcs)" xml:space="preserve"><value>Кол-во (шт.)</value></data>
+  <data name="Description (optional)" xml:space="preserve"><value>Описание (необязательно)</value></data>
+  <data name="Short description..." xml:space="preserve"><value>Краткое описание...</value></data>
+  <data name="Total Cost" xml:space="preserve"><value>Итоговая стоимость</value></data>
+  <data name="Balance after:" xml:space="preserve"><value>Баланс после:</value></data>
+  <data name="Save Product" xml:space="preserve"><value>Сохранить товар</value></data>
+  <data name="View Products" xml:space="preserve"><value>Просмотреть товары</value></data>
+  <data name="Products of this Seller" xml:space="preserve"><value>Товары этого продавца</value></data>
+  <data name="Existing items registered for this partner" xml:space="preserve"><value>Товары, зарегистрированные для этого партнёра</value></data>
+  <data name="No products yet for this seller" xml:space="preserve"><value>У этого продавца пока нет товаров</value></data>
+  <data name="e.g. Apple" xml:space="preserve"><value>напр. Яблоко</value></data>
+  <data name="invoice" xml:space="preserve"><value>накладная</value></data>
+  <data name="invoices" xml:space="preserve"><value>накладных</value></data>
+  <data name="Tracking all sales receipts" xml:space="preserve"><value>Учёт всех чеков о продажах</value></data>
+  <data name="Search by number or buyer..." xml:space="preserve"><value>Поиск по номеру или покупателю...</value></data>
+  <data name="Sell from Store" xml:space="preserve"><value>Продать из магазина</value></data>
+  <data name="Total Invoices" xml:space="preserve"><value>Всего накладных</value></data>
+  <data name="Total Revenue" xml:space="preserve"><value>Общая выручка</value></data>
+  <data name="Items Sold" xml:space="preserve"><value>Продано товаров</value></data>
+  <data name="Number" xml:space="preserve"><value>Номер</value></data>
+  <data name="Date" xml:space="preserve"><value>Дата</value></data>
+  <data name="Buyer" xml:space="preserve"><value>Покупатель</value></data>
+  <data name="Items" xml:space="preserve"><value>Товары</value></data>
+  <data name="Walk-in" xml:space="preserve"><value>Случайный</value></data>
+  <data name="View details" xml:space="preserve"><value>Подробнее</value></data>
+  <data name="Download PDF" xml:space="preserve"><value>Скачать PDF</value></data>
+  <data name="No invoices yet" xml:space="preserve"><value>Накладных пока нет</value></data>
+  <data name="Sell something from a Store to create your first invoice." xml:space="preserve"><value>Продайте что-нибудь из магазина, чтобы создать первую накладную.</value></data>
+  <data name="Open Stores" xml:space="preserve"><value>Открыть магазины</value></data>
+  <data name="Invoice" xml:space="preserve"><value>Накладная</value></data>
+  <data name="All invoices" xml:space="preserve"><value>Все накладные</value></data>
+  <data name="INVOICE" xml:space="preserve"><value>НАКЛАДНАЯ</value></data>
+  <data name="Invoice #" xml:space="preserve"><value>Накладная №</value></data>
+  <data name="Issued" xml:space="preserve"><value>Выдана</value></data>
+  <data name="From" xml:space="preserve"><value>От</value></data>
+  <data name="Issued by:" xml:space="preserve"><value>Выдал:</value></data>
+  <data name="Bill to" xml:space="preserve"><value>Кому</value></data>
+  <data name="Walk-in customer" xml:space="preserve"><value>Случайный покупатель</value></data>
+  <data name="Qty" xml:space="preserve"><value>Кол-во</value></data>
+  <data name="Unit price" xml:space="preserve"><value>Цена за ед.</value></data>
+  <data name="Amount" xml:space="preserve"><value>Сумма</value></data>
+  <data name="Subtotal" xml:space="preserve"><value>Подытог</value></data>
+  <data name="VAT" xml:space="preserve"><value>НДС</value></data>
+  <data name="All-time overview based on transaction history" xml:space="preserve"><value>Общий обзор на основе истории транзакций</value></data>
+  <data name="Total Spent" xml:space="preserve"><value>Всего потрачено</value></data>
+  <data name="purchases" xml:space="preserve"><value>закупок</value></data>
+  <data name="Total Earned" xml:space="preserve"><value>Всего заработано</value></data>
+  <data name="sales" xml:space="preserve"><value>продаж</value></data>
+  <data name="Earned − Spent" xml:space="preserve"><value>Заработано − Потрачено</value></data>
+  <data name="Total Transactions" xml:space="preserve"><value>Всего транзакций</value></data>
+  <data name="in" xml:space="preserve"><value>вход.</value></data>
+  <data name="out" xml:space="preserve"><value>исход.</value></data>
+  <data name="Income vs Expenses" xml:space="preserve"><value>Доходы и расходы</value></data>
+  <data name="Monthly comparison — last 6 months" xml:space="preserve"><value>Помесячное сравнение — последние 6 месяцев</value></data>
+  <data name="Top 5 by Sales" xml:space="preserve"><value>Топ-5 по продажам</value></data>
+  <data name="Most profitable products" xml:space="preserve"><value>Самые прибыльные товары</value></data>
+  <data name="No sales yet" xml:space="preserve"><value>Продаж пока нет</value></data>
+  <data name="Top 5 by Purchases" xml:space="preserve"><value>Топ-5 по закупкам</value></data>
+  <data name="Most bought products" xml:space="preserve"><value>Самые закупаемые товары</value></data>
+  <data name="No purchases yet" xml:space="preserve"><value>Закупок пока нет</value></data>
+  <data name="Revenue by Store" xml:space="preserve"><value>Выручка по магазинам</value></data>
+  <data name="Breakdown across retail points" xml:space="preserve"><value>Распределение по торговым точкам</value></data>
+  <data name="No store sales yet" xml:space="preserve"><value>Продаж по магазинам пока нет</value></data>
+  <data name="Revenue" xml:space="preserve"><value>Выручка</value></data>
+  <data name="My Account" xml:space="preserve"><value>Мой аккаунт</value></data>
+  <data name="Available funds for purchases" xml:space="preserve"><value>Доступные средства для покупок</value></data>
+  <data name="Top Up" xml:space="preserve"><value>Пополнить</value></data>
+  <data name="Total Deposited" xml:space="preserve"><value>Всего внесено</value></data>
+  <data name="Recent transactions" xml:space="preserve"><value>Последние транзакции</value></data>
+  <data name="Latest movements on your account" xml:space="preserve"><value>Последние движения по аккаунту</value></data>
+  <data name="View all" xml:space="preserve"><value>Смотреть все</value></data>
+  <data name="Type" xml:space="preserve"><value>Тип</value></data>
+  <data name="Purchase" xml:space="preserve"><value>Закупка</value></data>
+  <data name="Sale" xml:space="preserve"><value>Продажа</value></data>
+  <data name="Deposit" xml:space="preserve"><value>Депозит</value></data>
+  <data name="Create User" xml:space="preserve"><value>Создать пользователя</value></data>
+  <data name="Add the main account holder to the system" xml:space="preserve"><value>Добавьте основного владельца аккаунта в систему</value></data>
+  <data name="Create user account" xml:space="preserve"><value>Создать учётную запись пользователя</value></data>
+  <data name="Only one main user account is allowed" xml:space="preserve"><value>Допускается только один основной пользователь</value></data>
+  <data name="Success!" xml:space="preserve"><value>Готово!</value></data>
+  <data name="The user has been created. You cannot create another one." xml:space="preserve"><value>Пользователь создан. Создать ещё одного нельзя.</value></data>
+  <data name="Enter your name" xml:space="preserve"><value>Введите ваше имя</value></data>
+  <data name="Transaction History" xml:space="preserve"><value>История транзакций</value></data>
+  <data name="Full ledger of all account activity" xml:space="preserve"><value>Полный журнал всей активности аккаунта</value></data>
+  <data name="Export to Excel" xml:space="preserve"><value>Экспорт в Excel</value></data>
+  <data name="Filter Transactions" xml:space="preserve"><value>Фильтр транзакций</value></data>
+  <data name="From Date" xml:space="preserve"><value>С даты</value></data>
+  <data name="To Date" xml:space="preserve"><value>По дату</value></data>
+  <data name="All" xml:space="preserve"><value>Все</value></data>
+  <data name="Apply" xml:space="preserve"><value>Применить</value></data>
+  <data name="Reset" xml:space="preserve"><value>Сбросить</value></data>
+  <data name="Active filters:" xml:space="preserve"><value>Активные фильтры:</value></data>
+  <data name="from" xml:space="preserve"><value>с</value></data>
+  <data name="to" xml:space="preserve"><value>по</value></data>
+  <data name="Type:" xml:space="preserve"><value>Тип:</value></data>
+  <data name="Total Records" xml:space="preserve"><value>Всего записей</value></data>
+  <data name="Spent (Purchases)" xml:space="preserve"><value>Потрачено (закупки)</value></data>
+  <data name="Earned (Sales)" xml:space="preserve"><value>Заработано (продажи)</value></data>
+  <data name="Net for Period" xml:space="preserve"><value>Итог за период</value></data>
+  <data name="transaction found" xml:space="preserve"><value>транзакция найдена</value></data>
+  <data name="transactions found" xml:space="preserve"><value>транзакций найдено</value></data>
+  <data name="Sorted by most recent" xml:space="preserve"><value>Сортировка по новизне</value></data>
+  <data name="No transactions found for selected filters" xml:space="preserve"><value>По выбранным фильтрам транзакций не найдено</value></data>
+  <data name="Telegram Bot" xml:space="preserve"><value>Telegram-бот</value></data>
+  <data name="Get real-time notifications and reports" xml:space="preserve"><value>Получайте уведомления и отчёты в реальном времени</value></data>
+  <data name="Back to Dashboard" xml:space="preserve"><value>Назад на панель</value></data>
+  <data name="Bot is not configured. Set" xml:space="preserve"><value>Бот не настроен. Задайте</value></data>
+  <data name="in_config" xml:space="preserve"><value>в</value></data>
+  <data name="and restart the application." xml:space="preserve"><value>и перезапустите приложение.</value></data>
+  <data name="Connection Status" xml:space="preserve"><value>Статус подключения</value></data>
+  <data name="Link your Telegram account to the system" xml:space="preserve"><value>Привяжите свой Telegram-аккаунт к системе</value></data>
+  <data name="Open Bot" xml:space="preserve"><value>Открыть бота</value></data>
+  <data name="Account linked" xml:space="preserve"><value>Аккаунт привязан</value></data>
+  <data name="Not linked" xml:space="preserve"><value>Не привязан</value></data>
+  <data name="How to link:" xml:space="preserve"><value>Как привязать:</value></data>
+  <data name="Open the bot in Telegram" xml:space="preserve"><value>Откройте бота в Telegram</value></data>
+  <data name="(set bot's @username in appsettings)" xml:space="preserve"><value>(укажите @username бота в appsettings)</value></data>
+  <data name="Send" xml:space="preserve"><value>Отправьте</value></data>
+  <data name="Generate a code below and send it to the bot:" xml:space="preserve"><value>Сгенерируйте код ниже и отправьте боту:</value></data>
+  <data name="Send to the bot:" xml:space="preserve"><value>Отправьте боту:</value></data>
+  <data name="Generate code" xml:space="preserve"><value>Сгенерировать код</value></data>
+  <data name="Generate new code" xml:space="preserve"><value>Сгенерировать новый код</value></data>
+  <data name="Send test" xml:space="preserve"><value>Отправить тест</value></data>
+  <data name="Unlink account from Telegram?" xml:space="preserve"><value>Отвязать аккаунт от Telegram?</value></data>
+  <data name="Unlink" xml:space="preserve"><value>Отвязать</value></data>
+  <data name="Notifications" xml:space="preserve"><value>Уведомления</value></data>
+  <data name="Choose what the bot should send to you" xml:space="preserve"><value>Выберите, что бот должен присылать вам</value></data>
+  <data name="New sales" xml:space="preserve"><value>Новые продажи</value></data>
+  <data name="Instantly after a sale is recorded" xml:space="preserve"><value>Сразу после регистрации продажи</value></data>
+  <data name="Low stock" xml:space="preserve"><value>Низкий остаток</value></data>
+  <data name="When a product is running low in a store" xml:space="preserve"><value>Когда товар заканчивается в магазине</value></data>
+  <data name="Daily report" xml:space="preserve"><value>Ежедневный отчёт</value></data>
+  <data name="End-of-day summary every evening" xml:space="preserve"><value>Итоги дня каждый вечер</value></data>
+  <data name="Save" xml:space="preserve"><value>Сохранить</value></data>
+  <data name="Bot commands" xml:space="preserve"><value>Команды бота</value></data>
+  <data name="Available commands inside the chat" xml:space="preserve"><value>Доступные команды в чате</value></data>
+  <data name="today's report" xml:space="preserve"><value>отчёт за сегодня</value></data>
+  <data name="last 7 days" xml:space="preserve"><value>последние 7 дней</value></data>
+  <data name="top 5 products" xml:space="preserve"><value>топ-5 товаров</value></data>
+  <data name="low stock" xml:space="preserve"><value>низкий остаток</value></data>
+  <data name="all commands" xml:space="preserve"><value>все команды</value></data>
+  <data name="unlink account" xml:space="preserve"><value>отвязать аккаунт</value></data>
+  <data name="Error" xml:space="preserve"><value>Ошибка</value></data>
+  <data name="Error." xml:space="preserve"><value>Ошибка.</value></data>
+  <data name="An error occurred while processing your request." xml:space="preserve"><value>При обработке запроса произошла ошибка.</value></data>
+  <data name="Request ID:" xml:space="preserve"><value>ID запроса:</value></data>
+  <data name="Development Mode" xml:space="preserve"><value>Режим разработки</value></data>
+  <data name="Swapping to Development environment will display more detailed information about the error that occurred." xml:space="preserve"><value>Переключение на среду Development покажет более подробную информацию о возникшей ошибке.</value></data>
+  <data name="The Development environment shouldn't be enabled for deployed applications. It can result in displaying sensitive information from exceptions to end users. For local debugging, enable the Development environment by setting the ASPNETCORE_ENVIRONMENT environment variable to Development and restarting the app." xml:space="preserve"><value>Среда Development не должна быть включена для развёрнутых приложений. Это может привести к показу конечным пользователям конфиденциальной информации из исключений. Для локальной отладки включите среду Development, задав переменной окружения ASPNETCORE_ENVIRONMENT значение Development и перезапустив приложение.</value></data>
+  <data name="Home Page" xml:space="preserve"><value>Главная страница</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Добро пожаловать</value></data>
+  <data name="Learn about" xml:space="preserve"><value>Узнайте о</value></data>
+  <data name="building Web apps with ASP.NET Core" xml:space="preserve"><value>создании веб-приложений на ASP.NET Core</value></data>
+  <data name="Privacy Policy" xml:space="preserve"><value>Политика конфиденциальности</value></data>
+  <data name="Use this page to detail your site's privacy policy." xml:space="preserve"><value>Используйте эту страницу для описания политики конфиденциальности вашего сайта.</value></data>
+</root>

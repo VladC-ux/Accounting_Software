@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Language" xml:space="preserve"><value>Լեզու</value></data>
+  <data name="Dashboard" xml:space="preserve"><value>Կառավարման վահանակ</value></data>
+  <data name="Income" xml:space="preserve"><value>Մուտքեր</value></data>
+  <data name="Sellers" xml:space="preserve"><value>Վաճառողներ</value></data>
+  <data name="Invoices" xml:space="preserve"><value>Հաշիվ-ապրանքագրեր</value></data>
+  <data name="Stores" xml:space="preserve"><value>Խանութներ</value></data>
+  <data name="Reports" xml:space="preserve"><value>Հաշվետվություններ</value></data>
+  <data name="Transactions" xml:space="preserve"><value>Գործարքներ</value></data>
+  <data name="Telegram" xml:space="preserve"><value>Telegram</value></data>
+  <data name="Account" xml:space="preserve"><value>Հաշիվ</value></data>
+  <data name="Overview" xml:space="preserve"><value>Ընդհանուր պատկեր</value></data>
+  <data name="Monthly profit" xml:space="preserve"><value>Ամսական շահույթ</value></data>
+  <data name="Monthly loss" xml:space="preserve"><value>Ամսական վնաս</value></data>
+  <data name="Net Profit" xml:space="preserve"><value>Զուտ շահույթ</value></data>
+  <data name="vs last month" xml:space="preserve"><value>նախորդ ամսվա համեմատ</value></data>
+  <data name="Expenses" xml:space="preserve"><value>Ծախսեր</value></data>
+  <data name="Cash Balance" xml:space="preserve"><value>Կանխիկ մնացորդ</value></data>
+  <data name="Cash flow" xml:space="preserve"><value>Դրամական հոսք</value></data>
+  <data name="Income and expenses over the last 6 months" xml:space="preserve"><value>Մուտքերն ու ծախսերը վերջին 6 ամսում</value></data>
+  <data name="Last 6 months" xml:space="preserve"><value>Վերջին 6 ամիս</value></data>
+  <data name="Expense breakdown" xml:space="preserve"><value>Ծախսերի բաշխվածություն</value></data>
+  <data name="Top 5 purchase categories" xml:space="preserve"><value>Գնումների թոփ 5 կատեգորիա</value></data>
+  <data name="Total" xml:space="preserve"><value>Ընդամենը</value></data>
+  <data name="No expenses yet" xml:space="preserve"><value>Դեռ ծախսեր չկան</value></data>
+  <data name="Quick actions" xml:space="preserve"><value>Արագ գործողություններ</value></data>
+  <data name="Most common operations" xml:space="preserve"><value>Ամենահաճախ կիրառվող գործառնությունները</value></data>
+  <data name="New purchase" xml:space="preserve"><value>Նոր գնում</value></data>
+  <data name="Buy products from a seller" xml:space="preserve"><value>Գնել ապրանքներ վաճառողից</value></data>
+  <data name="Record sale" xml:space="preserve"><value>Գրանցել վաճառք</value></data>
+  <data name="Sell products from a store" xml:space="preserve"><value>Վաճառել ապրանքներ խանութից</value></data>
+  <data name="New invoice" xml:space="preserve"><value>Նոր հաշիվ-ապրանքագիր</value></data>
+  <data name="Create an invoice for a client" xml:space="preserve"><value>Ստեղծել հաշիվ-ապրանքագիր հաճախորդի համար</value></data>
+  <data name="Add funds" xml:space="preserve"><value>Ավելացնել միջոցներ</value></data>
+  <data name="Top up your account balance" xml:space="preserve"><value>Համալրել ձեր հաշվի մնացորդը</value></data>
+  <data name="Sales and profit analytics" xml:space="preserve"><value>Վաճառքի և շահույթի վերլուծություն</value></data>
+  <data name="Export" xml:space="preserve"><value>Արտահանում</value></data>
+  <data name="Download an Excel report" xml:space="preserve"><value>Ներբեռնել Excel հաշվետվություն</value></data>
+  <data name="Recent activity" xml:space="preserve"><value>Վերջին ակտիվությունը</value></data>
+  <data name="Latest transactions" xml:space="preserve"><value>Վերջին գործարքները</value></data>
+  <data name="See all" xml:space="preserve"><value>Տեսնել բոլորը</value></data>
+  <data name="No transactions yet" xml:space="preserve"><value>Դեռ գործարքներ չկան</value></data>
+  <data name="Sign In" xml:space="preserve"><value>Մուտք</value></data>
+  <data name="Sign in to your account" xml:space="preserve"><value>Մուտք գործեք ձեր հաշիվ</value></data>
+  <data name="Email" xml:space="preserve"><value>Էլ. փոստ</value></data>
+  <data name="Password" xml:space="preserve"><value>Գաղտնաբառ</value></data>
+  <data name="Remember me for 30 days" xml:space="preserve"><value>Հիշել ինձ 30 օր</value></data>
+  <data name="Forgot password?" xml:space="preserve"><value>Մոռացե՞լ եք գաղտնաբառը</value></data>
+  <data name="Create Owner Account" xml:space="preserve"><value>Ստեղծել սեփականատիրոջ հաշիվ</value></data>
+  <data name="FIRST TIME SETUP" xml:space="preserve"><value>ՆԱԽՆԱԿԱՆ ԿԱՐԳԱՎՈՐՈՒՄ</value></data>
+  <data name="Set up your credentials to access the system" xml:space="preserve"><value>Կարգավորեք ձեր մուտքի տվյալները համակարգ մուտք գործելու համար</value></data>
+  <data name="This account will be the only account with access to the system. Keep your credentials safe." xml:space="preserve"><value>Այս հաշիվը կլինի համակարգ մուտք ունեցող միակ հաշիվը։ Պահպանեք ձեր տվյալներն ապահով։</value></data>
+  <data name="Full Name" xml:space="preserve"><value>Անուն Ազգանուն</value></data>
+  <data name="Your name" xml:space="preserve"><value>Ձեր անունը</value></data>
+  <data name="Used for password recovery" xml:space="preserve"><value>Օգտագործվում է գաղտնաբառի վերականգնման համար</value></data>
+  <data name="Min. 6 characters" xml:space="preserve"><value>Նվազագույնը 6 նիշ</value></data>
+  <data name="Confirm Password" xml:space="preserve"><value>Հաստատեք գաղտնաբառը</value></data>
+  <data name="Repeat password" xml:space="preserve"><value>Կրկնեք գաղտնաբառը</value></data>
+  <data name="Create Account &amp; Continue" xml:space="preserve"><value>Ստեղծել հաշիվ և շարունակել</value></data>
+  <data name="Forgot Password" xml:space="preserve"><value>Մոռացել եք գաղտնաբառը</value></data>
+  <data name="Enter your email to receive a reset request" xml:space="preserve"><value>Մուտքագրեք ձեր էլ. փոստը՝ վերականգնման հարցում ստանալու համար</value></data>
+  <data name="Check your email!" xml:space="preserve"><value>Ստուգեք ձեր էլ. փոստը</value></data>
+  <data name="A confirmation email has been sent. Open it and click &quot;Approve &amp; Reset Password&quot; to proceed." xml:space="preserve"><value>Հաստատման նամակ է ուղարկվել։ Բացեք այն և սեղմեք «Հաստատել և վերականգնել գաղտնաբառը»՝ շարունակելու համար։</value></data>
+  <data name="The link expires in 1 hour." xml:space="preserve"><value>Հղման ժամկետը լրանում է 1 ժամից։</value></data>
+  <data name="Email Could Not Be Sent" xml:space="preserve"><value>Նամակը հնարավոր չէր ուղարկել</value></data>
+  <data name="The email service is not configured correctly." xml:space="preserve"><value>Էլ. փոստի ծառայությունը ճիշտ կարգավորված չէ։</value></data>
+  <data name="Please contact your administrator to set up SMTP in appsettings.json." xml:space="preserve"><value>Խնդրում ենք դիմել ձեր ադմինիստրատորին՝ appsettings.json-ում SMTP կարգավորելու համար։</value></data>
+  <data name="Email Address" xml:space="preserve"><value>Էլ. փոստի հասցե</value></data>
+  <data name="Send Reset Request" xml:space="preserve"><value>Ուղարկել վերականգնման հարցում</value></data>
+  <data name="Back to Login" xml:space="preserve"><value>Վերադառնալ մուտքի էջ</value></data>
+  <data name="New Password" xml:space="preserve"><value>Նոր գաղտնաբառ</value></data>
+  <data name="Enter your new password below" xml:space="preserve"><value>Մուտքագրեք ձեր նոր գաղտնաբառը ստորև</value></data>
+  <data name="Link Expired or Invalid" xml:space="preserve"><value>Հղման ժամկետը լրացել է կամ անվավեր է</value></data>
+  <data name="This reset link is no longer valid. Please request a new one." xml:space="preserve"><value>Այս վերականգնման հղումն այլևս վավեր չէ։ Խնդրում ենք պահանջել նորը։</value></data>
+  <data name="Request new link" xml:space="preserve"><value>Պահանջել նոր հղում</value></data>
+  <data name="Confirm New Password" xml:space="preserve"><value>Հաստատեք նոր գաղտնաբառը</value></data>
+  <data name="Set New Password" xml:space="preserve"><value>Սահմանել նոր գաղտնաբառ</value></data>
+  <data name="Approve Password Reset" xml:space="preserve"><value>Հաստատել գաղտնաբառի վերականգնումը</value></data>
+  <data name="You received this link because a password reset was requested for your account." xml:space="preserve"><value>Դուք ստացել եք այս հղումը, քանի որ ձեր հաշվի համար պահանջվել է գաղտնաբառի վերականգնում։</value></data>
+  <data name="Did not request this? Click &quot;Cancel&quot; and your password stays unchanged. The link expires in 1 hour." xml:space="preserve"><value>Չե՞ք պահանջել սա։ Սեղմեք «Չեղարկել», և ձեր գաղտնաբառը կմնա անփոփոխ։ Հղման ժամկետը լրանում է 1 ժամից։</value></data>
+  <data name="Yes, I approve – Set new password" xml:space="preserve"><value>Այո, հաստատում եմ – Սահմանել նոր գաղտնաբառ</value></data>
+  <data name="Cancel – I did not request this" xml:space="preserve"><value>Չեղարկել – Ես չեմ պահանջել սա</value></data>
+  <data name="ACCOUNT SETUP REQUIRED" xml:space="preserve"><value>ՊԱՀԱՆՋՎՈՒՄ Է ՀԱՇՎԻ ԿԱՐԳԱՎՈՐՈՒՄ</value></data>
+  <data name="Set Up Your Login" xml:space="preserve"><value>Կարգավորեք ձեր մուտքը</value></data>
+  <data name="Your account needs a password and email" xml:space="preserve"><value>Ձեր հաշվին անհրաժեշտ է գաղտնաբառ և էլ. փոստ</value></data>
+  <data name="Your account was created without login credentials. Please set them up now." xml:space="preserve"><value>Ձեր հաշիվը ստեղծվել է առանց մուտքի տվյալների։ Խնդրում ենք կարգավորել դրանք հիմա։</value></data>
+  <data name="Your Name" xml:space="preserve"><value>Ձեր անունը</value></data>
+  <data name="Save &amp; Continue" xml:space="preserve"><value>Պահպանել և շարունակել</value></data>
+  <data name="supplier" xml:space="preserve"><value>մատակարար</value></data>
+  <data name="suppliers" xml:space="preserve"><value>մատակարարներ</value></data>
+  <data name="Manage your network" xml:space="preserve"><value>Կառավարեք ձեր ցանցը</value></data>
+  <data name="Search sellers..." xml:space="preserve"><value>Որոնել վաճառողներ...</value></data>
+  <data name="Add Seller" xml:space="preserve"><value>Ավելացնել վաճառող</value></data>
+  <data name="Active" xml:space="preserve"><value>Ակտիվ</value></data>
+  <data name="View" xml:space="preserve"><value>Դիտել</value></data>
+  <data name="Product" xml:space="preserve"><value>Ապրանք</value></data>
+  <data name="Delete seller" xml:space="preserve"><value>Ջնջե՞լ վաճառողին</value></data>
+  <data name="No sellers yet" xml:space="preserve"><value>Դեռ վաճառողներ չկան</value></data>
+  <data name="Add your first seller to start tracking products." xml:space="preserve"><value>Ավելացրեք ձեր առաջին վաճառողին՝ ապրանքները հետևելու համար։</value></data>
+  <data name="New Seller" xml:space="preserve"><value>Նոր վաճառող</value></data>
+  <data name="Add a new partner to start tracking their products" xml:space="preserve"><value>Ավելացրեք նոր գործընկեր՝ նրա ապրանքները հետևելու համար</value></data>
+  <data name="Back to Sellers" xml:space="preserve"><value>Վերադառնալ վաճառողներ</value></data>
+  <data name="Seller details" xml:space="preserve"><value>Վաճառողի տվյալներ</value></data>
+  <data name="This name will appear on products, receipts and reports" xml:space="preserve"><value>Այս անունը կհայտնվի ապրանքների, անդորրագրերի և հաշվետվությունների վրա</value></data>
+  <data name="Seller Name" xml:space="preserve"><value>Վաճառողի անունը</value></data>
+  <data name="e.g. Acme Distribution Ltd." xml:space="preserve"><value>օր. Acme Distribution Ltd.</value></data>
+  <data name="Used across the system to identify this partner." xml:space="preserve"><value>Օգտագործվում է համակարգում այս գործընկերոջը նույնականացնելու համար։</value></data>
+  <data name="Save Seller" xml:space="preserve"><value>Պահպանել վաճառողին</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Չեղարկել</value></data>
+  <data name="Edit Seller" xml:space="preserve"><value>Խմբագրել վաճառողին</value></data>
+  <data name="Update the seller name" xml:space="preserve"><value>Թարմացրեք վաճառողի անունը</value></data>
+  <data name="Edit details" xml:space="preserve"><value>Խմբագրել տվյալները</value></data>
+  <data name="Change the seller's display name" xml:space="preserve"><value>Փոխեք վաճառողի ցուցադրվող անունը</value></data>
+  <data name="Seller ID:" xml:space="preserve"><value>Վաճառողի ID՝</value></data>
+  <data name="Enter new name..." xml:space="preserve"><value>Մուտքագրեք նոր անուն...</value></data>
+  <data name="Save Changes" xml:space="preserve"><value>Պահպանել փոփոխությունները</value></data>
+  <data name="location" xml:space="preserve"><value>կետ</value></data>
+  <data name="locations" xml:space="preserve"><value>կետ</value></data>
+  <data name="Manage your retail points" xml:space="preserve"><value>Կառավարեք ձեր վաճառակետերը</value></data>
+  <data name="Search stores..." xml:space="preserve"><value>Որոնել խանութներ...</value></data>
+  <data name="New Store" xml:space="preserve"><value>Նոր խանութ</value></data>
+  <data name="Products" xml:space="preserve"><value>Ապրանքներ</value></data>
+  <data name="Edit" xml:space="preserve"><value>Խմբագրել</value></data>
+  <data name="Delete" xml:space="preserve"><value>Ջնջել</value></data>
+  <data name="Delete this store?" xml:space="preserve"><value>Ջնջե՞լ այս խանութը</value></data>
+  <data name="No stores yet" xml:space="preserve"><value>Դեռ խանութներ չկան</value></data>
+  <data name="Create your first store to start managing inventory." xml:space="preserve"><value>Ստեղծեք ձեր առաջին խանութը՝ պաշարը կառավարելու համար։</value></data>
+  <data name="Create your first store" xml:space="preserve"><value>Ստեղծել առաջին խանութը</value></data>
+  <data name="Add Store" xml:space="preserve"><value>Ավելացնել խանութ</value></data>
+  <data name="Create a new store location" xml:space="preserve"><value>Ստեղծել նոր խանութ</value></data>
+  <data name="Back to Stores" xml:space="preserve"><value>Վերադառնալ խանութներ</value></data>
+  <data name="Add new store" xml:space="preserve"><value>Ավելացնել նոր խանութ</value></data>
+  <data name="Each store keeps its own inventory and sales" xml:space="preserve"><value>Յուրաքանչյուր խանութ ունի իր պաշարն ու վաճառքները</value></data>
+  <data name="Store Name" xml:space="preserve"><value>Խանութի անունը</value></data>
+  <data name="e.g. Downtown Branch" xml:space="preserve"><value>օր. Կենտրոնի մասնաճյուղ</value></data>
+  <data name="Create Store" xml:space="preserve"><value>Ստեղծել խանութ</value></data>
+  <data name="Edit Store" xml:space="preserve"><value>Խմբագրել խանութը</value></data>
+  <data name="Update store details" xml:space="preserve"><value>Թարմացրեք խանութի տվյալները</value></data>
+  <data name="Edit store" xml:space="preserve"><value>Խմբագրել խանութը</value></data>
+  <data name="Change the store name" xml:space="preserve"><value>Փոխեք խանութի անունը</value></data>
+  <data name="Choose Store" xml:space="preserve"><value>Ընտրեք խանութ</value></data>
+  <data name="Select where to add this product" xml:space="preserve"><value>Ընտրեք, թե որտեղ ավելացնել այս ապրանքը</value></data>
+  <data name="Back to Products" xml:space="preserve"><value>Վերադառնալ ապրանքներ</value></data>
+  <data name="No stores available" xml:space="preserve"><value>Հասանելի խանութներ չկան</value></data>
+  <data name="Create a store first to continue." xml:space="preserve"><value>Շարունակելու համար նախ ստեղծեք խանութ։</value></data>
+  <data name="Go to Stores" xml:space="preserve"><value>Անցնել խանութներ</value></data>
+  <data name="Back to Product List" xml:space="preserve"><value>Վերադառնալ ապրանքների ցանկ</value></data>
+  <data name="Edit Product" xml:space="preserve"><value>Խմբագրել ապրանքը</value></data>
+  <data name="update product details" xml:space="preserve"><value>թարմացնել ապրանքի տվյալները</value></data>
+  <data name="Back to Store Products" xml:space="preserve"><value>Վերադառնալ խանութի ապրանքներ</value></data>
+  <data name="Edit product" xml:space="preserve"><value>Խմբագրել ապրանքը</value></data>
+  <data name="Product Name" xml:space="preserve"><value>Ապրանքի անունը</value></data>
+  <data name="Store" xml:space="preserve"><value>Խանութ</value></data>
+  <data name="Price" xml:space="preserve"><value>Գին</value></data>
+  <data name="Quantity" xml:space="preserve"><value>Քանակ</value></data>
+  <data name="Mass" xml:space="preserve"><value>Զանգված</value></data>
+  <data name="Unit" xml:space="preserve"><value>Միավոր</value></data>
+  <data name="Added Date" xml:space="preserve"><value>Ավելացման ամսաթիվ</value></data>
+  <data name="Description" xml:space="preserve"><value>Նկարագրություն</value></data>
+  <data name="Optional notes..." xml:space="preserve"><value>Լրացուցիչ նշումներ...</value></data>
+  <data name="Update Product" xml:space="preserve"><value>Թարմացնել ապրանքը</value></data>
+  <data name="items in stock" xml:space="preserve"><value>ապրանք պահեստում</value></data>
+  <data name="Quick Add" xml:space="preserve"><value>Արագ ավելացում</value></data>
+  <data name="Browse Products" xml:space="preserve"><value>Դիտել ապրանքները</value></data>
+  <data name="Download Invoice" xml:space="preserve"><value>Ներբեռնել հաշիվ-ապրանքագիրը</value></data>
+  <data name="Seller" xml:space="preserve"><value>Վաճառող</value></data>
+  <data name="Stock" xml:space="preserve"><value>Պաշար</value></data>
+  <data name="Added" xml:space="preserve"><value>Ավելացված</value></data>
+  <data name="Actions" xml:space="preserve"><value>Գործողություններ</value></data>
+  <data name="pcs" xml:space="preserve"><value>հատ</value></data>
+  <data name="Quantity in" xml:space="preserve"><value>Քանակը՝</value></data>
+  <data name="Sell" xml:space="preserve"><value>Վաճառել</value></data>
+  <data name="Delete this product?" xml:space="preserve"><value>Ջնջե՞լ այս ապրանքը</value></data>
+  <data name="No products in this store yet" xml:space="preserve"><value>Այս խանութում դեռ ապրանքներ չկան</value></data>
+  <data name="Quick Add to" xml:space="preserve"><value>Արագ ավելացում՝</value></data>
+  <data name="No products available. Add products to a seller first." xml:space="preserve"><value>Հասանելի ապրանքներ չկան։ Նախ ավելացրեք ապրանքներ վաճառողին։</value></data>
+  <data name="— Select a product —" xml:space="preserve"><value>— Ընտրեք ապրանք —</value></data>
+  <data name="stock:" xml:space="preserve"><value>պաշար՝</value></data>
+  <data name="Add to Store" xml:space="preserve"><value>Ավելացնել խանութ</value></data>
+  <data name="Quantity (pcs)" xml:space="preserve"><value>Քանակ (հատ)</value></data>
+  <data name="Quantity (units)" xml:space="preserve"><value>Քանակ (միավոր)</value></data>
+  <data name="In stock:" xml:space="preserve"><value>Պահեստում՝</value></data>
+  <data name="units" xml:space="preserve"><value>միավոր</value></data>
+  <data name="Adding" xml:space="preserve"><value>Ավելացվում է</value></data>
+  <data name="Add Product to Store" xml:space="preserve"><value>Ավելացնել ապրանք խանութ</value></data>
+  <data name="Move a product from inventory into a store" xml:space="preserve"><value>Տեղափոխեք ապրանքը պաշարից խանութ</value></data>
+  <data name="Set price, quantity and notes for this store" xml:space="preserve"><value>Սահմանեք գինը, քանակը և նշումներն այս խանութի համար</value></data>
+  <data name="Select Unit" xml:space="preserve"><value>Ընտրեք միավորը</value></data>
+  <data name="Optional notes about this product..." xml:space="preserve"><value>Լրացուցիչ նշումներ այս ապրանքի մասին...</value></data>
+  <data name="Back to" xml:space="preserve"><value>Վերադառնալ՝</value></data>
+  <data name="Add Products to" xml:space="preserve"><value>Ավելացնել ապրանքներ՝</value></data>
+  <data name="Pick a product — pre-filled price and quantity, edit as needed" xml:space="preserve"><value>Ընտրեք ապրանք — գինն ու քանակը նախապես լրացված են, խմբագրեք ըստ անհրաժեշտության</value></data>
+  <data name="Search by product or seller name..." xml:space="preserve"><value>Որոնել ըստ ապրանքի կամ վաճառողի անվան...</value></data>
+  <data name="Out of stock" xml:space="preserve"><value>Պաշարը սպառվել է</value></data>
+  <data name="Remove" xml:space="preserve"><value>Հեռացնե՞լ</value></data>
+  <data name="from inventory? This cannot be undone." xml:space="preserve"><value>պաշարից։ Սա հնարավոր չէ հետարկել։</value></data>
+  <data name="Remove this product" xml:space="preserve"><value>Հեռացնել այս ապրանքը</value></data>
+  <data name="No products available" xml:space="preserve"><value>Հասանելի ապրանքներ չկան</value></data>
+  <data name="Add products to a seller first." xml:space="preserve"><value>Նախ ավելացրեք ապրանքներ վաճառողին։</value></data>
+  <data name="Go to Sellers" xml:space="preserve"><value>Անցնել վաճառողներ</value></data>
+  <data name="item" xml:space="preserve"><value>ապրանք</value></data>
+  <data name="for this seller" xml:space="preserve"><value>այս վաճառողի համար</value></data>
+  <data name="Product list" xml:space="preserve"><value>Ապրանքների ցանկ</value></data>
+  <data name="All products for this seller" xml:space="preserve"><value>Այս վաճառողի բոլոր ապրանքները</value></data>
+  <data name="Items in stock" xml:space="preserve"><value>Պաշարում առկա ապրանքներ</value></data>
+  <data name="Total value" xml:space="preserve"><value>Ընդհանուր արժեք</value></data>
+  <data name="Search products..." xml:space="preserve"><value>Որոնել ապրանքներ...</value></data>
+  <data name="Name" xml:space="preserve"><value>Անվանում</value></data>
+  <data name="Count" xml:space="preserve"><value>Քանակ</value></data>
+  <data name="Shops" xml:space="preserve"><value>Խանութներ</value></data>
+  <data name="No products yet" xml:space="preserve"><value>Դեռ ապրանքներ չկան</value></data>
+  <data name="Add a product to get started." xml:space="preserve"><value>Ավելացրեք ապրանք՝ սկսելու համար։</value></data>
+  <data name="Total items:" xml:space="preserve"><value>Ընդհանուր ապրանքներ՝</value></data>
+  <data name="Total value:" xml:space="preserve"><value>Ընդհանուր արժեք՝</value></data>
+  <data name="Add Product" xml:space="preserve"><value>Ավելացնել ապրանք</value></data>
+  <data name="Change the values below and save" xml:space="preserve"><value>Փոխեք ստորև արժեքները և պահպանեք</value></data>
+  <data name="ID:" xml:space="preserve"><value>ID՝</value></data>
+  <data name="Unit of Mass" xml:space="preserve"><value>Չափման միավոր</value></data>
+  <data name="Description..." xml:space="preserve"><value>Նկարագրություն...</value></data>
+  <data name="New Product" xml:space="preserve"><value>Նոր ապրանք</value></data>
+  <data name="Register a new purchase from this seller" xml:space="preserve"><value>Գրանցեք նոր գնում այս վաճառողից</value></data>
+  <data name="Current Balance" xml:space="preserve"><value>Ընթացիկ մնացորդ</value></data>
+  <data name="Product Details" xml:space="preserve"><value>Ապրանքի մանրամասներ</value></data>
+  <data name="Price per unit" xml:space="preserve"><value>Գին մեկ միավորի համար</value></data>
+  <data name="Purchase Type" xml:space="preserve"><value>Գնման տեսակ</value></data>
+  <data name="By piece" xml:space="preserve"><value>Հատով</value></data>
+  <data name="By weight" xml:space="preserve"><value>Ըստ քաշի</value></data>
+  <data name="Count (pcs)" xml:space="preserve"><value>Քանակ (հատ)</value></data>
+  <data name="Description (optional)" xml:space="preserve"><value>Նկարագրություն (ոչ պարտադիր)</value></data>
+  <data name="Short description..." xml:space="preserve"><value>Կարճ նկարագրություն...</value></data>
+  <data name="Total Cost" xml:space="preserve"><value>Ընդհանուր արժեք</value></data>
+  <data name="Balance after:" xml:space="preserve"><value>Մնացորդը հետո՝</value></data>
+  <data name="Save Product" xml:space="preserve"><value>Պահպանել ապրանքը</value></data>
+  <data name="View Products" xml:space="preserve"><value>Դիտել ապրանքները</value></data>
+  <data name="Products of this Seller" xml:space="preserve"><value>Այս վաճառողի ապրանքները</value></data>
+  <data name="Existing items registered for this partner" xml:space="preserve"><value>Այս գործընկերոջ համար գրանցված ապրանքները</value></data>
+  <data name="No products yet for this seller" xml:space="preserve"><value>Այս վաճառողի համար դեռ ապրանքներ չկան</value></data>
+  <data name="e.g. Apple" xml:space="preserve"><value>օր. Խնձոր</value></data>
+  <data name="invoice" xml:space="preserve"><value>հաշիվ-ապրանքագիր</value></data>
+  <data name="invoices" xml:space="preserve"><value>հաշիվ-ապրանքագրեր</value></data>
+  <data name="Tracking all sales receipts" xml:space="preserve"><value>Հետևում ենք բոլոր վաճառքի անդորրագրերին</value></data>
+  <data name="Search by number or buyer..." xml:space="preserve"><value>Որոնել ըստ համարի կամ գնորդի...</value></data>
+  <data name="Sell from Store" xml:space="preserve"><value>Վաճառել խանութից</value></data>
+  <data name="Total Invoices" xml:space="preserve"><value>Ընդհանուր հաշիվ-ապրանքագրեր</value></data>
+  <data name="Total Revenue" xml:space="preserve"><value>Ընդհանուր եկամուտ</value></data>
+  <data name="Items Sold" xml:space="preserve"><value>Վաճառված ապրանքներ</value></data>
+  <data name="Number" xml:space="preserve"><value>Համար</value></data>
+  <data name="Date" xml:space="preserve"><value>Ամսաթիվ</value></data>
+  <data name="Buyer" xml:space="preserve"><value>Գնորդ</value></data>
+  <data name="Items" xml:space="preserve"><value>Ապրանքներ</value></data>
+  <data name="Walk-in" xml:space="preserve"><value>Պատահական</value></data>
+  <data name="View details" xml:space="preserve"><value>Դիտել մանրամասները</value></data>
+  <data name="Download PDF" xml:space="preserve"><value>Ներբեռնել PDF</value></data>
+  <data name="No invoices yet" xml:space="preserve"><value>Դեռ հաշիվ-ապրանքագրեր չկան</value></data>
+  <data name="Sell something from a Store to create your first invoice." xml:space="preserve"><value>Վաճառեք ինչ-որ բան խանութից՝ առաջին հաշիվ-ապրանքագիրը ստեղծելու համար։</value></data>
+  <data name="Open Stores" xml:space="preserve"><value>Բացել խանութները</value></data>
+  <data name="Invoice" xml:space="preserve"><value>Հաշիվ-ապրանքագիր</value></data>
+  <data name="All invoices" xml:space="preserve"><value>Բոլոր հաշիվ-ապրանքագրերը</value></data>
+  <data name="INVOICE" xml:space="preserve"><value>ՀԱՇԻՎ-ԱՊՐԱՆՔԱԳԻՐ</value></data>
+  <data name="Invoice #" xml:space="preserve"><value>Հաշիվ-ապրանքագիր №</value></data>
+  <data name="Issued" xml:space="preserve"><value>Թողարկված</value></data>
+  <data name="From" xml:space="preserve"><value>Ումից</value></data>
+  <data name="Issued by:" xml:space="preserve"><value>Թողարկել է՝</value></data>
+  <data name="Bill to" xml:space="preserve"><value>Ում</value></data>
+  <data name="Walk-in customer" xml:space="preserve"><value>Պատահական հաճախորդ</value></data>
+  <data name="Qty" xml:space="preserve"><value>Քանակ</value></data>
+  <data name="Unit price" xml:space="preserve"><value>Միավորի գին</value></data>
+  <data name="Amount" xml:space="preserve"><value>Գումար</value></data>
+  <data name="Subtotal" xml:space="preserve"><value>Ենթագումար</value></data>
+  <data name="VAT" xml:space="preserve"><value>ԱԱՀ</value></data>
+  <data name="All-time overview based on transaction history" xml:space="preserve"><value>Ընդհանուր ակնարկ՝ ըստ գործարքների պատմության</value></data>
+  <data name="Total Spent" xml:space="preserve"><value>Ընդհանուր ծախսված</value></data>
+  <data name="purchases" xml:space="preserve"><value>գնում</value></data>
+  <data name="Total Earned" xml:space="preserve"><value>Ընդհանուր վաստակած</value></data>
+  <data name="sales" xml:space="preserve"><value>վաճառք</value></data>
+  <data name="Earned − Spent" xml:space="preserve"><value>Վաստակած − Ծախսված</value></data>
+  <data name="Total Transactions" xml:space="preserve"><value>Ընդհանուր գործարքներ</value></data>
+  <data name="in" xml:space="preserve"><value>մուտք</value></data>
+  <data name="out" xml:space="preserve"><value>ելք</value></data>
+  <data name="Income vs Expenses" xml:space="preserve"><value>Մուտքեր ընդդեմ ծախսերի</value></data>
+  <data name="Monthly comparison — last 6 months" xml:space="preserve"><value>Ամսական համեմատություն — վերջին 6 ամիս</value></data>
+  <data name="Top 5 by Sales" xml:space="preserve"><value>Թոփ 5 ըստ վաճառքի</value></data>
+  <data name="Most profitable products" xml:space="preserve"><value>Ամենաշահութաբեր ապրանքները</value></data>
+  <data name="No sales yet" xml:space="preserve"><value>Դեռ վաճառքներ չկան</value></data>
+  <data name="Top 5 by Purchases" xml:space="preserve"><value>Թոփ 5 ըստ գնումների</value></data>
+  <data name="Most bought products" xml:space="preserve"><value>Ամենաշատ գնված ապրանքները</value></data>
+  <data name="No purchases yet" xml:space="preserve"><value>Դեռ գնումներ չկան</value></data>
+  <data name="Revenue by Store" xml:space="preserve"><value>Եկամուտն ըստ խանութի</value></data>
+  <data name="Breakdown across retail points" xml:space="preserve"><value>Բաշխվածությունն ըստ վաճառակետերի</value></data>
+  <data name="No store sales yet" xml:space="preserve"><value>Դեռ խանութի վաճառքներ չկան</value></data>
+  <data name="Revenue" xml:space="preserve"><value>Եկամուտ</value></data>
+  <data name="My Account" xml:space="preserve"><value>Իմ հաշիվը</value></data>
+  <data name="Available funds for purchases" xml:space="preserve"><value>Հասանելի միջոցներ գնումների համար</value></data>
+  <data name="Top Up" xml:space="preserve"><value>Համալրել</value></data>
+  <data name="Total Deposited" xml:space="preserve"><value>Ընդհանուր ավանդ</value></data>
+  <data name="Recent transactions" xml:space="preserve"><value>Վերջին գործարքները</value></data>
+  <data name="Latest movements on your account" xml:space="preserve"><value>Ձեր հաշվի վերջին շարժերը</value></data>
+  <data name="View all" xml:space="preserve"><value>Տեսնել բոլորը</value></data>
+  <data name="Type" xml:space="preserve"><value>Տեսակ</value></data>
+  <data name="Purchase" xml:space="preserve"><value>Գնում</value></data>
+  <data name="Sale" xml:space="preserve"><value>Վաճառք</value></data>
+  <data name="Deposit" xml:space="preserve"><value>Ավանդ</value></data>
+  <data name="Create User" xml:space="preserve"><value>Ստեղծել օգտատեր</value></data>
+  <data name="Add the main account holder to the system" xml:space="preserve"><value>Ավելացրեք համակարգի հիմնական հաշվետիրոջը</value></data>
+  <data name="Create user account" xml:space="preserve"><value>Ստեղծել օգտատիրոջ հաշիվ</value></data>
+  <data name="Only one main user account is allowed" xml:space="preserve"><value>Թույլատրվում է միայն մեկ հիմնական օգտատիրոջ հաշիվ</value></data>
+  <data name="Success!" xml:space="preserve"><value>Հաջողվեց</value></data>
+  <data name="The user has been created. You cannot create another one." xml:space="preserve"><value>Օգտատերը ստեղծվել է։ Դուք չեք կարող ստեղծել մեկ ուրիշը։</value></data>
+  <data name="Enter your name" xml:space="preserve"><value>Մուտքագրեք ձեր անունը</value></data>
+  <data name="Transaction History" xml:space="preserve"><value>Գործարքների պատմություն</value></data>
+  <data name="Full ledger of all account activity" xml:space="preserve"><value>Հաշվի ամբողջ ակտիվության գրանցամատյանը</value></data>
+  <data name="Export to Excel" xml:space="preserve"><value>Արտահանել Excel</value></data>
+  <data name="Filter Transactions" xml:space="preserve"><value>Զտել գործարքները</value></data>
+  <data name="From Date" xml:space="preserve"><value>Սկսած ամսաթվից</value></data>
+  <data name="To Date" xml:space="preserve"><value>Մինչև ամսաթիվը</value></data>
+  <data name="All" xml:space="preserve"><value>Բոլորը</value></data>
+  <data name="Apply" xml:space="preserve"><value>Կիրառել</value></data>
+  <data name="Reset" xml:space="preserve"><value>Վերակայել</value></data>
+  <data name="Active filters:" xml:space="preserve"><value>Ակտիվ զտիչներ՝</value></data>
+  <data name="from" xml:space="preserve"><value>սկսած</value></data>
+  <data name="to" xml:space="preserve"><value>մինչև</value></data>
+  <data name="Type:" xml:space="preserve"><value>Տեսակ՝</value></data>
+  <data name="Total Records" xml:space="preserve"><value>Ընդհանուր գրառումներ</value></data>
+  <data name="Spent (Purchases)" xml:space="preserve"><value>Ծախսված (գնումներ)</value></data>
+  <data name="Earned (Sales)" xml:space="preserve"><value>Վաստակած (վաճառք)</value></data>
+  <data name="Net for Period" xml:space="preserve"><value>Զուտ ժամանակահատվածի համար</value></data>
+  <data name="transaction found" xml:space="preserve"><value>գործարք գտնվեց</value></data>
+  <data name="transactions found" xml:space="preserve"><value>գործարք գտնվեց</value></data>
+  <data name="Sorted by most recent" xml:space="preserve"><value>Դասավորված ըստ վերջինի</value></data>
+  <data name="No transactions found for selected filters" xml:space="preserve"><value>Ընտրված զտիչներով գործարքներ չեն գտնվել</value></data>
+  <data name="Telegram Bot" xml:space="preserve"><value>Telegram բոտ</value></data>
+  <data name="Get real-time notifications and reports" xml:space="preserve"><value>Ստացեք իրական ժամանակի ծանուցումներ և հաշվետվություններ</value></data>
+  <data name="Back to Dashboard" xml:space="preserve"><value>Վերադառնալ վահանակ</value></data>
+  <data name="Bot is not configured. Set" xml:space="preserve"><value>Բոտը կարգավորված չէ։ Սահմանեք</value></data>
+  <data name="in_config" xml:space="preserve"><value>-ում</value></data>
+  <data name="and restart the application." xml:space="preserve"><value>և վերագործարկեք հավելվածը։</value></data>
+  <data name="Connection Status" xml:space="preserve"><value>Կապի կարգավիճակ</value></data>
+  <data name="Link your Telegram account to the system" xml:space="preserve"><value>Կապեք ձեր Telegram հաշիվը համակարգի հետ</value></data>
+  <data name="Open Bot" xml:space="preserve"><value>Բացել բոտը</value></data>
+  <data name="Account linked" xml:space="preserve"><value>Հաշիվը կապված է</value></data>
+  <data name="Not linked" xml:space="preserve"><value>Կապված չէ</value></data>
+  <data name="How to link:" xml:space="preserve"><value>Ինչպես կապել՝</value></data>
+  <data name="Open the bot in Telegram" xml:space="preserve"><value>Բացեք բոտը Telegram-ում</value></data>
+  <data name="(set bot's @username in appsettings)" xml:space="preserve"><value>(նշեք բոտի @username-ը appsettings-ում)</value></data>
+  <data name="Send" xml:space="preserve"><value>Ուղարկեք</value></data>
+  <data name="Generate a code below and send it to the bot:" xml:space="preserve"><value>Ստեղծեք կոդ ստորև և ուղարկեք բոտին՝</value></data>
+  <data name="Send to the bot:" xml:space="preserve"><value>Ուղարկեք բոտին՝</value></data>
+  <data name="Generate code" xml:space="preserve"><value>Ստեղծել կոդ</value></data>
+  <data name="Generate new code" xml:space="preserve"><value>Ստեղծել նոր կոդ</value></data>
+  <data name="Send test" xml:space="preserve"><value>Ուղարկել փորձնական</value></data>
+  <data name="Unlink account from Telegram?" xml:space="preserve"><value>Անջատե՞լ հաշիվը Telegram-ից</value></data>
+  <data name="Unlink" xml:space="preserve"><value>Անջատել</value></data>
+  <data name="Notifications" xml:space="preserve"><value>Ծանուցումներ</value></data>
+  <data name="Choose what the bot should send to you" xml:space="preserve"><value>Ընտրեք, թե ինչ պետք է ուղարկի բոտը ձեզ</value></data>
+  <data name="New sales" xml:space="preserve"><value>Նոր վաճառքներ</value></data>
+  <data name="Instantly after a sale is recorded" xml:space="preserve"><value>Անմիջապես վաճառքը գրանցելուց հետո</value></data>
+  <data name="Low stock" xml:space="preserve"><value>Ցածր պաշար</value></data>
+  <data name="When a product is running low in a store" xml:space="preserve"><value>Երբ ապրանքը քիչ է մնում խանութում</value></data>
+  <data name="Daily report" xml:space="preserve"><value>Օրական հաշվետվություն</value></data>
+  <data name="End-of-day summary every evening" xml:space="preserve"><value>Օրվա ամփոփումը ամեն երեկո</value></data>
+  <data name="Save" xml:space="preserve"><value>Պահպանել</value></data>
+  <data name="Bot commands" xml:space="preserve"><value>Բոտի հրամանները</value></data>
+  <data name="Available commands inside the chat" xml:space="preserve"><value>Հասանելի հրամանները չատում</value></data>
+  <data name="today's report" xml:space="preserve"><value>այսօրվա հաշվետվություն</value></data>
+  <data name="last 7 days" xml:space="preserve"><value>վերջին 7 օրը</value></data>
+  <data name="top 5 products" xml:space="preserve"><value>թոփ 5 ապրանք</value></data>
+  <data name="low stock" xml:space="preserve"><value>ցածր պաշար</value></data>
+  <data name="all commands" xml:space="preserve"><value>բոլոր հրամանները</value></data>
+  <data name="unlink account" xml:space="preserve"><value>անջատել հաշիվը</value></data>
+  <data name="Error" xml:space="preserve"><value>Սխալ</value></data>
+  <data name="Error." xml:space="preserve"><value>Սխալ։</value></data>
+  <data name="An error occurred while processing your request." xml:space="preserve"><value>Ձեր հարցումը մշակելիս սխալ տեղի ունեցավ։</value></data>
+  <data name="Request ID:" xml:space="preserve"><value>Հարցման ID՝</value></data>
+  <data name="Development Mode" xml:space="preserve"><value>Մշակման ռեժիմ</value></data>
+  <data name="Swapping to Development environment will display more detailed information about the error that occurred." xml:space="preserve"><value>Անցումը Development միջավայրին ցույց կտա ավելի մանրամասն տեղեկություն տեղի ունեցած սխալի մասին։</value></data>
+  <data name="The Development environment shouldn't be enabled for deployed applications. It can result in displaying sensitive information from exceptions to end users. For local debugging, enable the Development environment by setting the ASPNETCORE_ENVIRONMENT environment variable to Development and restarting the app." xml:space="preserve"><value>Development միջավայրը չպետք է միացված լինի տեղակայված հավելվածների համար։ Այն կարող է վերջնական օգտատերերին ցույց տալ զգայուն տեղեկություն բացառություններից։ Տեղային վրիպազերծման համար միացրեք Development միջավայրը՝ ASPNETCORE_ENVIRONMENT փոփոխականը դնելով Development և վերագործարկելով հավելվածը։</value></data>
+  <data name="Home Page" xml:space="preserve"><value>Գլխավոր էջ</value></data>
+  <data name="Welcome" xml:space="preserve"><value>Բարի գալուստ</value></data>
+  <data name="Learn about" xml:space="preserve"><value>Իմացեք ավելին</value></data>
+  <data name="building Web apps with ASP.NET Core" xml:space="preserve"><value>ASP.NET Core-ով վեբ հավելվածներ ստեղծելու մասին</value></data>
+  <data name="Privacy Policy" xml:space="preserve"><value>Գաղտնիության քաղաքականություն</value></data>
+  <data name="Use this page to detail your site's privacy policy." xml:space="preserve"><value>Օգտագործեք այս էջը ձեր կայքի գաղտնիության քաղաքականությունը նկարագրելու համար։</value></data>
+</root>

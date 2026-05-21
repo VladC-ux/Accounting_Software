@@ -5,9 +5,9 @@
         ? $"https://t.me/{Model.BotUsername.TrimStart('@')}"
         : null;
     ViewBag.ActivePage = "telegram";
-    ViewBag.PageTitle = "Telegram";
-    ViewBag.PageHeading = "Telegram Bot";
-    ViewBag.PageSubtitle = "Get real-time notifications and reports";
+    ViewBag.PageTitle = Localizer["Telegram"].Value;
+    ViewBag.PageHeading = Localizer["Telegram Bot"].Value;
+    ViewBag.PageSubtitle = Localizer["Get real-time notifications and reports"].Value;
 }
 
 @section Styles {
@@ -78,7 +78,7 @@
 }
 
 <a class="back-link" asp-controller="Dashboard" asp-action="Index">
-    <i class="fas fa-arrow-left"></i> Back to Dashboard
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Dashboard"]
 </a>
 
 <div class="tg-wrap">
@@ -94,20 +94,20 @@
     {
         <div class="alert-box alert-warn">
             <i class="fas fa-exclamation-triangle"></i>
-            <span>Bot is not configured. Set <code>Telegram:BotToken</code> in <code>appsettings.json</code> and restart the application.</span>
+            <span>@Localizer["Bot is not configured. Set"] <code>Telegram:BotToken</code> @Localizer["in_config"] <code>appsettings.json</code> @Localizer["and restart the application."]</span>
         </div>
     }
 
     <div class="card tg-card">
         <div class="card-hd">
             <div>
-                <h3><i class="fab fa-telegram" style="color:#0088cc;margin-right:6px;"></i> Connection Status</h3>
-                <div class="hd-sub">Link your Telegram account to the system</div>
+                <h3><i class="fab fa-telegram" style="color:#0088cc;margin-right:6px;"></i> @Localizer["Connection Status"]</h3>
+                <div class="hd-sub">@Localizer["Link your Telegram account to the system"]</div>
             </div>
             @if (botLink != null)
             {
                 <a class="btn btn-tg" href="@botLink" target="_blank" rel="noopener">
-                    <i class="fab fa-telegram"></i> Open Bot
+                    <i class="fab fa-telegram"></i> @Localizer["Open Bot"]
                 </a>
             }
         </div>
@@ -116,7 +116,7 @@
             <div class="status-dot @(Model.IsLinked ? "ok" : "off")"></div>
             <div>
                 <div class="status-lbl @(Model.IsLinked ? "ok" : "off")">
-                    @(Model.IsLinked ? "Account linked" : "Not linked")
+                    @(Model.IsLinked ? Localizer["Account linked"].Value : Localizer["Not linked"].Value)
                 </div>
                 @if (Model.IsLinked && !string.IsNullOrEmpty(Model.TelegramUsername))
                 {
@@ -128,11 +128,11 @@
         @if (!Model.IsLinked)
         {
             <div class="how-box">
-                <h4>How to link:</h4>
+                <h4>@Localizer["How to link:"]</h4>
                 <ol class="steps">
-                    <li>Open the bot in Telegram@(botLink != null ? "" : " (set bot's @username in appsettings)")</li>
-                    <li>Send <code>/start</code></li>
-                    <li>Generate a code below and send it to the bot: <code>/link CODE</code></li>
+                    <li>@Localizer["Open the bot in Telegram"]@(botLink != null ? "" : " " + Localizer["(set bot's @username in appsettings)"].Value)</li>
+                    <li>@Localizer["Send"] <code>/start</code></li>
+                    <li>@Localizer["Generate a code below and send it to the bot:"] <code>/link CODE</code></li>
                 </ol>
             </div>
 
@@ -140,14 +140,14 @@
             {
                 <div class="code-box">
                     <div class="code-val">@Model.LinkCode</div>
-                    <div class="code-hint">Send to the bot: <code>/link @Model.LinkCode</code></div>
+                    <div class="code-hint">@Localizer["Send to the bot:"] <code>/link @Model.LinkCode</code></div>
                 </div>
             }
 
             <form asp-action="GenerateCode" method="post" style="display:inline;">
                 <button class="btn btn-primary" type="submit">
                     <i class="fas fa-key"></i>
-                    @(string.IsNullOrEmpty(Model.LinkCode) ? "Generate code" : "Generate new code")
+                    @(string.IsNullOrEmpty(Model.LinkCode) ? Localizer["Generate code"].Value : Localizer["Generate new code"].Value)
                 </button>
             </form>
         }
@@ -156,13 +156,13 @@
             <div class="action-row">
                 <form asp-action="SendTest" method="post" style="display:inline;">
                     <button class="btn btn-primary" type="submit">
-                        <i class="fas fa-paper-plane"></i> Send test
+                        <i class="fas fa-paper-plane"></i> @Localizer["Send test"]
                     </button>
                 </form>
                 <form asp-action="Unlink" method="post" style="display:inline;"
-                      onsubmit="return confirm('Unlink account from Telegram?');">
+                      onsubmit="return confirm('@Localizer["Unlink account from Telegram?"]');">
                     <button class="btn btn-danger" type="submit">
-                        <i class="fas fa-unlink"></i> Unlink
+                        <i class="fas fa-unlink"></i> @Localizer["Unlink"]
                     </button>
                 </form>
             </div>
@@ -174,16 +174,16 @@
         <div class="card tg-card">
             <div class="card-hd">
                 <div>
-                    <h3><i class="fas fa-bell" style="color:var(--green);margin-right:6px;"></i> Notifications</h3>
-                    <div class="hd-sub">Choose what the bot should send to you</div>
+                    <h3><i class="fas fa-bell" style="color:var(--green);margin-right:6px;"></i> @Localizer["Notifications"]</h3>
+                    <div class="hd-sub">@Localizer["Choose what the bot should send to you"]</div>
                 </div>
             </div>
 
             <form asp-action="SavePreferences" method="post">
                 <div class="toggle-row">
                     <div class="toggle-info">
-                        <h4>New sales</h4>
-                        <p>Instantly after a sale is recorded</p>
+                        <h4>@Localizer["New sales"]</h4>
+                        <p>@Localizer["Instantly after a sale is recorded"]</p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="notifySales" value="true" @(Model.NotifySales ? "checked" : "")>
@@ -192,8 +192,8 @@
                 </div>
                 <div class="toggle-row">
                     <div class="toggle-info">
-                        <h4>Low stock</h4>
-                        <p>When a product is running low in a store</p>
+                        <h4>@Localizer["Low stock"]</h4>
+                        <p>@Localizer["When a product is running low in a store"]</p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="notifyLowStock" value="true" @(Model.NotifyLowStock ? "checked" : "")>
@@ -202,8 +202,8 @@
                 </div>
                 <div class="toggle-row">
                     <div class="toggle-info">
-                        <h4>Daily report</h4>
-                        <p>End-of-day summary every evening</p>
+                        <h4>@Localizer["Daily report"]</h4>
+                        <p>@Localizer["End-of-day summary every evening"]</p>
                     </div>
                     <label class="switch">
                         <input type="checkbox" name="dailyReport" value="true" @(Model.DailyReport ? "checked" : "")>
@@ -212,7 +212,7 @@
                 </div>
                 <div style="margin-top:18px;">
                     <button class="btn btn-primary" type="submit">
-                        <i class="fas fa-save"></i> Save
+                        <i class="fas fa-save"></i> @Localizer["Save"]
                     </button>
                 </div>
             </form>
@@ -221,17 +221,17 @@
         <div class="card tg-card">
             <div class="card-hd">
                 <div>
-                    <h3><i class="fas fa-terminal" style="color:var(--green);margin-right:6px;"></i> Bot commands</h3>
-                    <div class="hd-sub">Available commands inside the chat</div>
+                    <h3><i class="fas fa-terminal" style="color:var(--green);margin-right:6px;"></i> @Localizer["Bot commands"]</h3>
+                    <div class="hd-sub">@Localizer["Available commands inside the chat"]</div>
                 </div>
             </div>
             <div class="cmd-grid">
-                <div><code>/today</code> — today's report</div>
-                <div><code>/week</code> — last 7 days</div>
-                <div><code>/top</code> — top 5 products</div>
-                <div><code>/low</code> — low stock</div>
-                <div><code>/help</code> — all commands</div>
-                <div><code>/unlink</code> — unlink account</div>
+                <div><code>/today</code> — @Localizer["today's report"]</div>
+                <div><code>/week</code> — @Localizer["last 7 days"]</div>
+                <div><code>/top</code> — @Localizer["top 5 products"]</div>
+                <div><code>/low</code> — @Localizer["low stock"]</div>
+                <div><code>/help</code> — @Localizer["all commands"]</div>
+                <div><code>/unlink</code> — @Localizer["unlink account"]</div>
             </div>
         </div>
     }

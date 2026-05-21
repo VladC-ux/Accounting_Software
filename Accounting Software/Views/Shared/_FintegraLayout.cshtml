@@ -86,6 +86,18 @@
         .sb-foot-lbl{font-size:.7rem;color:var(--muted);font-weight:500;}
         .sb-foot-val{font-size:.82rem;font-weight:700;color:var(--text);margin-top:2px;}
 
+        /* ── LANGUAGE SWITCHER ── */
+        .lang-switch{
+            display:flex;gap:4px;padding:5px;margin-top:14px;
+            background:var(--green-soft);border-radius:12px;
+        }
+        .lang-opt{
+            flex:1;text-align:center;padding:7px 0;border-radius:9px;
+            font-size:.74rem;font-weight:700;color:var(--muted);transition:all .12s;
+        }
+        .lang-opt:hover{background:#fff;color:var(--text);}
+        .lang-opt.active{background:var(--green);color:#fff;box-shadow:0 2px 6px rgba(45,106,79,.25);}
+
         /* ── MAIN ── */
         .main{flex:1;padding:28px 32px 32px;overflow-x:hidden;min-width:0;}
 
@@ -176,6 +188,7 @@
             body{flex-direction:column;}
             .sidebar{width:100%;border-radius:0;margin:0;flex-direction:row;overflow-x:auto;padding:12px;align-items:center;}
             .sb-spacer,.sb-foot{display:none;}
+            .lang-switch{margin-top:0;flex-shrink:0;}
             .brand{padding:0 12px;}
             .sb-nav{flex-direction:row;gap:4px;}
             .sb-link{padding:8px 12px;font-size:.8rem;white-space:nowrap;}
@@ -194,32 +207,43 @@
 
     <nav class="sb-nav">
         <a class="@Cls("dashboard")" asp-controller="Dashboard" asp-action="Index">
-            <i class="fas fa-th-large"></i> Dashboard
+            <i class="fas fa-th-large"></i> @Localizer["Dashboard"]
         </a>
         <a class="@Cls("income")" asp-controller="User" asp-action="Index" asp-route-id="@userId">
-            <i class="fas fa-arrow-down"></i> Income
+            <i class="fas fa-arrow-down"></i> @Localizer["Income"]
         </a>
         <a class="@Cls("sellers")" asp-controller="Seller" asp-action="Index">
-            <i class="fas fa-user-tie"></i> Sellers
+            <i class="fas fa-user-tie"></i> @Localizer["Sellers"]
         </a>
         <a class="@Cls("invoices")" asp-controller="Invoice" asp-action="Index">
-            <i class="far fa-file-lines"></i> Invoices
+            <i class="far fa-file-lines"></i> @Localizer["Invoices"]
         </a>
         <a class="@Cls("stores")" asp-controller="Store" asp-action="Index">
-            <i class="fas fa-store"></i> Stores
+            <i class="fas fa-store"></i> @Localizer["Stores"]
         </a>
         <a class="@Cls("reports")" asp-controller="Statistics" asp-action="Index">
-            <i class="fas fa-chart-column"></i> Reports
+            <i class="fas fa-chart-column"></i> @Localizer["Reports"]
         </a>
         <a class="@Cls("transactions")" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@userId">
-            <i class="fas fa-receipt"></i> Transactions
+            <i class="fas fa-receipt"></i> @Localizer["Transactions"]
         </a>
         <a class="@Cls("telegram")" asp-controller="Telegram" asp-action="Index">
-            <i class="fab fa-telegram"></i> Telegram
+            <i class="fab fa-telegram"></i> @Localizer["Telegram"]
         </a>
     </nav>
 
     <div class="sb-spacer"></div>
+
+    @{
+        var curLang = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+        var langReturnUrl = Context.Request.Path + Context.Request.QueryString;
+        string LangCls(string code) => curLang == code ? "lang-opt active" : "lang-opt";
+    }
+    <div class="lang-switch" title="@Localizer["Language"]">
+        <a class="@LangCls("en")" asp-controller="Culture" asp-action="Set" asp-route-culture="en-US" asp-route-returnUrl="@langReturnUrl">EN</a>
+        <a class="@LangCls("hy")" asp-controller="Culture" asp-action="Set" asp-route-culture="hy-AM" asp-route-returnUrl="@langReturnUrl">ՀՅ</a>
+        <a class="@LangCls("ru")" asp-controller="Culture" asp-action="Set" asp-route-culture="ru-RU" asp-route-returnUrl="@langReturnUrl">РУ</a>
+    </div>
 
     @if (ViewBag.SidebarFoot != null)
     {
@@ -230,7 +254,7 @@
         <div class="sb-foot">
             <div class="sb-foot-ico"><i class="fas fa-leaf"></i></div>
             <div class="sb-foot-text">
-                <div class="sb-foot-lbl">Account</div>
+                <div class="sb-foot-lbl">@Localizer["Account"]</div>
                 <div class="sb-foot-val">@userName</div>
             </div>
         </div>

@@ -74,10 +74,10 @@
     }
 
     ViewBag.ActivePage = "dashboard";
-    ViewBag.PageTitle = "Dashboard";
-    ViewBag.PageHeading = "Overview";
+    ViewBag.PageTitle = Localizer["Dashboard"].Value;
+    ViewBag.PageHeading = Localizer["Overview"].Value;
     ViewBag.PageSubtitle = DateTime.Now.ToString("dddd, d MMMM yyyy", enCulture) + " · " + Model.UserName;
-    var monthLabel = monthProfit >= 0 ? "Monthly profit" : "Monthly loss";
+    var monthLabel = monthProfit >= 0 ? Localizer["Monthly profit"].Value : Localizer["Monthly loss"].Value;
     var monthValue = (monthProfit >= 0 ? "+" : "") + FmtMoney(monthProfit);
     ViewBag.SidebarFoot = "<div class='sb-foot'>"
         + "<div class='sb-foot-ico'><i class='far fa-calendar'></i></div>"
@@ -181,45 +181,45 @@
 
 <div class="kpi-row">
     <div class="kpi">
-        <div class="kpi-lbl">Net Profit</div>
+        <div class="kpi-lbl">@Localizer["Net Profit"]</div>
         <div class="kpi-val">@FmtMoney(profit)</div>
         <div class="kpi-delta @(pctProfit >= 0 ? "up" : "down")">
             <i class="fas fa-arrow-@(pctProfit >= 0 ? "up" : "down")"></i>
             @Math.Abs(pctProfit).ToString("F1", inv)%
-            <span class="vs">vs last month</span>
+            <span class="vs">@Localizer["vs last month"]</span>
         </div>
         @Html.Raw(Sparkline(Model.SparkProfit, "#2D6A4F"))
     </div>
 
     <div class="kpi">
-        <div class="kpi-lbl">Income</div>
+        <div class="kpi-lbl">@Localizer["Income"]</div>
         <div class="kpi-val">@FmtMoney(Model.TotalEarned)</div>
         <div class="kpi-delta @(pctIncome >= 0 ? "up" : "down")">
             <i class="fas fa-arrow-@(pctIncome >= 0 ? "up" : "down")"></i>
             @Math.Abs(pctIncome).ToString("F1", inv)%
-            <span class="vs">vs last month</span>
+            <span class="vs">@Localizer["vs last month"]</span>
         </div>
         @Html.Raw(Sparkline(Model.SparkIncome, "#52B788"))
     </div>
 
     <div class="kpi">
-        <div class="kpi-lbl">Expenses</div>
+        <div class="kpi-lbl">@Localizer["Expenses"]</div>
         <div class="kpi-val">@FmtMoney(Model.TotalSpent)</div>
         <div class="kpi-delta @(pctExpense <= 0 ? "up" : "down")">
             <i class="fas fa-arrow-@(pctExpense <= 0 ? "down" : "up")"></i>
             @Math.Abs(pctExpense).ToString("F1", inv)%
-            <span class="vs">vs last month</span>
+            <span class="vs">@Localizer["vs last month"]</span>
         </div>
         @Html.Raw(Sparkline(Model.SparkExpense, "#E89A3C"))
     </div>
 
     <div class="kpi">
-        <div class="kpi-lbl">Cash Balance</div>
+        <div class="kpi-lbl">@Localizer["Cash Balance"]</div>
         <div class="kpi-val">@FmtMoney(Model.Balance)</div>
         <div class="kpi-delta @(pctBalance >= 0 ? "up" : "down")">
             <i class="fas fa-arrow-@(pctBalance >= 0 ? "up" : "down")"></i>
             @Math.Abs(pctBalance).ToString("F1", inv)%
-            <span class="vs">vs last month</span>
+            <span class="vs">@Localizer["vs last month"]</span>
         </div>
         @Html.Raw(Sparkline(Model.SparkBalance, "#2D6A4F"))
     </div>
@@ -229,17 +229,17 @@
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3>Cash flow</h3>
-                <div class="hd-sub">Income and expenses over the last 6 months</div>
+                <h3>@Localizer["Cash flow"]</h3>
+                <div class="hd-sub">@Localizer["Income and expenses over the last 6 months"]</div>
             </div>
             <a class="hd-link" asp-controller="Statistics" asp-action="Index">
-                Last 6 months <i class="fas fa-chevron-right"></i>
+                @Localizer["Last 6 months"] <i class="fas fa-chevron-right"></i>
             </a>
         </div>
 
         <div class="flow-legend">
-            <span class="lg"><span class="chip in"></span> Income</span>
-            <span class="lg"><span class="chip out"></span> Expenses</span>
+            <span class="lg"><span class="chip in"></span> @Localizer["Income"]</span>
+            <span class="lg"><span class="chip out"></span> @Localizer["Expenses"]</span>
         </div>
 
         <div class="flow-chart">
@@ -257,8 +257,8 @@
                     var hOut = flowMax > 0 ? (double)p.Expense / (double)flowMax * 100 : 0;
                     <div class="bar-group">
                         <div class="bar-pair">
-                            <div class="bar in"  style="height:@Fmt(hIn)%;"  title="Income: @FmtMoney(p.Income)"></div>
-                            <div class="bar out" style="height:@Fmt(hOut)%;" title="Expenses: @FmtMoney(p.Expense)"></div>
+                            <div class="bar in"  style="height:@Fmt(hIn)%;"  title="@Localizer["Income"]: @FmtMoney(p.Income)"></div>
+                            <div class="bar out" style="height:@Fmt(hOut)%;" title="@Localizer["Expenses"]: @FmtMoney(p.Expense)"></div>
                         </div>
                         <div class="bar-label">@p.Label</div>
                     </div>
@@ -270,8 +270,8 @@
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3>Expense breakdown</h3>
-                <div class="hd-sub">Top 5 purchase categories</div>
+                <h3>@Localizer["Expense breakdown"]</h3>
+                <div class="hd-sub">@Localizer["Top 5 purchase categories"]</div>
             </div>
         </div>
 
@@ -294,7 +294,7 @@
                 <div class="donut-center">
                     <div>
                         <div class="v">@FmtMoney(breakdownTotal)</div>
-                        <div class="l">Total</div>
+                        <div class="l">@Localizer["Total"]</div>
                     </div>
                 </div>
             </div>
@@ -315,7 +315,7 @@
                 {
                     <div class="small-empty" style="padding:8px 0;">
                         <i class="far fa-chart-pie"></i>
-                        <div>No expenses yet</div>
+                        <div>@Localizer["No expenses yet"]</div>
                     </div>
                 }
             </div>
@@ -327,51 +327,51 @@
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3>Quick actions</h3>
-                <div class="hd-sub">Most common operations</div>
+                <h3>@Localizer["Quick actions"]</h3>
+                <div class="hd-sub">@Localizer["Most common operations"]</div>
             </div>
         </div>
         <div class="action-grid">
             <a class="action-tile" asp-controller="Seller" asp-action="Index">
                 <div class="tile-icon"><i class="fas fa-cart-plus"></i></div>
                 <div>
-                    <div class="tile-label">New purchase</div>
-                    <div class="tile-desc">Buy products from a seller</div>
+                    <div class="tile-label">@Localizer["New purchase"]</div>
+                    <div class="tile-desc">@Localizer["Buy products from a seller"]</div>
                 </div>
             </a>
             <a class="action-tile" asp-controller="Store" asp-action="Index">
                 <div class="tile-icon"><i class="fas fa-tag"></i></div>
                 <div>
-                    <div class="tile-label">Record sale</div>
-                    <div class="tile-desc">Sell products from a store</div>
+                    <div class="tile-label">@Localizer["Record sale"]</div>
+                    <div class="tile-desc">@Localizer["Sell products from a store"]</div>
                 </div>
             </a>
             <a class="action-tile" asp-controller="Invoice" asp-action="Index">
                 <div class="tile-icon"><i class="far fa-file-lines"></i></div>
                 <div>
-                    <div class="tile-label">New invoice</div>
-                    <div class="tile-desc">Create an invoice for a client</div>
+                    <div class="tile-label">@Localizer["New invoice"]</div>
+                    <div class="tile-desc">@Localizer["Create an invoice for a client"]</div>
                 </div>
             </a>
             <a class="action-tile" asp-controller="User" asp-action="Index" asp-route-id="@Model.UserId">
                 <div class="tile-icon"><i class="fas fa-plus-circle"></i></div>
                 <div>
-                    <div class="tile-label">Add funds</div>
-                    <div class="tile-desc">Top up your account balance</div>
+                    <div class="tile-label">@Localizer["Add funds"]</div>
+                    <div class="tile-desc">@Localizer["Top up your account balance"]</div>
                 </div>
             </a>
             <a class="action-tile" asp-controller="Statistics" asp-action="Index">
                 <div class="tile-icon"><i class="fas fa-chart-bar"></i></div>
                 <div>
-                    <div class="tile-label">Reports</div>
-                    <div class="tile-desc">Sales and profit analytics</div>
+                    <div class="tile-label">@Localizer["Reports"]</div>
+                    <div class="tile-desc">@Localizer["Sales and profit analytics"]</div>
                 </div>
             </a>
             <a class="action-tile" href="/Export/Transactions?userId=@Model.UserId">
                 <div class="tile-icon"><i class="fas fa-file-export"></i></div>
                 <div>
-                    <div class="tile-label">Export</div>
-                    <div class="tile-desc">Download an Excel report</div>
+                    <div class="tile-label">@Localizer["Export"]</div>
+                    <div class="tile-desc">@Localizer["Download an Excel report"]</div>
                 </div>
             </a>
         </div>
@@ -380,11 +380,11 @@
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3>Recent activity</h3>
-                <div class="hd-sub">Latest transactions</div>
+                <h3>@Localizer["Recent activity"]</h3>
+                <div class="hd-sub">@Localizer["Latest transactions"]</div>
             </div>
             <a class="hd-link" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.UserId">
-                See all <i class="fas fa-chevron-right"></i>
+                @Localizer["See all"] <i class="fas fa-chevron-right"></i>
             </a>
         </div>
         @if (Model.LastTransactions != null && Model.LastTransactions.Any())
@@ -409,7 +409,7 @@
         {
             <div class="small-empty">
                 <i class="fas fa-inbox"></i>
-                <div>No transactions yet</div>
+                <div>@Localizer["No transactions yet"]</div>
             </div>
         }
     </div>

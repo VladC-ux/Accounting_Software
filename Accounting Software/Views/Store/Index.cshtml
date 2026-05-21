@@ -4,15 +4,16 @@
     var storeCount = Model?.Count() ?? 0;
 
     ViewBag.ActivePage = "stores";
-    ViewBag.PageTitle = "Stores";
-    ViewBag.PageHeading = "Stores";
-    ViewBag.PageSubtitle = storeCount + " location" + (storeCount == 1 ? "" : "s") + " · Manage your retail points";
+    ViewBag.PageTitle = Localizer["Stores"].Value;
+    ViewBag.PageHeading = Localizer["Stores"].Value;
+    var locationWord = storeCount == 1 ? Localizer["location"].Value : Localizer["locations"].Value;
+    ViewBag.PageSubtitle = storeCount + " " + locationWord + " · " + Localizer["Manage your retail points"].Value;
     ViewBag.HeaderActions =
         "<div class='search-pill'>"
         + "<i class='fas fa-search'></i>"
-        + "<input type='text' id='storeSearch' placeholder='Search stores...' />"
+        + "<input type='text' id='storeSearch' placeholder='" + Localizer["Search stores..."].Value + "' />"
         + "</div>"
-        + "<a class='btn btn-primary' href='/Store/Add'><i class='fas fa-plus'></i> New Store</a>";
+        + "<a class='btn btn-primary' href='/Store/Add'><i class='fas fa-plus'></i> " + Localizer["New Store"].Value + "</a>";
 }
 
 @section Styles {
@@ -82,18 +83,18 @@
                     <div class="store-icon"><i class="fas fa-store"></i></div>
                     <div class="store-info">
                         <a class="store-name" asp-action="ShowStoreProduct" asp-route-storeId="@store.Id">@store.StoreName</a>
-                        <div class="store-meta"><span class="dot"></span> Active · ID #@store.Id</div>
+                        <div class="store-meta"><span class="dot"></span> @Localizer["Active"] · ID #@store.Id</div>
                     </div>
                 </div>
                 <div class="store-actions">
                     <a class="a-products" asp-action="ShowStoreProduct" asp-route-storeId="@store.Id">
-                        <i class="fas fa-box"></i> Products
+                        <i class="fas fa-box"></i> @Localizer["Products"]
                     </a>
-                    <a class="a-edit" asp-action="Edit" asp-route-id="@store.Id" title="Edit">
+                    <a class="a-edit" asp-action="Edit" asp-route-id="@store.Id" title="@Localizer["Edit"]">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <a class="a-del" asp-action="Delete" asp-route-id="@store.Id" title="Delete"
-                       onclick="return confirm('Delete this store?');">
+                    <a class="a-del" asp-action="Delete" asp-route-id="@store.Id" title="@Localizer["Delete"]"
+                       onclick="return confirm('@Localizer["Delete this store?"]');">
                         <i class="fas fa-trash"></i>
                     </a>
                 </div>
@@ -105,9 +106,9 @@ else
 {
     <div class="empty-state">
         <div class="empty-ico"><i class="fas fa-store-slash"></i></div>
-        <h4>No stores yet</h4>
-        <p>Create your first store to start managing inventory.</p>
-        <a class="btn btn-primary" asp-action="Add"><i class="fas fa-plus"></i> Create your first store</a>
+        <h4>@Localizer["No stores yet"]</h4>
+        <p>@Localizer["Create your first store to start managing inventory."]</p>
+        <a class="btn btn-primary" asp-action="Add"><i class="fas fa-plus"></i> @Localizer["Create your first store"]</a>
     </div>
 }
 

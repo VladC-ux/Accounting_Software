@@ -21,9 +21,9 @@
     string FmtMoney(decimal v) => v.ToString("N2", inv);
 
     ViewBag.ActivePage = "reports";
-    ViewBag.PageTitle = "Reports";
-    ViewBag.PageHeading = "Reports";
-    ViewBag.PageSubtitle = "All-time overview based on transaction history";
+    ViewBag.PageTitle = Localizer["Reports"].Value;
+    ViewBag.PageHeading = Localizer["Reports"].Value;
+    ViewBag.PageSubtitle = Localizer["All-time overview based on transaction history"].Value;
 }
 
 @section Styles {
@@ -69,30 +69,30 @@
 <div class="stat-row">
     <div class="stat">
         <div class="stat-ico red"><i class="fas fa-arrow-down"></i></div>
-        <div class="stat-lbl">Total Spent</div>
+        <div class="stat-lbl">@Localizer["Total Spent"]</div>
         <div class="stat-val c-red">@FmtMoney(Model.TotalSpent)</div>
-        <div class="stat-sub">@Model.TotalPurchases purchases</div>
+        <div class="stat-sub">@Model.TotalPurchases @Localizer["purchases"]</div>
     </div>
 
     <div class="stat">
         <div class="stat-ico green"><i class="fas fa-arrow-up"></i></div>
-        <div class="stat-lbl">Total Earned</div>
+        <div class="stat-lbl">@Localizer["Total Earned"]</div>
         <div class="stat-val c-green">@FmtMoney(Model.TotalEarned)</div>
-        <div class="stat-sub">@Model.TotalSales sales</div>
+        <div class="stat-sub">@Model.TotalSales @Localizer["sales"]</div>
     </div>
 
     <div class="stat">
         <div class="stat-ico orange"><i class="fas fa-chart-line"></i></div>
-        <div class="stat-lbl">Net Profit</div>
+        <div class="stat-lbl">@Localizer["Net Profit"]</div>
         <div class="stat-val @(Model.NetProfit >= 0 ? "c-green" : "c-red")">@FmtMoney(Model.NetProfit)</div>
-        <div class="stat-sub">Earned − Spent</div>
+        <div class="stat-sub">@Localizer["Earned − Spent"]</div>
     </div>
 
     <div class="stat">
         <div class="stat-ico blue"><i class="fas fa-exchange-alt"></i></div>
-        <div class="stat-lbl">Total Transactions</div>
+        <div class="stat-lbl">@Localizer["Total Transactions"]</div>
         <div class="stat-val">@(Model.TotalPurchases + Model.TotalSales)</div>
-        <div class="stat-sub">@Model.TotalPurchases in · @Model.TotalSales out</div>
+        <div class="stat-sub">@Model.TotalPurchases @Localizer["in"] · @Model.TotalSales @Localizer["out"]</div>
     </div>
 </div>
 
@@ -100,8 +100,8 @@
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3>Income vs Expenses</h3>
-                <div class="hd-sub">Monthly comparison — last 6 months</div>
+                <h3>@Localizer["Income vs Expenses"]</h3>
+                <div class="hd-sub">@Localizer["Monthly comparison — last 6 months"]</div>
             </div>
         </div>
         <div class="chart-host"><canvas id="monthlyChart"></canvas></div>
@@ -112,8 +112,8 @@
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3>Top 5 by Sales</h3>
-                <div class="hd-sub">Most profitable products</div>
+                <h3>@Localizer["Top 5 by Sales"]</h3>
+                <div class="hd-sub">@Localizer["Most profitable products"]</div>
             </div>
         </div>
         @if (Model.TopSoldProducts.Any())
@@ -122,15 +122,15 @@
         }
         else
         {
-            <div class="chart-empty"><i class="fas fa-inbox"></i> No sales yet</div>
+            <div class="chart-empty"><i class="fas fa-inbox"></i> @Localizer["No sales yet"]</div>
         }
     </div>
 
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3>Top 5 by Purchases</h3>
-                <div class="hd-sub">Most bought products</div>
+                <h3>@Localizer["Top 5 by Purchases"]</h3>
+                <div class="hd-sub">@Localizer["Most bought products"]</div>
             </div>
         </div>
         @if (Model.TopBoughtProducts.Any())
@@ -139,7 +139,7 @@
         }
         else
         {
-            <div class="chart-empty"><i class="fas fa-inbox"></i> No purchases yet</div>
+            <div class="chart-empty"><i class="fas fa-inbox"></i> @Localizer["No purchases yet"]</div>
         }
     </div>
 </div>
@@ -148,8 +148,8 @@
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3>Revenue by Store</h3>
-                <div class="hd-sub">Breakdown across retail points</div>
+                <h3>@Localizer["Revenue by Store"]</h3>
+                <div class="hd-sub">@Localizer["Breakdown across retail points"]</div>
             </div>
         </div>
         @if (Model.RevenueByStore.Any())
@@ -158,7 +158,7 @@
         }
         else
         {
-            <div class="chart-empty"><i class="fas fa-inbox"></i> No store sales yet</div>
+            <div class="chart-empty"><i class="fas fa-inbox"></i> @Localizer["No store sales yet"]</div>
         }
     </div>
 </div>
@@ -182,8 +182,8 @@
         data: {
             labels: @Html.Raw(monthLabels),
             datasets: [
-                { label: 'Income',   data: @Html.Raw(monthlyEarned), backgroundColor: '#2D6A4F', borderRadius: 6, barPercentage: .65, categoryPercentage: .7 },
-                { label: 'Expenses', data: @Html.Raw(monthlySpent),  backgroundColor: '#E89A3C', borderRadius: 6, barPercentage: .65, categoryPercentage: .7 }
+                { label: '@Localizer["Income"]',   data: @Html.Raw(monthlyEarned), backgroundColor: '#2D6A4F', borderRadius: 6, barPercentage: .65, categoryPercentage: .7 },
+                { label: '@Localizer["Expenses"]', data: @Html.Raw(monthlySpent),  backgroundColor: '#E89A3C', borderRadius: 6, barPercentage: .65, categoryPercentage: .7 }
             ]
         },
         options: {
@@ -230,7 +230,7 @@
             type: 'bar',
             data: {
                 labels: @Html.Raw(storeLabels),
-                datasets: [{ label: 'Revenue', data: @Html.Raw(storeValues), backgroundColor: COLORS, borderRadius: 6 }]
+                datasets: [{ label: '@Localizer["Revenue"]', data: @Html.Raw(storeValues), backgroundColor: COLORS, borderRadius: 6 }]
             },
             options: {
                 ...baseOpts,

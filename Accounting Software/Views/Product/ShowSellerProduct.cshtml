@@ -7,14 +7,15 @@
     var totalItems = Model != null ? Model.Sum(p => p.Count) : 0;
     var count = Model?.Count ?? 0;
     ViewBag.ActivePage = "sellers";
-    ViewBag.PageTitle = "Products";
-    ViewBag.PageHeading = "Products";
-    ViewBag.PageSubtitle = $"{count} item{(count == 1 ? "" : "s")} for this seller";
+    ViewBag.PageTitle = Localizer["Products"].Value;
+    ViewBag.PageHeading = Localizer["Products"].Value;
+    var itemWord = count == 1 ? Localizer["item"].Value : Localizer["items"].Value;
+    ViewBag.PageSubtitle = $"{count} {itemWord} " + Localizer["for this seller"].Value;
 
     if (sellerId > 0)
     {
-        ViewBag.HeaderActions = $@"<a class='btn btn-primary' href='/Product/Add?SellerId={sellerId}'><i class='fas fa-plus'></i> Add Product</a>"
-                              + $@"<a class='btn btn-ghost' href='/Seller/Index'><i class='fas fa-arrow-left'></i> Sellers</a>";
+        ViewBag.HeaderActions = $@"<a class='btn btn-primary' href='/Product/Add?SellerId={sellerId}'><i class='fas fa-plus'></i> {Localizer["Add Product"].Value}</a>"
+                              + $@"<a class='btn btn-ghost' href='/Seller/Index'><i class='fas fa-arrow-left'></i> {Localizer["Sellers"].Value}</a>";
     }
 }
 
@@ -74,26 +75,26 @@
 }
 
 <a class="back-link" asp-controller="Seller" asp-action="Index">
-    <i class="fas fa-arrow-left"></i> Back to Sellers
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Sellers"]
 </a>
 
 <div class="kpi-row">
-    <div class="kpi"><div class="ic g"><i class="fas fa-cube"></i></div><div><div class="lbl">Products</div><div class="val">@count</div></div></div>
-    <div class="kpi"><div class="ic o"><i class="fas fa-layer-group"></i></div><div><div class="lbl">Items in stock</div><div class="val">@totalItems</div></div></div>
-    <div class="kpi"><div class="ic b"><i class="fas fa-dollar-sign"></i></div><div><div class="lbl">Total value</div><div class="val">@totalValue.ToString("N2")</div></div></div>
+    <div class="kpi"><div class="ic g"><i class="fas fa-cube"></i></div><div><div class="lbl">@Localizer["Products"]</div><div class="val">@count</div></div></div>
+    <div class="kpi"><div class="ic o"><i class="fas fa-layer-group"></i></div><div><div class="lbl">@Localizer["Items in stock"]</div><div class="val">@totalItems</div></div></div>
+    <div class="kpi"><div class="ic b"><i class="fas fa-dollar-sign"></i></div><div><div class="lbl">@Localizer["Total value"]</div><div class="val">@totalValue.ToString("N2")</div></div></div>
 </div>
 
 <div class="card">
     <div class="card-hd">
         <div>
-            <h3><i class="fas fa-boxes" style="color:var(--green);margin-right:6px;"></i> Product list</h3>
-            <div class="hd-sub">All products for this seller</div>
+            <h3><i class="fas fa-boxes" style="color:var(--green);margin-right:6px;"></i> @Localizer["Product list"]</h3>
+            <div class="hd-sub">@Localizer["All products for this seller"]</div>
         </div>
     </div>
 
     <div class="toolbar">
         <i class="fas fa-search"></i>
-        <input type="text" id="productSearch" placeholder="Search products..." />
+        <input type="text" id="productSearch" placeholder="@Localizer["Search products..."]" />
     </div>
 
     @if (Model != null && Model.Any())
@@ -102,14 +103,14 @@
             <table class="products-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th>Mass</th>
-                        <th>Unit</th>
-                        <th>Count</th>
-                        <th>Total</th>
-                        <th>Actions</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["Price"]</th>
+                        <th>@Localizer["Description"]</th>
+                        <th>@Localizer["Mass"]</th>
+                        <th>@Localizer["Unit"]</th>
+                        <th>@Localizer["Count"]</th>
+                        <th>@Localizer["Total"]</th>
+                        <th>@Localizer["Actions"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -126,15 +127,15 @@
                             <td>
                                 <div class="row-actions">
                                     <a class="btn-icon-sm btn-edit" asp-action="Edit" asp-controller="Product" asp-route-id="@item.Id">
-                                        <i class="fas fa-edit"></i> Edit
+                                        <i class="fas fa-edit"></i> @Localizer["Edit"]
                                     </a>
                                     <a class="btn-icon-sm btn-del" asp-action="Delete" asp-controller="Product"
                                        asp-route-id="@item.Id" asp-route-SellerId="@item.SellerId"
-                                       onclick="return confirm('Delete @item.Name?')">
-                                        <i class="fas fa-trash-alt"></i> Delete
+                                       onclick="return confirm('@Localizer["Delete"] @item.Name?')">
+                                        <i class="fas fa-trash-alt"></i> @Localizer["Delete"]
                                     </a>
                                     <a class="btn-icon-sm btn-shops" asp-action="ShowShops" asp-controller="Store" asp-route-id="@item.Id">
-                                        <i class="fas fa-warehouse"></i> Shops
+                                        <i class="fas fa-warehouse"></i> @Localizer["Shops"]
                                     </a>
                                 </div>
                             </td>
@@ -145,20 +146,20 @@
         </div>
 
         <div class="table-foot">
-            <div><i class="fas fa-layer-group" style="color:var(--orange);"></i> Total items: <strong>@totalItems</strong></div>
-            <div><i class="fas fa-dollar-sign" style="color:var(--green);"></i> Total value: <strong>@totalValue.ToString("N2")</strong></div>
+            <div><i class="fas fa-layer-group" style="color:var(--orange);"></i> @Localizer["Total items:"] <strong>@totalItems</strong></div>
+            <div><i class="fas fa-dollar-sign" style="color:var(--green);"></i> @Localizer["Total value:"] <strong>@totalValue.ToString("N2")</strong></div>
         </div>
     }
     else
     {
         <div class="empty">
             <div class="ic"><i class="fas fa-box-open"></i></div>
-            <h4 style="font-weight:700;margin-bottom:6px;color:var(--text);">No products yet</h4>
-            <p style="font-size:.86rem;">Add a product to get started.</p>
+            <h4 style="font-weight:700;margin-bottom:6px;color:var(--text);">@Localizer["No products yet"]</h4>
+            <p style="font-size:.86rem;">@Localizer["Add a product to get started."]</p>
             @if (sellerId > 0)
             {
                 <a class="btn btn-primary" asp-action="Add" asp-controller="Product" asp-route-SellerId="@sellerId" style="margin-top:14px;">
-                    <i class="fas fa-plus"></i> Add Product
+                    <i class="fas fa-plus"></i> @Localizer["Add Product"]
                 </a>
             }
         </div>

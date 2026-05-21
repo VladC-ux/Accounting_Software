@@ -6,16 +6,17 @@
     var sellerCount = sellers.Count();
 
     ViewBag.ActivePage = "sellers";
-    ViewBag.PageTitle = "Sellers";
-    ViewBag.PageHeading = "Sellers";
-    ViewBag.PageSubtitle = sellerCount + " supplier" + (sellerCount == 1 ? "" : "s") + " · Manage your network";
+    ViewBag.PageTitle = Localizer["Sellers"].Value;
+    ViewBag.PageHeading = Localizer["Sellers"].Value;
+    var supplierWord = sellerCount == 1 ? Localizer["supplier"].Value : Localizer["suppliers"].Value;
+    ViewBag.PageSubtitle = sellerCount + " " + supplierWord + " · " + Localizer["Manage your network"].Value;
     ViewBag.HeaderActions =
         "<div class='search-pill'>"
         + "<i class='fas fa-search'></i>"
-        + "<input type='text' id='sellerSearch' placeholder='Search sellers...' />"
+        + "<input type='text' id='sellerSearch' placeholder='" + Localizer["Search sellers..."].Value + "' />"
         + "</div>"
-        + "<a class='btn btn-ghost' href='/Export/Products'><i class='fas fa-file-excel'></i> Export</a>"
-        + "<a class='btn btn-primary' href='/Seller/Add'><i class='fas fa-plus'></i> Add Seller</a>";
+        + "<a class='btn btn-ghost' href='/Export/Products'><i class='fas fa-file-excel'></i> " + Localizer["Export"].Value + "</a>"
+        + "<a class='btn btn-primary' href='/Seller/Add'><i class='fas fa-plus'></i> " + Localizer["Add Seller"].Value + "</a>";
 }
 
 @section Styles {
@@ -101,21 +102,21 @@
                         <div class="seller-avatar @avClass">@item.Name.ToString().Substring(0, 1).ToUpper()</div>
                         <div style="min-width:0;flex:1;">
                             <a class="seller-name" href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">@item.Name</a>
-                            <div class="seller-meta"><span class="dot"></span> Active · ID #@item.Id</div>
+                            <div class="seller-meta"><span class="dot"></span> @Localizer["Active"] · ID #@item.Id</div>
                         </div>
                     </div>
                     <div class="card-actions">
                         <a class="btn-icon-sm btn-view" href="@Url.Action("ShowSellerProduct", "Product", new { SellerId = item.Id })">
-                            <i class="fas fa-eye"></i> View
+                            <i class="fas fa-eye"></i> @Localizer["View"]
                         </a>
                         <a class="btn-icon-sm btn-add" asp-action="Add" asp-controller="Product" asp-route-SellerId="@item.Id">
-                            <i class="fas fa-plus"></i> Product
+                            <i class="fas fa-plus"></i> @Localizer["Product"]
                         </a>
                         <a class="btn-icon-sm btn-edit" asp-action="Edit" asp-controller="Seller" asp-route-id="@item.Id">
                             <i class="fas fa-edit"></i>
                         </a>
                         <a class="btn-icon-sm btn-del" asp-action="Delete" asp-controller="Seller" asp-route-id="@item.Id"
-                           onclick="return confirm('Delete seller @item.Name?')">
+                           onclick="return confirm('@Localizer["Delete seller"] @item.Name?')">
                             <i class="fas fa-trash"></i>
                         </a>
                     </div>
@@ -128,9 +129,9 @@ else
 {
     <div class="empty-state">
         <div class="empty-ico"><i class="fas fa-user-slash"></i></div>
-        <h4>No sellers yet</h4>
-        <p>Add your first seller to start tracking products.</p>
-        <a class="btn btn-primary" asp-action="Add" asp-controller="Seller"><i class="fas fa-plus"></i> Add Seller</a>
+        <h4>@Localizer["No sellers yet"]</h4>
+        <p>@Localizer["Add your first seller to start tracking products."]</p>
+        <a class="btn btn-primary" asp-action="Add" asp-controller="Seller"><i class="fas fa-plus"></i> @Localizer["Add Seller"]</a>
     </div>
 }
 

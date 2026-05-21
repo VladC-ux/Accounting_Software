@@ -15,8 +15,8 @@
     string FmtMoney(decimal v) => v.ToString("N2", inv);
 
     ViewBag.ActivePage = "income";
-    ViewBag.PageTitle = "Income";
-    ViewBag.PageHeading = "My Account";
+    ViewBag.PageTitle = Localizer["Income"].Value;
+    ViewBag.PageHeading = Localizer["My Account"].Value;
     ViewBag.PageSubtitle = (Model.Name ?? "User") + (string.IsNullOrEmpty(email) ? "" : " · " + email);
 }
 
@@ -144,9 +144,9 @@
 
 <div class="balance-row">
     <div class="balance-card">
-        <div class="balance-lbl">Current Balance</div>
+        <div class="balance-lbl">@Localizer["Current Balance"]</div>
         <div class="balance-val">@FmtMoney(Model.Balance)</div>
-        <div class="balance-sub">Available funds for purchases</div>
+        <div class="balance-sub">@Localizer["Available funds for purchases"]</div>
         <div class="balance-meta">
             <span><i class="fas fa-user"></i> @Model.Name</span>
             @if (!string.IsNullOrEmpty(email))
@@ -158,15 +158,15 @@
 
     <div class="topup-card">
         <div>
-            <h3>Add funds</h3>
-            <div class="sub">Top up your account balance</div>
+            <h3>@Localizer["Add funds"]</h3>
+            <div class="sub">@Localizer["Top up your account balance"]</div>
         </div>
         <form asp-action="TopUp" asp-controller="User" method="post">
             <div class="topup-form">
                 <input type="number" name="amount" id="topupAmount"
                        placeholder="0.00" step="0.01" min="0.01" required />
                 <button type="submit" class="btn-topup">
-                    <i class="fas fa-plus-circle"></i> Top Up
+                    <i class="fas fa-plus-circle"></i> @Localizer["Top Up"]
                 </button>
             </div>
             <div class="preset-row" style="margin-top:12px;">
@@ -183,22 +183,22 @@
 <div class="stats-row">
     <div class="stat">
         <div class="stat-ico orange"><i class="fas fa-piggy-bank"></i></div>
-        <div class="stat-lbl">Total Deposited</div>
+        <div class="stat-lbl">@Localizer["Total Deposited"]</div>
         <div class="stat-val c-orange">@FmtMoney(totalDeposited)</div>
     </div>
     <div class="stat">
         <div class="stat-ico red"><i class="fas fa-arrow-down"></i></div>
-        <div class="stat-lbl">Total Spent</div>
+        <div class="stat-lbl">@Localizer["Total Spent"]</div>
         <div class="stat-val c-red">@FmtMoney(totalSpent)</div>
     </div>
     <div class="stat">
         <div class="stat-ico blue"><i class="fas fa-arrow-up"></i></div>
-        <div class="stat-lbl">Total Earned</div>
+        <div class="stat-lbl">@Localizer["Total Earned"]</div>
         <div class="stat-val c-blue">@FmtMoney(totalEarned)</div>
     </div>
     <div class="stat">
         <div class="stat-ico green"><i class="fas fa-chart-line"></i></div>
-        <div class="stat-lbl">Net Profit</div>
+        <div class="stat-lbl">@Localizer["Net Profit"]</div>
         <div class="stat-val @(netProfit >= 0 ? "c-green" : "c-red")">@FmtMoney(netProfit)</div>
     </div>
 </div>
@@ -206,11 +206,11 @@
 <div class="card" style="padding:0;">
     <div class="card-hd" style="padding:22px 24px 16px;margin-bottom:0;">
         <div>
-            <h3>Recent transactions</h3>
-            <div class="hd-sub">Latest movements on your account</div>
+            <h3>@Localizer["Recent transactions"]</h3>
+            <div class="hd-sub">@Localizer["Latest movements on your account"]</div>
         </div>
         <a class="hd-link" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@Model.Id">
-            View all <i class="fas fa-chevron-right"></i>
+            @Localizer["View all"] <i class="fas fa-chevron-right"></i>
         </a>
     </div>
 
@@ -219,11 +219,11 @@
         <table class="tx-table">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Product</th>
-                    <th>Store</th>
-                    <th style="text-align:right;">Amount</th>
+                    <th>@Localizer["Date"]</th>
+                    <th>@Localizer["Type"]</th>
+                    <th>@Localizer["Product"]</th>
+                    <th>@Localizer["Store"]</th>
+                    <th style="text-align:right;">@Localizer["Amount"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -234,15 +234,15 @@
                         <td>
                             @if (t.typeofAction == "Add")
                             {
-                                <span class="badge buy"><i class="fas fa-shopping-cart"></i> Purchase</span>
+                                <span class="badge buy"><i class="fas fa-shopping-cart"></i> @Localizer["Purchase"]</span>
                             }
                             else if (t.typeofAction == "Sale")
                             {
-                                <span class="badge sale"><i class="fas fa-tag"></i> Sale</span>
+                                <span class="badge sale"><i class="fas fa-tag"></i> @Localizer["Sale"]</span>
                             }
                             else if (t.typeofAction == "Deposit")
                             {
-                                <span class="badge dep"><i class="fas fa-plus"></i> Deposit</span>
+                                <span class="badge dep"><i class="fas fa-plus"></i> @Localizer["Deposit"]</span>
                             }
                             else
                             {
@@ -263,7 +263,7 @@
     {
         <div style="padding:48px;text-align:center;color:var(--muted);">
             <i class="fas fa-inbox" style="font-size:1.8rem;color:var(--border);display:block;margin-bottom:10px;"></i>
-            <div>No transactions yet</div>
+            <div>@Localizer["No transactions yet"]</div>
         </div>
     }
 </div>

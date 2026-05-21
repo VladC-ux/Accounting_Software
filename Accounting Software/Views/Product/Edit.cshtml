@@ -3,9 +3,9 @@
 @{
     Layout = "_FintegraLayout";
     ViewBag.ActivePage = "sellers";
-    ViewBag.PageTitle = "Edit Product";
-    ViewBag.PageHeading = "Edit Product";
-    ViewBag.PageSubtitle = "Update product details";
+    ViewBag.PageTitle = Localizer["Edit Product"].Value;
+    ViewBag.PageHeading = Localizer["Edit Product"].Value;
+    ViewBag.PageSubtitle = Localizer["Update product details"].Value;
 }
 
 @section Styles {
@@ -48,15 +48,15 @@
 }
 
 <a class="back-link" asp-action="ShowSellerProduct" asp-controller="Product" asp-route-SellerId="@Model.SellerId">
-    <i class="fas fa-arrow-left"></i> Back to Products
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Products"]
 </a>
 
 <div class="form-wrap">
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3><i class="fas fa-pencil-alt" style="color:var(--green);margin-right:6px;"></i> Edit product</h3>
-                <div class="hd-sub">Change the values below and save</div>
+                <h3><i class="fas fa-pencil-alt" style="color:var(--green);margin-right:6px;"></i> @Localizer["Edit product"]</h3>
+                <div class="hd-sub">@Localizer["Change the values below and save"]</div>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
             <div class="ic"><i class="fas fa-box"></i></div>
             <div>
                 <div class="title">@Model.Name</div>
-                <div class="sub">ID: @Model.Id &nbsp;·&nbsp; Seller ID: @Model.SellerId</div>
+                <div class="sub">@Localizer["ID:"] @Model.Id &nbsp;·&nbsp; @Localizer["Seller ID:"] @Model.SellerId</div>
             </div>
         </div>
 
@@ -74,22 +74,22 @@
 
             <div class="grid-2">
                 <div class="fg">
-                    <label>Product Name</label>
+                    <label>@Localizer["Product Name"]</label>
                     <input asp-for="Name" required />
                 </div>
                 <div class="fg">
-                    <label>Price</label>
+                    <label>@Localizer["Price"]</label>
                     <input asp-for="Price" min="1" required />
                 </div>
             </div>
 
             <div class="grid-2">
                 <div class="fg">
-                    <label>Mass</label>
+                    <label>@Localizer["Mass"]</label>
                     <input asp-for="Mass" min="1" required />
                 </div>
                 <div class="fg">
-                    <label>Unit of Mass</label>
+                    <label>@Localizer["Unit of Mass"]</label>
                     <select asp-for="unitOfmass" required>
                         <option value="Kg">Kg</option>
                         <option value="Gram">Gram</option>
@@ -99,17 +99,17 @@
             </div>
 
             <div class="fg">
-                <label>Description</label>
-                <textarea asp-for="Description" rows="3" placeholder="Description..."></textarea>
+                <label>@Localizer["Description"]</label>
+                <textarea asp-for="Description" rows="3" placeholder="@Localizer["Description..."]"></textarea>
             </div>
 
             <div class="actions">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Save Changes
+                    <i class="fas fa-save"></i> @Localizer["Save Changes"]
                 </button>
                 <a asp-action="ShowSellerProduct" asp-controller="Product"
                    asp-route-SellerId="@Model.SellerId" class="btn btn-ghost">
-                    <i class="fas fa-times"></i> Cancel
+                    <i class="fas fa-times"></i> @Localizer["Cancel"]
                 </a>
             </div>
         </form>

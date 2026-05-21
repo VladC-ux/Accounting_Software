@@ -2,11 +2,11 @@
 @{
     Layout = "_FintegraLayout";
     ViewBag.ActivePage = "invoices";
-    ViewBag.PageTitle = $"Invoice {Model.Number}";
-    ViewBag.PageHeading = $"Invoice {Model.Number}";
+    ViewBag.PageTitle = Localizer["Invoice"].Value + $" {Model.Number}";
+    ViewBag.PageHeading = Localizer["Invoice"].Value + $" {Model.Number}";
     ViewBag.PageSubtitle = Model.IssuedAt.ToString("dd MMMM yyyy HH:mm");
-    ViewBag.HeaderActions = $@"<a class='btn btn-ghost' href='/Invoice/Index'><i class='fas fa-arrow-left'></i> All invoices</a>"
-                          + $@"<a class='btn btn-primary' href='/Invoice/Pdf/{Model.Id}' target='_blank'><i class='fas fa-file-pdf'></i> Download PDF</a>";
+    ViewBag.HeaderActions = $@"<a class='btn btn-ghost' href='/Invoice/Index'><i class='fas fa-arrow-left'></i> {Localizer["All invoices"].Value}</a>"
+                          + $@"<a class='btn btn-primary' href='/Invoice/Pdf/{Model.Id}' target='_blank'><i class='fas fa-file-pdf'></i> {Localizer["Download PDF"].Value}</a>";
 }
 
 @section Styles {
@@ -64,29 +64,29 @@
     <div class="doc">
         <div class="doc-head">
             <div>
-                <div class="doc-title">INVOICE</div>
+                <div class="doc-title">@Localizer["INVOICE"]</div>
                 <div class="doc-sub">StockFlow</div>
             </div>
             <div class="doc-meta">
-                <div class="label">Invoice #</div>
+                <div class="label">@Localizer["Invoice #"]</div>
                 <div class="val">@Model.Number</div>
-                <div class="label" style="margin-top:8px;">Issued</div>
+                <div class="label" style="margin-top:8px;">@Localizer["Issued"]</div>
                 <div class="date">@Model.IssuedAt.ToString("dd MMM yyyy HH:mm")</div>
             </div>
         </div>
 
         <div class="parties">
             <div class="party">
-                <div class="label">From</div>
+                <div class="label">@Localizer["From"]</div>
                 <div class="name">@(Model.StoreName ?? "—")</div>
                 @if (!string.IsNullOrWhiteSpace(Model.UserName))
                 {
-                    <div class="detail">Issued by: @Model.UserName</div>
+                    <div class="detail">@Localizer["Issued by:"] @Model.UserName</div>
                 }
             </div>
             <div class="party">
-                <div class="label">Bill to</div>
-                <div class="name">@(string.IsNullOrWhiteSpace(Model.BuyerName) ? "Walk-in customer" : Model.BuyerName)</div>
+                <div class="label">@Localizer["Bill to"]</div>
+                <div class="name">@(string.IsNullOrWhiteSpace(Model.BuyerName) ? Localizer["Walk-in customer"].Value : Model.BuyerName)</div>
                 @if (!string.IsNullOrWhiteSpace(Model.BuyerEmail))
                 {
                     <div class="detail">@Model.BuyerEmail</div>
@@ -102,10 +102,10 @@
             <thead>
                 <tr>
                     <th style="width:30px;">#</th>
-                    <th>Description</th>
-                    <th class="r" style="width:80px;">Qty</th>
-                    <th class="r" style="width:120px;">Unit price</th>
-                    <th class="r" style="width:120px;">Amount</th>
+                    <th>@Localizer["Description"]</th>
+                    <th class="r" style="width:80px;">@Localizer["Qty"]</th>
+                    <th class="r" style="width:120px;">@Localizer["Unit price"]</th>
+                    <th class="r" style="width:120px;">@Localizer["Amount"]</th>
                 </tr>
             </thead>
             <tbody>
@@ -133,18 +133,18 @@
         <div class="totals">
             <div class="totals-box">
                 <div class="totals-row">
-                    <span class="lbl">Subtotal</span>
+                    <span class="lbl">@Localizer["Subtotal"]</span>
                     <span>@Model.Subtotal.ToString("N2")</span>
                 </div>
                 @if (Model.TaxRate > 0)
                 {
                     <div class="totals-row">
-                        <span class="lbl">VAT (@Model.TaxRate.ToString("N2")%)</span>
+                        <span class="lbl">@Localizer["VAT"] (@Model.TaxRate.ToString("N2")%)</span>
                         <span>@Model.TaxAmount.ToString("N2")</span>
                     </div>
                 }
                 <div class="totals-total">
-                    <span class="lbl">Total</span>
+                    <span class="lbl">@Localizer["Total"]</span>
                     <span class="val">@Model.Total.ToString("N2")</span>
                 </div>
             </div>

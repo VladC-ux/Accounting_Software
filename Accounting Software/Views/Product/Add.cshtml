@@ -5,9 +5,9 @@
     var products = ViewBag.Products as List<Accounting_Software.ViewModel.ProductViewModel>;
     var balance = (ViewBag.UserBalance as decimal? ?? 0m);
     ViewBag.ActivePage = "sellers";
-    ViewBag.PageTitle = "New Product";
-    ViewBag.PageHeading = "New Product";
-    ViewBag.PageSubtitle = "Register a new purchase from this seller";
+    ViewBag.PageTitle = Localizer["New Product"].Value;
+    ViewBag.PageHeading = Localizer["New Product"].Value;
+    ViewBag.PageSubtitle = Localizer["Register a new purchase from this seller"].Value;
 }
 
 @section Styles {
@@ -126,15 +126,15 @@
 }
 
 <a class="back-link" asp-action="Index" asp-controller="Seller">
-    <i class="fas fa-arrow-left"></i> Back to Sellers
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Sellers"]
 </a>
 
 <div class="balance-banner">
     <div class="l">
         <div class="ic"><i class="fas fa-box-open"></i></div>
         <div>
-            <div style="font-size:1.05rem;font-weight:800;color:var(--text);">New Product</div>
-            <div style="font-size:.84rem;color:var(--muted);">Register a new purchase from this seller</div>
+            <div style="font-size:1.05rem;font-weight:800;color:var(--text);">@Localizer["New Product"]</div>
+            <div style="font-size:.84rem;color:var(--muted);">@Localizer["Register a new purchase from this seller"]</div>
         </div>
     </div>
     <div style="display:flex;align-items:center;gap:12px;">
@@ -142,7 +142,7 @@
             <i class="fas fa-wallet"></i>
         </div>
         <div>
-            <div class="lbl">Current Balance</div>
+            <div class="lbl">@Localizer["Current Balance"]</div>
             <div class="val" id="balanceDisplay">@balance.ToString("N2")</div>
         </div>
     </div>
@@ -161,40 +161,40 @@
     <form method="post" id="productForm">
         <input type="hidden" name="SellerId" value="@ViewBag.SellerId" />
 
-        <div class="section-head"><span class="dot"></span> Product Details</div>
+        <div class="section-head"><span class="dot"></span> @Localizer["Product Details"]</div>
 
         <div class="grid-2">
             <div class="fg">
-                <label>Product Name</label>
-                <input asp-for="Name" placeholder="e.g. Apple" required />
+                <label>@Localizer["Product Name"]</label>
+                <input asp-for="Name" placeholder="@Localizer["e.g. Apple"]" required />
             </div>
             <div class="fg">
-                <label>Price per unit</label>
+                <label>@Localizer["Price per unit"]</label>
                 <input type="number" name="Price" id="priceInput" placeholder="0.00" step="0.01" min="0.01" required />
             </div>
         </div>
 
         <div class="fg">
-            <label>Purchase Type</label>
+            <label>@Localizer["Purchase Type"]</label>
             <div class="type-toggle">
                 <input type="radio" id="typePiece" name="purchaseType" value="piece" checked />
-                <label for="typePiece"><i class="fas fa-cubes"></i> By piece</label>
+                <label for="typePiece"><i class="fas fa-cubes"></i> @Localizer["By piece"]</label>
                 <input type="radio" id="typeWeight" name="purchaseType" value="weight" />
-                <label for="typeWeight"><i class="fas fa-weight-hanging"></i> By weight</label>
+                <label for="typeWeight"><i class="fas fa-weight-hanging"></i> @Localizer["By weight"]</label>
             </div>
         </div>
 
         <div class="grid-3" id="quantityGrid">
             <div class="fg">
-                <label>Count (pcs)</label>
+                <label>@Localizer["Count (pcs)"]</label>
                 <input type="number" name="Count" id="countInput" placeholder="0" min="1" required />
             </div>
             <div class="fg weight-only">
-                <label>Mass</label>
+                <label>@Localizer["Mass"]</label>
                 <input type="number" name="Mass" id="massInput" placeholder="0" min="1" />
             </div>
             <div class="fg weight-only">
-                <label>Unit</label>
+                <label>@Localizer["Unit"]</label>
                 <select name="unitOfmass" id="unitInput">
                     <option value="Kg">Kg</option>
                     <option value="Gram">Gram</option>
@@ -204,25 +204,25 @@
         </div>
 
         <div class="fg">
-            <label>Description (optional)</label>
-            <input asp-for="Description" placeholder="Short description..." />
+            <label>@Localizer["Description (optional)"]</label>
+            <input asp-for="Description" placeholder="@Localizer["Short description..."]" />
         </div>
 
         <div class="summary">
             <div class="col">
-                <div class="label">Total Cost</div>
+                <div class="label">@Localizer["Total Cost"]</div>
                 <div class="amount" id="totalDisplay">0.00</div>
-                <div class="balance-left" id="balanceAfter">Balance after: <span id="balanceAfterVal">—</span></div>
+                <div class="balance-left" id="balanceAfter">@Localizer["Balance after:"] <span id="balanceAfterVal">—</span></div>
             </div>
             <div class="calc-icon"><i class="fas fa-calculator"></i></div>
         </div>
 
         <div class="actions">
             <button type="submit" class="btn btn-primary">
-                <i class="fas fa-check"></i> Save Product
+                <i class="fas fa-check"></i> @Localizer["Save Product"]
             </button>
             <a asp-action="ShowSellerProduct" asp-controller="Product" asp-route-SellerId="@ViewBag.SellerId" class="btn btn-ghost">
-                <i class="fas fa-list"></i> View Products
+                <i class="fas fa-list"></i> @Localizer["View Products"]
             </a>
         </div>
     </form>
@@ -231,10 +231,10 @@
 <div class="card list-card">
     <div class="card-hd">
         <div>
-            <h3><i class="fas fa-list" style="color:var(--green);margin-right:6px;"></i> Products of this Seller</h3>
-            <div class="hd-sub">Existing items registered for this partner</div>
+            <h3><i class="fas fa-list" style="color:var(--green);margin-right:6px;"></i> @Localizer["Products of this Seller"]</h3>
+            <div class="hd-sub">@Localizer["Existing items registered for this partner"]</div>
         </div>
-        @if (products != null) { <div class="count">@products.Count items</div> }
+        @if (products != null) { <div class="count">@products.Count @Localizer["items"]</div> }
     </div>
 
     @if (products != null && products.Any())
@@ -243,13 +243,13 @@
             <table class="products-table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Price</th>
-                        <th>Count</th>
-                        <th>Mass</th>
-                        <th>Unit</th>
-                        <th>Total</th>
-                        <th>Description</th>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["Price"]</th>
+                        <th>@Localizer["Count"]</th>
+                        <th>@Localizer["Mass"]</th>
+                        <th>@Localizer["Unit"]</th>
+                        <th>@Localizer["Total"]</th>
+                        <th>@Localizer["Description"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -273,7 +273,7 @@
     {
         <div class="empty">
             <div class="ic"><i class="fas fa-box"></i></div>
-            No products yet for this seller
+            @Localizer["No products yet for this seller"]
         </div>
     }
 </div>

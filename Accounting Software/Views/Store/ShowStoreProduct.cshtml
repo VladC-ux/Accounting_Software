@@ -7,11 +7,12 @@
                       ?? new List<Accounting_Software.ViewModel.ProductViewModel>();
     var count = Model?.Count ?? 0;
     ViewBag.ActivePage = "stores";
-    ViewBag.PageTitle = $"{storeName ?? "Store"} Products";
-    ViewBag.PageHeading = $"{storeName ?? "Store"} Products";
-    ViewBag.PageSubtitle = $"{count} item{(count == 1 ? "" : "s")} in stock";
-    ViewBag.HeaderActions = $@"<button type='button' class='btn btn-primary' onclick='openQuickAdd()'><i class='fas fa-bolt'></i> Quick Add</button>"
-                          + $@"<a class='btn btn-ghost' href='/Store/PickProductForStore?storeId={storeId}'><i class='fas fa-th-large'></i> Browse Products</a>";
+    var storeLabel = storeName ?? Localizer["Store"].Value;
+    ViewBag.PageTitle = $"{storeLabel} " + Localizer["Products"].Value;
+    ViewBag.PageHeading = $"{storeLabel} " + Localizer["Products"].Value;
+    ViewBag.PageSubtitle = $"{count} " + Localizer["items in stock"].Value;
+    ViewBag.HeaderActions = $@"<button type='button' class='btn btn-primary' onclick='openQuickAdd()'><i class='fas fa-bolt'></i> {Localizer["Quick Add"].Value}</button>"
+                          + $@"<a class='btn btn-ghost' href='/Store/PickProductForStore?storeId={storeId}'><i class='fas fa-th-large'></i> {Localizer["Browse Products"].Value}</a>";
 }
 
 @section Styles {
@@ -90,7 +91,7 @@
 }
 
 <a class="back-link" asp-action="Index">
-    <i class="fas fa-arrow-left"></i> Back to Stores
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Stores"]
 </a>
 
 @if (TempData["ErrorMessage"] != null)
@@ -105,7 +106,7 @@
         @if (lastInvoiceId.HasValue)
         {
             <a class="btn-icon-sm btn-sale" asp-controller="Invoice" asp-action="Pdf" asp-route-id="@lastInvoiceId.Value" target="_blank">
-                <i class="fas fa-file-pdf"></i> Download Invoice
+                <i class="fas fa-file-pdf"></i> @Localizer["Download Invoice"]
             </a>
         }
     </div>
@@ -118,13 +119,13 @@
             <table class="s-table">
                 <thead>
                     <tr>
-                        <th>Product</th>
-                        <th>Seller</th>
-                        <th>Price</th>
-                        <th>Mass</th>
-                        <th>Stock</th>
-                        <th>Added</th>
-                        <th style="text-align:right;">Actions</th>
+                        <th>@Localizer["Product"]</th>
+                        <th>@Localizer["Seller"]</th>
+                        <th>@Localizer["Price"]</th>
+                        <th>@Localizer["Mass"]</th>
+                        <th>@Localizer["Stock"]</th>
+                        <th>@Localizer["Added"]</th>
+                        <th style="text-align:right;">@Localizer["Actions"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -142,7 +143,7 @@
                             <td>@product.SellerName</td>
                             <td class="price">@product.Price.ToString("N2")</td>
                             <td>@product.Mass @product.unitOfmass</td>
-                            <td><span class="count-pill @countClass">@product.Count pcs</span></td>
+                            <td><span class="count-pill @countClass">@product.Count @Localizer["pcs"]</span></td>
                             <td style="color:var(--muted);font-size:.8rem;">@product.AddDate.ToString("dd MMM yyyy")</td>
                             <td>
                                 <div class="row-actions">
@@ -150,18 +151,18 @@
                                         @Html.AntiForgeryToken()
                                         <input type="hidden" name="storeProductId" value="@product.Id" />
                                         <input type="number" name="quantity" value="1" min="1" max="@product.Count"
-                                               class="qty-input" title="Quantity in @product.unitOfmass"
+                                               class="qty-input" title="@Localizer["Quantity in"] @product.unitOfmass"
                                                @(product.Count <= 0 ? "disabled" : "") />
                                         <span class="unit-label">@product.unitOfmass</span>
                                         <button class="btn-icon-sm btn-sale" type="submit" @(product.Count <= 0 ? "disabled" : "")>
-                                            <i class="fas fa-cash-register"></i> Sell
+                                            <i class="fas fa-cash-register"></i> @Localizer["Sell"]
                                         </button>
                                     </form>
                                     <a class="btn-icon-sm btn-edit" href="/Store/EditAllStore/@product.Id">
                                         <i class="fas fa-edit"></i>
                                     </a>
                                     <form asp-action="DeleteStoreProduct" method="post"
-                                          onsubmit="return confirm('Delete this product?');">
+                                          onsubmit="return confirm('@Localizer["Delete this product?"]');">
                                         <input type="hidden" name="Id" value="@product.Id" />
                                         <input type="hidden" name="ProductId" value="@product.ProductId" />
                                         <input type="hidden" name="StoreId" value="@product.StoreId" />
@@ -181,19 +182,19 @@
     {
         <div class="empty">
             <div class="ic"><i class="fas fa-box"></i></div>
-            <p style="font-size:.9rem;">No products in this store yet</p>
+            <p style="font-size:.9rem;">@Localizer["No products in this store yet"]</p>
         </div>
     }
 </div>
 
 <div style="margin-top:24px;">
-    <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-arrow-left"></i> Back to Stores</a>
+    <a class="btn btn-ghost" asp-action="Index"><i class="fas fa-arrow-left"></i> @Localizer["Back to Stores"]</a>
 </div>
 
 <div id="quickAddModal" class="modal-backdrop" onclick="if(event.target===this)closeQuickAdd()">
     <div class="modal-card">
         <div class="modal-hd">
-            <h2><i class="fas fa-bolt" style="color:var(--green);"></i> Quick Add to @(storeName ?? "Store")</h2>
+            <h2><i class="fas fa-bolt" style="color:var(--green);"></i> @Localizer["Quick Add to"] @(storeName ?? Localizer["Store"].Value)</h2>
             <button type="button" class="modal-close" onclick="closeQuickAdd()"><i class="fas fa-times"></i></button>
         </div>
         <div class="modal-body">
@@ -201,7 +202,7 @@
             {
                 <div class="warn-box">
                     <i class="fas fa-exclamation-triangle"></i>
-                    No products available. Add products to a seller first.
+                    @Localizer["No products available. Add products to a seller first."]
                 </div>
             }
             else
@@ -215,9 +216,9 @@
                     <input type="hidden" name="Mass" id="qa_Mass" value="0" />
 
                     <div class="fg">
-                        <label for="qa_ProductId">Product</label>
+                        <label for="qa_ProductId">@Localizer["Product"]</label>
                         <select name="ProductId" id="qa_ProductId" required onchange="fillFromProduct()">
-                            <option value="">— Select a product —</option>
+                            <option value="">@Localizer["— Select a product —"]</option>
                             @foreach (var p in allProducts)
                             {
                                 <option value="@p.Id"
@@ -229,7 +230,7 @@
                                         data-stock="@p.Count"
                                         data-desc="@p.Description"
                                         data-seller="@p.SellerName">
-                                    @p.Name @(string.IsNullOrEmpty(p.SellerName) ? "" : " — " + p.SellerName) (stock: @p.Count)
+                                    @p.Name @(string.IsNullOrEmpty(p.SellerName) ? "" : " — " + p.SellerName) (@Localizer["stock:"] @p.Count)
                                 </option>
                             }
                         </select>
@@ -242,24 +243,24 @@
 
                     <div class="fg-row">
                         <div class="fg">
-                            <label for="qa_Price">Price</label>
+                            <label for="qa_Price">@Localizer["Price"]</label>
                             <input type="number" step="0.01" min="0.01" name="Price" id="qa_Price" required />
                         </div>
                         <div class="fg">
-                            <label for="qa_Count" id="qa_CountLabel">Quantity</label>
+                            <label for="qa_Count" id="qa_CountLabel">@Localizer["Quantity"]</label>
                             <input type="number" min="1" name="Count" id="qa_Count" required oninput="updateTransfer()" />
                             <div class="hint" id="qa_StockHint"></div>
                         </div>
                     </div>
 
                     <div class="fg">
-                        <label for="qa_Description">Description</label>
-                        <textarea name="Description" id="qa_Description" placeholder="Optional notes..."></textarea>
+                        <label for="qa_Description">@Localizer["Description"]</label>
+                        <textarea name="Description" id="qa_Description" placeholder="@Localizer["Optional notes..."]"></textarea>
                     </div>
 
                     <div class="modal-actions">
-                        <button type="button" class="btn btn-ghost" onclick="closeQuickAdd()">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Add to Store</button>
+                        <button type="button" class="btn btn-ghost" onclick="closeQuickAdd()">@Localizer["Cancel"]</button>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> @Localizer["Add to Store"]</button>
                     </div>
                 </form>
             }
@@ -295,17 +296,17 @@
         var c = document.getElementById('qa_Count');
         c.max = stock;
         if(!c.value || parseInt(c.value) > stock){ c.value = stock > 0 ? 1 : 0; }
-        document.getElementById('qa_CountLabel').textContent = isPieceUnit(unit) ? 'Quantity (pcs)' : 'Quantity (units)';
+        document.getElementById('qa_CountLabel').textContent = isPieceUnit(unit) ? '@Localizer["Quantity (pcs)"]' : '@Localizer["Quantity (units)"]';
 
         // Баннер с остатком на складе в правильных единицах
         var banner = document.getElementById('qa_StockBanner');
         var stockText = document.getElementById('qa_StockText');
         banner.style.display = 'flex';
         if(isPieceUnit(unit)){
-            stockText.innerHTML = 'In stock: <strong>' + stock + ' pcs</strong>';
+            stockText.innerHTML = '@Localizer["In stock:"] <strong>' + stock + ' @Localizer["pcs"]</strong>';
         } else {
             var totalKg = stock * mass;
-            stockText.innerHTML = 'In stock: <strong>' + stock + ' units &times; ' + mass + ' ' + unitName +
+            stockText.innerHTML = '@Localizer["In stock:"] <strong>' + stock + ' @Localizer["units"] &times; ' + mass + ' ' + unitName +
                                   ' = ' + totalKg + ' ' + unitName + '</strong>';
         }
         updateTransfer();
@@ -322,9 +323,9 @@
         var mass = parseInt(opt.dataset.mass) || 0;
         var count = parseInt(document.getElementById('qa_Count').value) || 0;
         if(isPieceUnit(unit)){
-            hint.textContent = 'Adding ' + count + ' pcs';
+            hint.textContent = '@Localizer["Adding"] ' + count + ' @Localizer["pcs"]';
         } else {
-            hint.textContent = 'Adding ' + count + ' units = ' + (count * mass) + ' ' + unitName;
+            hint.textContent = '@Localizer["Adding"] ' + count + ' @Localizer["units"] = ' + (count * mass) + ' ' + unitName;
         }
     }
 

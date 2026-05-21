@@ -3,9 +3,9 @@
 @{
     Layout = "_FintegraLayout";
     ViewBag.ActivePage = "sellers";
-    ViewBag.PageTitle = "Edit Seller";
-    ViewBag.PageHeading = "Edit Seller";
-    ViewBag.PageSubtitle = "Update the seller name";
+    ViewBag.PageTitle = Localizer["Edit Seller"].Value;
+    ViewBag.PageHeading = Localizer["Edit Seller"].Value;
+    ViewBag.PageSubtitle = Localizer["Update the seller name"].Value;
 }
 
 @section Styles {
@@ -39,15 +39,15 @@
 }
 
 <a class="back-link" asp-action="Index" asp-controller="Seller">
-    <i class="fas fa-arrow-left"></i> Back to Sellers
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Sellers"]
 </a>
 
 <div class="form-wrap">
     <div class="card">
         <div class="card-hd">
             <div>
-                <h3><i class="fas fa-user-edit" style="color:var(--green);margin-right:6px;"></i> Edit details</h3>
-                <div class="hd-sub">Change the seller's display name</div>
+                <h3><i class="fas fa-user-edit" style="color:var(--green);margin-right:6px;"></i> @Localizer["Edit details"]</h3>
+                <div class="hd-sub">@Localizer["Change the seller's display name"]</div>
             </div>
         </div>
 
@@ -55,7 +55,7 @@
             <div class="seller-avatar">@(Model.Name.Length > 0 ? Model.Name.Substring(0, 1).ToUpper() : "?")</div>
             <div>
                 <div class="title">@Model.Name</div>
-                <div class="sub">Seller ID: @Model.Id</div>
+                <div class="sub">@Localizer["Seller ID:"] @Model.Id</div>
             </div>
         </div>
 
@@ -63,17 +63,17 @@
             <input type="hidden" asp-for="Id" />
 
             <div class="fg">
-                <label>Seller Name</label>
-                <input asp-for="Name" placeholder="Enter new name..." required />
+                <label>@Localizer["Seller Name"]</label>
+                <input asp-for="Name" placeholder="@Localizer["Enter new name..."]" required />
                 <span asp-validation-for="Name" class="validation-error"></span>
             </div>
 
             <div class="actions">
                 <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save"></i> Save Changes
+                    <i class="fas fa-save"></i> @Localizer["Save Changes"]
                 </button>
                 <a asp-action="Index" asp-controller="Seller" class="btn btn-ghost">
-                    <i class="fas fa-times"></i> Cancel
+                    <i class="fas fa-times"></i> @Localizer["Cancel"]
                 </a>
             </div>
         </form>
