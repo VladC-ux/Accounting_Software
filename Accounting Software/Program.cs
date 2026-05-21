@@ -37,8 +37,6 @@ namespace Accounting_Software
                     options.ExpireTimeSpan = TimeSpan.FromHours(8);
                 });
 
-            // ResourcesPath НЕ задаём: имя ресурса берётся из полного имени типа
-            // (Accounting_Software.Resources.SharedResource), что совпадает с .resx.
             builder.Services.AddLocalization();
             builder.Services.AddControllersWithViews()
                 .AddViewLocalization()
@@ -81,14 +79,11 @@ namespace Accounting_Software
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            // ── Localization ──────────────────────────────────────────────
-            // Язык интерфейса переключается через cookie (CultureController),
-            // а формат чисел/дат держим в en-US, чтобы суммы и PDF не менялись.
             var supportedUICultures = new[]
             {
                 enUs,
-                new CultureInfo("hy-AM"), // армянский
-                new CultureInfo("ru-RU"), // русский
+                new CultureInfo("hy-AM"),
+                new CultureInfo("ru-RU"),
             };
             app.UseRequestLocalization(new RequestLocalizationOptions
             {

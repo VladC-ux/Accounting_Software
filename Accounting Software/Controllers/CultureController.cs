@@ -3,10 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Accounting_Software.Controllers
 {
-    /// <summary>
-    /// Переключение языка интерфейса. Сохраняет выбор в cookie на год.
-    /// Формат чисел/дат держим в en-US, переключаем только UI-культуру.
-    /// </summary>
     public class CultureController : Controller
     {
         private static readonly string[] Allowed = { "en-US", "hy-AM", "ru-RU" };
