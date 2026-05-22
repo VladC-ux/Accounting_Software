@@ -439,4 +439,23 @@
   <data name="building Web apps with ASP.NET Core" xml:space="preserve"><value>ASP.NET Core-ով վեբ հավելվածներ ստեղծելու մասին</value></data>
   <data name="Privacy Policy" xml:space="preserve"><value>Գաղտնիության քաղաքականություն</value></data>
   <data name="Use this page to detail your site's privacy policy." xml:space="preserve"><value>Օգտագործեք այս էջը ձեր կայքի գաղտնիության քաղաքականությունը նկարագրելու համար։</value></data>
+  <data name="Taxes" xml:space="preserve"><value>Հարկեր</value></data>
+  <data name="Set tax rates and see what you owe on your income" xml:space="preserve"><value>Սահմանեք հարկադրույքները և տեսեք, թե որքան եք պարտք ձեր եկամտից</value></data>
+  <data name="Total Income" xml:space="preserve"><value>Ընդհանուր եկամուտ</value></data>
+  <data name="Total Tax Rate" xml:space="preserve"><value>Ընդհանուր հարկադրույք</value></data>
+  <data name="Total Tax Due" xml:space="preserve"><value>Վճարման ենթակա ընդհանուր հարկ</value></data>
+  <data name="Income After Tax" xml:space="preserve"><value>Եկամուտ հարկումից հետո</value></data>
+  <data name="Add a tax" xml:space="preserve"><value>Ավելացնել հարկ</value></data>
+  <data name="Each tax is a percentage applied to your total income" xml:space="preserve"><value>Յուրաքանչյուր հարկ տոկոս է, որը կիրառվում է ձեր ընդհանուր եկամտի վրա</value></data>
+  <data name="Tax name" xml:space="preserve"><value>Հարկի անվանում</value></data>
+  <data name="e.g. Income tax" xml:space="preserve"><value>օր. Եկամտահարկ</value></data>
+  <data name="Rate (%)" xml:space="preserve"><value>Դրույք (%)</value></data>
+  <data name="Short note..." xml:space="preserve"><value>Կարճ նշում...</value></data>
+  <data name="Add" xml:space="preserve"><value>Ավելացնել</value></data>
+  <data name="Your taxes" xml:space="preserve"><value>Ձեր հարկերը</value></data>
+  <data name="Applied to total income of" xml:space="preserve"><value>Կիրառվում է ընդհանուր եկամտի վրա՝</value></data>
+  <data name="Amount Due" xml:space="preserve"><value>Վճարման ենթակա գումար</value></data>
+  <data name="Delete this tax?" xml:space="preserve"><value>Ջնջե՞լ այս հարկը</value></data>
+  <data name="No taxes yet. Add your first one above." xml:space="preserve"><value>Դեռ հարկեր չկան։ Ավելացրեք առաջինը վերևում։</value></data>
+  <data name="Edit tax" xml:space="preserve"><value>Խմբագրել հարկը</value></data>
 </root>

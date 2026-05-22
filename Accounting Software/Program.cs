@@ -58,6 +58,8 @@ namespace Accounting_Software
             builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
             builder.Services.AddScoped<IInvoiceService, InvoiceService>();
             builder.Services.AddScoped<IInvoicePdfService, InvoicePdfService>();
+            builder.Services.AddScoped<ITaxService, TaxService>();
+            builder.Services.AddScoped<ITaxRepository, TaxRepository>();
 
             // ── Telegram bot ──────────────────────────────────────────────
             var botToken = builder.Configuration["Telegram:BotToken"];

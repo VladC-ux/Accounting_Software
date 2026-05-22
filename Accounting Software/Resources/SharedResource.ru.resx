@@ -439,4 +439,23 @@
   <data name="building Web apps with ASP.NET Core" xml:space="preserve"><value>создании веб-приложений на ASP.NET Core</value></data>
   <data name="Privacy Policy" xml:space="preserve"><value>Политика конфиденциальности</value></data>
   <data name="Use this page to detail your site's privacy policy." xml:space="preserve"><value>Используйте эту страницу для описания политики конфиденциальности вашего сайта.</value></data>
+  <data name="Taxes" xml:space="preserve"><value>Налоги</value></data>
+  <data name="Set tax rates and see what you owe on your income" xml:space="preserve"><value>Задайте налоговые ставки и узнайте, сколько вы должны с дохода</value></data>
+  <data name="Total Income" xml:space="preserve"><value>Общий доход</value></data>
+  <data name="Total Tax Rate" xml:space="preserve"><value>Общая ставка налога</value></data>
+  <data name="Total Tax Due" xml:space="preserve"><value>Итого к уплате</value></data>
+  <data name="Income After Tax" xml:space="preserve"><value>Доход после налогов</value></data>
+  <data name="Add a tax" xml:space="preserve"><value>Добавить налог</value></data>
+  <data name="Each tax is a percentage applied to your total income" xml:space="preserve"><value>Каждый налог — это процент, применяемый к вашему общему доходу</value></data>
+  <data name="Tax name" xml:space="preserve"><value>Название налога</value></data>
+  <data name="e.g. Income tax" xml:space="preserve"><value>напр. Подоходный налог</value></data>
+  <data name="Rate (%)" xml:space="preserve"><value>Ставка (%)</value></data>
+  <data name="Short note..." xml:space="preserve"><value>Краткая заметка...</value></data>
+  <data name="Add" xml:space="preserve"><value>Добавить</value></data>
+  <data name="Your taxes" xml:space="preserve"><value>Ваши налоги</value></data>
+  <data name="Applied to total income of" xml:space="preserve"><value>Применяется к общему доходу</value></data>
+  <data name="Amount Due" xml:space="preserve"><value>Сумма к уплате</value></data>
+  <data name="Delete this tax?" xml:space="preserve"><value>Удалить этот налог?</value></data>
+  <data name="No taxes yet. Add your first one above." xml:space="preserve"><value>Налогов пока нет. Добавьте первый выше.</value></data>
+  <data name="Edit tax" xml:space="preserve"><value>Редактировать налог</value></data>
 </root>

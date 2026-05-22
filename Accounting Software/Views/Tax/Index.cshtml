@@ -1,0 +1,215 @@
+@model Accounting_Software.ViewModel.TaxOverviewViewModel
+@{
+    Layout = "_FintegraLayout";
+    ViewBag.ActivePage = "taxes";
+    ViewBag.PageTitle = Localizer["Taxes"].Value;
+    ViewBag.PageHeading = Localizer["Taxes"].Value;
+    ViewBag.PageSubtitle = Localizer["Set tax rates and see what you owe on your income"].Value;
+}
+
+@section Styles {
+<style>
+    .tax-wrap{max-width:980px;}
+    .back-link{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;font-weight:600;color:var(--muted);margin-bottom:16px;transition:color .15s;}
+    .back-link:hover{color:var(--green);}
+
+    .alert-box{padding:12px 16px;border-radius:12px;margin-bottom:16px;font-size:.86rem;font-weight:500;display:flex;align-items:center;gap:10px;}
+    .alert-ok{background:var(--green-soft);color:var(--green-dark);border:1px solid var(--green-tint);}
+    .alert-err{background:var(--red-soft);color:#7A2322;border:1px solid #F1B3B0;}
+
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+    @@media(max-width:820px){.stat-grid{grid-template-columns:1fr 1fr;}}
+    .stat{background:var(--card);border-radius:var(--r-lg);box-shadow:var(--shadow-sm);padding:18px 20px;}
+    .stat .lbl{font-size:.72rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;}
+    .stat .val{font-size:1.45rem;font-weight:800;letter-spacing:-.02em;}
+    .stat .ic{float:right;width:36px;height:36px;border-radius:10px;display:grid;place-items:center;font-size:.95rem;}
+    .ic-income{background:var(--green-soft);color:var(--green);}
+    .ic-tax{background:var(--red-soft);color:var(--red);}
+    .ic-net{background:var(--blue-soft);color:var(--blue);}
+    .ic-rate{background:var(--orange-soft);color:var(--orange);}
+
+    .fg{margin-bottom:0;}
+    .fg label{display:block;font-size:.74rem;font-weight:700;color:var(--muted);margin-bottom:7px;text-transform:uppercase;letter-spacing:.05em;}
+    .fg input{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:12px;font-size:.92rem;font-family:inherit;background:#fff;color:var(--text);transition:all .15s;}
+    .fg input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 4px rgba(45,106,79,.12);}
+    .add-grid{display:grid;grid-template-columns:1.4fr .7fr 1.6fr auto;gap:12px;align-items:end;}
+    @@media(max-width:820px){.add-grid{grid-template-columns:1fr;}}
+
+    .rate-pill{display:inline-flex;align-items:center;background:var(--orange-soft);color:#7A4A12;padding:3px 10px;border-radius:99px;font-size:.78rem;font-weight:700;}
+    .amount-cell{font-weight:700;color:var(--red);}
+    .inline-form{display:inline;}
+
+    .totrow td{font-weight:800;background:var(--green-soft);}
+
+    .empty{padding:44px;text-align:center;color:var(--muted);}
+    .empty .ic{width:60px;height:60px;border-radius:50%;background:var(--green-soft);color:var(--green);display:grid;place-items:center;font-size:1.4rem;margin:0 auto 12px;}
+</style>
+}
+
+<a class="back-link" asp-controller="Dashboard" asp-action="Index">
+    <i class="fas fa-arrow-left"></i> @Localizer["Back to Dashboard"]
+</a>
+
+<div class="tax-wrap">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-box alert-ok"><i class="fas fa-check-circle"></i> @TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-box alert-err"><i class="fas fa-exclamation-circle"></i> @TempData["Error"]</div>
+    }
+
+    <div class="stat-grid">
+        <div class="stat">
+            <div class="ic ic-income"><i class="fas fa-arrow-down"></i></div>
+            <div class="lbl">@Localizer["Total Income"]</div>
+            <div class="val">@Model.TotalIncome.ToString("N2")</div>
+        </div>
+        <div class="stat">
+            <div class="ic ic-rate"><i class="fas fa-percent"></i></div>
+            <div class="lbl">@Localizer["Total Tax Rate"]</div>
+            <div class="val">@Model.TotalRate.ToString("N2")%</div>
+        </div>
+        <div class="stat">
+            <div class="ic ic-tax"><i class="fas fa-file-invoice-dollar"></i></div>
+            <div class="lbl">@Localizer["Total Tax Due"]</div>
+            <div class="val" style="color:var(--red);">@Model.TotalTax.ToString("N2")</div>
+        </div>
+        <div class="stat">
+            <div class="ic ic-net"><i class="fas fa-wallet"></i></div>
+            <div class="lbl">@Localizer["Income After Tax"]</div>
+            <div class="val">@Model.IncomeAfterTax.ToString("N2")</div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px;">
+        <div class="card-hd">
+            <div>
+                <h3><i class="fas fa-plus-circle" style="color:var(--green);margin-right:6px;"></i> @Localizer["Add a tax"]</h3>
+                <div class="hd-sub">@Localizer["Each tax is a percentage applied to your total income"]</div>
+            </div>
+        </div>
+        <form asp-action="Add" method="post">
+            <div class="add-grid">
+                <div class="fg">
+                    <label>@Localizer["Tax name"]</label>
+                    <input name="Name" placeholder="@Localizer["e.g. Income tax"]" required />
+                </div>
+                <div class="fg">
+                    <label>@Localizer["Rate (%)"]</label>
+                    <input name="Rate" type="number" step="0.01" min="0.01" max="100" placeholder="0.00" required />
+                </div>
+                <div class="fg">
+                    <label>@Localizer["Description (optional)"]</label>
+                    <input name="Description" placeholder="@Localizer["Short note..."]" />
+                </div>
+                <div class="fg">
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> @Localizer["Add"]</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-hd">
+            <div>
+                <h3><i class="fas fa-list" style="color:var(--green);margin-right:6px;"></i> @Localizer["Your taxes"]</h3>
+                <div class="hd-sub">@Localizer["Applied to total income of"] @Model.TotalIncome.ToString("N2")</div>
+            </div>
+        </div>
+
+        @if (Model.Rules.Any())
+        {
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>@Localizer["Name"]</th>
+                        <th>@Localizer["Rate (%)"]</th>
+                        <th>@Localizer["Amount Due"]</th>
+                        <th>@Localizer["Description"]</th>
+                        <th style="text-align:right;">@Localizer["Actions"]</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var rule in Model.Rules)
+                    {
+                        <tr>
+                            <td><strong>@rule.Name</strong></td>
+                            <td><span class="rate-pill">@rule.Rate.ToString("N2")%</span></td>
+                            <td class="amount-cell">@rule.Amount.ToString("N2")</td>
+                            <td style="color:var(--muted);">@rule.Description</td>
+                            <td style="text-align:right;white-space:nowrap;">
+                                <button type="button" class="btn btn-ghost btn-icon-sm"
+                                        onclick="editTax(@rule.Id, '@Html.Raw(rule.Name.Replace("'", "\\'"))', @rule.Rate.ToString(System.Globalization.CultureInfo.InvariantCulture), '@Html.Raw((rule.Description ?? "").Replace("'", "\\'"))')">
+                                    <i class="fas fa-pen"></i>
+                                </button>
+                                <form asp-action="Delete" method="post" class="inline-form"
+                                      onsubmit="return confirm('@Localizer["Delete this tax?"]');">
+                                    <input type="hidden" name="id" value="@rule.Id" />
+                                    <button type="submit" class="btn btn-danger btn-icon-sm"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                    <tr class="totrow">
+                        <td>@Localizer["Total"]</td>
+                        <td><span class="rate-pill">@Model.TotalRate.ToString("N2")%</span></td>
+                        <td class="amount-cell">@Model.TotalTax.ToString("N2")</td>
+                        <td colspan="2"></td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <div class="empty">
+                <div class="ic"><i class="fas fa-percent"></i></div>
+                @Localizer["No taxes yet. Add your first one above."]
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Edit modal -->
+<div id="editModal" style="display:none;position:fixed;inset:0;background:rgba(26,43,35,.45);z-index:50;align-items:center;justify-content:center;">
+    <div class="card" style="width:440px;max-width:92vw;">
+        <div class="card-hd">
+            <h3><i class="fas fa-pen" style="color:var(--green);margin-right:6px;"></i> @Localizer["Edit tax"]</h3>
+        </div>
+        <form asp-action="Edit" method="post">
+            <input type="hidden" name="Id" id="editId" />
+            <div class="fg" style="margin-bottom:14px;">
+                <label>@Localizer["Tax name"]</label>
+                <input name="Name" id="editName" required />
+            </div>
+            <div class="fg" style="margin-bottom:14px;">
+                <label>@Localizer["Rate (%)"]</label>
+                <input name="Rate" id="editRate" type="number" step="0.01" min="0.01" max="100" required />
+            </div>
+            <div class="fg" style="margin-bottom:18px;">
+                <label>@Localizer["Description (optional)"]</label>
+                <input name="Description" id="editDescription" />
+            </div>
+            <div style="display:flex;gap:10px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> @Localizer["Save"]</button>
+                <button type="button" class="btn btn-ghost" onclick="closeEdit()">@Localizer["Cancel"]</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const editModal = document.getElementById('editModal');
+    function editTax(id, name, rate, description) {
+        document.getElementById('editId').value = id;
+        document.getElementById('editName').value = name;
+        document.getElementById('editRate').value = rate;
+        document.getElementById('editDescription').value = description;
+        editModal.style.display = 'flex';
+    }
+    function closeEdit() { editModal.style.display = 'none'; }
+    editModal.addEventListener('click', e => { if (e.target === editModal) closeEdit(); });
+</script>
+}

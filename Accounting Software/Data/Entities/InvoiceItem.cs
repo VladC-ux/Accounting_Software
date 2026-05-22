@@ -27,8 +27,9 @@ namespace Accounting_Software.Data.Entities
         public Unit_of_mass UnitOfMass { get; set; }
 
         [NotMapped]
-        public decimal Total => UnitOfMass != Unit_of_mass.Pcs && Mass > 0
-            ? Price * Count * Mass
-            : Price * Count;
+        public decimal Total => UnitOfMass == Unit_of_mass.Pcs || Mass <= 0
+            ? Price * Count
+            // Price is per base unit (kg / litre); grams and millilitres are 1/1000 of it.
+            : Price * Count * (UnitOfMass == Unit_of_mass.Gram || UnitOfMass == Unit_of_mass.Ml ? Mass / 1000m : Mass);
     }
 }

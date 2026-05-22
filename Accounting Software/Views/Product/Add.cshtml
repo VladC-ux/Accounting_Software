@@ -284,6 +284,7 @@
     const priceInput = document.getElementById('priceInput');
     const countInput = document.getElementById('countInput');
     const massInput = document.getElementById('massInput');
+    const unitInput = document.getElementById('unitInput');
     const totalDisplay = document.getElementById('totalDisplay');
     const balanceAfterVal = document.getElementById('balanceAfterVal');
     const balanceAfter = document.getElementById('balanceAfter');
@@ -299,7 +300,10 @@
         const count = parseInt(countInput.value) || 0;
         const mass = parseInt(massInput.value) || 0;
         const isWeight = typeWeight.checked;
-        const total = isWeight && mass > 0 ? price * count * mass : price * count;
+        const unit = unitInput.value;
+        // Price is per base unit (kg / litre); grams and millilitres are 1/1000 of it.
+        const quantity = (unit === 'Gram' || unit === 'Ml') ? mass / 1000 : mass;
+        const total = isWeight && mass > 0 ? price * count * quantity : price * count;
         const remaining = balance - total;
 
         totalDisplay.textContent = fmt(total);
@@ -323,6 +327,7 @@
     priceInput.addEventListener('input', updateTotal);
     countInput.addEventListener('input', updateTotal);
     massInput.addEventListener('input', updateTotal);
+    unitInput.addEventListener('change', updateTotal);
     typePiece.addEventListener('change', () => { applyPurchaseType(); updateTotal(); });
     typeWeight.addEventListener('change', () => { applyPurchaseType(); updateTotal(); });
 

@@ -223,6 +223,9 @@
         <a class="@Cls("reports")" asp-controller="Statistics" asp-action="Index">
             <i class="fas fa-chart-column"></i> @Localizer["Reports"]
         </a>
+        <a class="@Cls("taxes")" asp-controller="Tax" asp-action="Index">
+            <i class="fas fa-percent"></i> @Localizer["Taxes"]
+        </a>
         <a class="@Cls("transactions")" asp-controller="User" asp-action="ProductsTransaction" asp-route-id="@userId">
             <i class="fas fa-receipt"></i> @Localizer["Transactions"]
         </a>

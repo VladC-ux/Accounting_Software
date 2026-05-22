@@ -17,9 +17,14 @@ namespace Accounting_Software.ViewModel
         {
             get
             {
-                return unitOfmass != Unit_of_mass.Pcs && Mass > 0
-                    ? Price * Count * Mass
-                    : Price * Count;
+                if (unitOfmass == Unit_of_mass.Pcs || Mass <= 0)
+                    return Price * Count;
+
+                // Price is per base unit (kg / litre); grams and millilitres are 1/1000 of it.
+                decimal quantity = unitOfmass == Unit_of_mass.Gram || unitOfmass == Unit_of_mass.Ml
+                    ? Mass / 1000m
+                    : Mass;
+                return Price * Count * quantity;
             }
         }
         public string ProductName { get; set; } = null!;
